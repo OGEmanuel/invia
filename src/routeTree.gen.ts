@@ -11,7 +11,14 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
+import { Route as AuthVerifyResetPasswordRouteImport } from './routes/auth/verify-reset-password'
+import { Route as AuthVerifyEmailRouteImport } from './routes/auth/verify-email'
+import { Route as AuthSignUpRouteImport } from './routes/auth/sign-up'
+import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
+import { Route as AuthCreatePasswordRouteImport } from './routes/auth/create-password'
+import { Route as AuthBusinessInfoRouteImport } from './routes/auth/business-info'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -23,39 +30,133 @@ const AuthIndexRoute = AuthIndexRouteImport.update({
   path: '/auth/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthVerifyResetPasswordRoute = AuthVerifyResetPasswordRouteImport.update({
+  id: '/auth/verify-reset-password',
+  path: '/auth/verify-reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthVerifyEmailRoute = AuthVerifyEmailRouteImport.update({
+  id: '/auth/verify-email',
+  path: '/auth/verify-email',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthSignUpRoute = AuthSignUpRouteImport.update({
+  id: '/auth/sign-up',
+  path: '/auth/sign-up',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/auth/reset-password',
+  path: '/auth/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/auth/login',
   path: '/auth/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthForgotPasswordRoute = AuthForgotPasswordRouteImport.update({
+  id: '/auth/forgot-password',
+  path: '/auth/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthCreatePasswordRoute = AuthCreatePasswordRouteImport.update({
+  id: '/auth/create-password',
+  path: '/auth/create-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthBusinessInfoRoute = AuthBusinessInfoRouteImport.update({
+  id: '/auth/business-info',
+  path: '/auth/business-info',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth/business-info': typeof AuthBusinessInfoRoute
+  '/auth/create-password': typeof AuthCreatePasswordRoute
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/sign-up': typeof AuthSignUpRoute
+  '/auth/verify-email': typeof AuthVerifyEmailRoute
+  '/auth/verify-reset-password': typeof AuthVerifyResetPasswordRoute
   '/auth': typeof AuthIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth/business-info': typeof AuthBusinessInfoRoute
+  '/auth/create-password': typeof AuthCreatePasswordRoute
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/sign-up': typeof AuthSignUpRoute
+  '/auth/verify-email': typeof AuthVerifyEmailRoute
+  '/auth/verify-reset-password': typeof AuthVerifyResetPasswordRoute
   '/auth': typeof AuthIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth/business-info': typeof AuthBusinessInfoRoute
+  '/auth/create-password': typeof AuthCreatePasswordRoute
+  '/auth/forgot-password': typeof AuthForgotPasswordRoute
   '/auth/login': typeof AuthLoginRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/sign-up': typeof AuthSignUpRoute
+  '/auth/verify-email': typeof AuthVerifyEmailRoute
+  '/auth/verify-reset-password': typeof AuthVerifyResetPasswordRoute
   '/auth/': typeof AuthIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth/login' | '/auth'
+  fullPaths:
+    | '/'
+    | '/auth/business-info'
+    | '/auth/create-password'
+    | '/auth/forgot-password'
+    | '/auth/login'
+    | '/auth/reset-password'
+    | '/auth/sign-up'
+    | '/auth/verify-email'
+    | '/auth/verify-reset-password'
+    | '/auth'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth/login' | '/auth'
-  id: '__root__' | '/' | '/auth/login' | '/auth/'
+  to:
+    | '/'
+    | '/auth/business-info'
+    | '/auth/create-password'
+    | '/auth/forgot-password'
+    | '/auth/login'
+    | '/auth/reset-password'
+    | '/auth/sign-up'
+    | '/auth/verify-email'
+    | '/auth/verify-reset-password'
+    | '/auth'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth/business-info'
+    | '/auth/create-password'
+    | '/auth/forgot-password'
+    | '/auth/login'
+    | '/auth/reset-password'
+    | '/auth/sign-up'
+    | '/auth/verify-email'
+    | '/auth/verify-reset-password'
+    | '/auth/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthBusinessInfoRoute: typeof AuthBusinessInfoRoute
+  AuthCreatePasswordRoute: typeof AuthCreatePasswordRoute
+  AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
   AuthLoginRoute: typeof AuthLoginRoute
+  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
+  AuthSignUpRoute: typeof AuthSignUpRoute
+  AuthVerifyEmailRoute: typeof AuthVerifyEmailRoute
+  AuthVerifyResetPasswordRoute: typeof AuthVerifyResetPasswordRoute
   AuthIndexRoute: typeof AuthIndexRoute
 }
 
@@ -75,6 +176,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/verify-reset-password': {
+      id: '/auth/verify-reset-password'
+      path: '/auth/verify-reset-password'
+      fullPath: '/auth/verify-reset-password'
+      preLoaderRoute: typeof AuthVerifyResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/verify-email': {
+      id: '/auth/verify-email'
+      path: '/auth/verify-email'
+      fullPath: '/auth/verify-email'
+      preLoaderRoute: typeof AuthVerifyEmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/sign-up': {
+      id: '/auth/sign-up'
+      path: '/auth/sign-up'
+      fullPath: '/auth/sign-up'
+      preLoaderRoute: typeof AuthSignUpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/reset-password': {
+      id: '/auth/reset-password'
+      path: '/auth/reset-password'
+      fullPath: '/auth/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/login': {
       id: '/auth/login'
       path: '/auth/login'
@@ -82,12 +211,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/forgot-password': {
+      id: '/auth/forgot-password'
+      path: '/auth/forgot-password'
+      fullPath: '/auth/forgot-password'
+      preLoaderRoute: typeof AuthForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/create-password': {
+      id: '/auth/create-password'
+      path: '/auth/create-password'
+      fullPath: '/auth/create-password'
+      preLoaderRoute: typeof AuthCreatePasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/business-info': {
+      id: '/auth/business-info'
+      path: '/auth/business-info'
+      fullPath: '/auth/business-info'
+      preLoaderRoute: typeof AuthBusinessInfoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthBusinessInfoRoute: AuthBusinessInfoRoute,
+  AuthCreatePasswordRoute: AuthCreatePasswordRoute,
+  AuthForgotPasswordRoute: AuthForgotPasswordRoute,
   AuthLoginRoute: AuthLoginRoute,
+  AuthResetPasswordRoute: AuthResetPasswordRoute,
+  AuthSignUpRoute: AuthSignUpRoute,
+  AuthVerifyEmailRoute: AuthVerifyEmailRoute,
+  AuthVerifyResetPasswordRoute: AuthVerifyResetPasswordRoute,
   AuthIndexRoute: AuthIndexRoute,
 }
 export const routeTree = rootRouteImport
