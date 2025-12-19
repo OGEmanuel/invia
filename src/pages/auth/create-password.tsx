@@ -2,26 +2,21 @@ import { useForm } from '@tanstack/react-form';
 import AuthFormWrapper from './components/form';
 import { z } from 'zod';
 import InputField from '@/components/ui/custom/input';
-import Envelope from '@/assets/jsx-icons/envelope';
-import EyeOpened from '@/assets/jsx-icons/eye-opened';
 import { useState } from 'react';
 import EyeClosed from '@/assets/jsx-icons/eye-closed';
+import EyeOpened from '@/assets/jsx-icons/eye-opened';
 
 const formSchema = z.object({
-  email: z.email({
-    message: 'Please enter a valid email address.',
-  }),
   password: z.string().min(6, {
     message: 'Please enter a valid password.',
   }),
 });
 
-const Login = () => {
+const CreatePassword = () => {
   const [passwordType, setPasswordType] = useState<string>('password');
 
   const form = useForm({
     defaultValues: {
-      email: '',
       password: '',
     },
     validators: {
@@ -38,29 +33,12 @@ const Login = () => {
 
   return (
     <AuthFormWrapper
-      legend="Login to continue"
-      description="Continue managing your event guest lists."
-      formId="login"
-      label="Login"
+      legend="Create your password"
+      description="Choose a password to secure your account."
+      formId="create-password"
+      label="Continue to login"
       form={form}
     >
-      <form.Field
-        name="email"
-        children={field => {
-          const isInvalid =
-            field.state.meta.isTouched && !field.state.meta.isValid;
-          return (
-            <InputField
-              field={field}
-              isInvalid={isInvalid}
-              label="Email address"
-              placeholder="Enter email"
-              type="email"
-              icon={<Envelope />}
-            />
-          );
-        }}
-      />
       <form.Field
         name="password"
         children={field => {
@@ -91,4 +69,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default CreatePassword;

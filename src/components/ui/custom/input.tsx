@@ -34,7 +34,7 @@ const InputField = <TValue = string,>(props: InputFieldProps<TValue>) => {
     isInvalid,
     type = 'text',
     icon,
-    iconPosition = 'left',
+    iconPosition,
   } = props;
 
   return (

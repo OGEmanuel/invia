@@ -16,7 +16,7 @@ const formSchema = z.object({
   }),
 });
 
-const Login = () => {
+const SignUp = () => {
   const [passwordType, setPasswordType] = useState<string>('password');
 
   const form = useForm({
@@ -38,10 +38,10 @@ const Login = () => {
 
   return (
     <AuthFormWrapper
-      legend="Login to continue"
-      description="Continue managing your event guest lists."
-      formId="login"
-      label="Login"
+      legend="Start managing your event guest lists"
+      description="Enter your name and email to get started."
+      formId="sign-up"
+      label="Continue"
       form={form}
     >
       <form.Field
@@ -91,4 +91,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignUp;
