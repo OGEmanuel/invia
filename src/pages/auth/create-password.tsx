@@ -1,5 +1,5 @@
 import { useForm } from '@tanstack/react-form';
-import AuthFormWrapper from './components/form';
+import AuthFormWrapper, { FormFooter } from './components/form';
 import { z } from 'zod';
 import InputField from '@/components/ui/custom/input';
 import { useState } from 'react';
@@ -36,7 +36,6 @@ const CreatePassword = () => {
       legend="Create your password"
       description="Choose a password to secure your account."
       formId="create-password"
-      label="Continue to login"
       form={form}
     >
       <form.Field
@@ -65,6 +64,7 @@ const CreatePassword = () => {
           );
         }}
       />
+      <FormFooter showSubmitButton label="Continue" className="justify-end" />
     </AuthFormWrapper>
   );
 };
