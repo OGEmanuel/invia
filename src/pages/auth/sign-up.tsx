@@ -1,11 +1,12 @@
 import { useForm } from '@tanstack/react-form';
-import AuthFormWrapper from './components/form';
+import AuthFormWrapper, { FormFooter } from './components/form';
 import { z } from 'zod';
 import InputField from '@/components/ui/custom/input';
 import Envelope from '@/assets/jsx-icons/envelope';
 import EyeOpened from '@/assets/jsx-icons/eye-opened';
 import { useState } from 'react';
 import EyeClosed from '@/assets/jsx-icons/eye-closed';
+import { Link } from '@tanstack/react-router';
 
 const formSchema = z.object({
   email: z.email({
@@ -41,7 +42,6 @@ const SignUp = () => {
       legend="Start managing your event guest lists"
       description="Enter your name and email to get started."
       formId="sign-up"
-      label="Continue"
       form={form}
     >
       <form.Field
@@ -87,6 +87,14 @@ const SignUp = () => {
           );
         }}
       />
+      <FormFooter showSubmitButton label="Continue">
+        <div className="leading-6">
+          <p className="inline">Have an account?</p>{' '}
+          <Link to="/auth/login" className="text-[#6155F5]">
+            Log in
+          </Link>
+        </div>
+      </FormFooter>
     </AuthFormWrapper>
   );
 };

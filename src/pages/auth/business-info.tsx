@@ -1,5 +1,5 @@
 import { useForm } from '@tanstack/react-form';
-import AuthFormWrapper from './components/form';
+import AuthFormWrapper, { FormFooter } from './components/form';
 import { z } from 'zod';
 import InputField from '@/components/ui/custom/input';
 import { FieldError, FieldLabel, FieldSet } from '@/components/ui/field';
@@ -49,7 +49,6 @@ const BusinessInfo = () => {
       legend="Customize your planner profile"
       description="Add your business name and logo for your invitations."
       formId="business-info"
-      label="Sign in"
       form={form}
     >
       <form.Field
@@ -119,6 +118,7 @@ const BusinessInfo = () => {
           );
         }}
       />
+      <FormFooter showSubmitButton label="Sign in" className="justify-end" />
     </AuthFormWrapper>
   );
 };

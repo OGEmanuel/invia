@@ -1,5 +1,5 @@
 import { useForm } from '@tanstack/react-form';
-import AuthFormWrapper from './components/form';
+import AuthFormWrapper, { FormFooter } from './components/form';
 import { z } from 'zod';
 import InputField from '@/components/ui/custom/input';
 import Envelope from '@/assets/jsx-icons/envelope';
@@ -32,7 +32,6 @@ const ForgotPassword = () => {
       legend="Enter email to reset password"
       description="We’ll send a code to help you reset your password."
       formId="forgot-password"
-      label="Send code"
       form={form}
     >
       <form.Field
@@ -47,11 +46,13 @@ const ForgotPassword = () => {
               label="Email address"
               placeholder="Enter email"
               type="email"
+              iconPosition="left"
               icon={<Envelope />}
             />
           );
         }}
       />
+      <FormFooter showSubmitButton className="justify-end" label="Send Code" />
     </AuthFormWrapper>
   );
 };

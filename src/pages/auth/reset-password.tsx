@@ -1,5 +1,5 @@
 import { useForm } from '@tanstack/react-form';
-import AuthFormWrapper from './components/form';
+import AuthFormWrapper, { FormFooter } from './components/form';
 import { z } from 'zod';
 import InputField from '@/components/ui/custom/input';
 import { useState } from 'react';
@@ -36,7 +36,6 @@ const ResetPassword = () => {
       legend="Set a new password"
       description="Choose a new password for your account."
       formId="reset-password"
-      label="Continue to login"
       form={form}
     >
       <form.Field
@@ -64,6 +63,11 @@ const ResetPassword = () => {
             />
           );
         }}
+      />
+      <FormFooter
+        showSubmitButton
+        label="Continue to login"
+        className="justify-end"
       />
     </AuthFormWrapper>
   );
