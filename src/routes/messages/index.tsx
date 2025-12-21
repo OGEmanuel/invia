@@ -1,15 +1,15 @@
-import Events from '@/pages/home/events';
 import RootLayout from '@/pages/home/layout';
+import Messages from '@/pages/home/messages';
 import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute('/messages/')({
   component: RouteComponent,
 });
 
 function RouteComponent() {
   return (
     <RootLayout>
-      <Events />
+      <Messages />
     </RootLayout>
   );
 }

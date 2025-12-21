@@ -9,17 +9,14 @@ const AvatarCustom = (props: {
 }) => {
   return (
     <Avatar
-      className={cn(
-        'size-9 text-sm/[100%] font-semibold text-black',
-        props.className,
-      )}
+      className={cn('font-inter text-white shadow-none', props.className)}
     >
       <AvatarImage
         src={props.src}
         alt={props.alt}
         className="object-cover object-top"
       />
-      <AvatarFallback className="bg-[#65AEFD]">{props.fallback}</AvatarFallback>
+      <AvatarFallback className="bg-[#65AEFD] font-semibold">{props.fallback}</AvatarFallback>
     </Avatar>
   );
 };

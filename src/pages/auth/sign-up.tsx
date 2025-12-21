@@ -56,6 +56,7 @@ const SignUp = () => {
               label="Email address"
               placeholder="Enter email"
               type="email"
+              iconPosition="left"
               icon={<Envelope />}
             />
           );
