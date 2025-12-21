@@ -62,7 +62,7 @@ const BusinessInfo = () => {
                 src={''}
                 alt={''}
                 fallback={'A'}
-                className="font-inter size-18 border border-[#00000014] text-[40px]/[100%] font-semibold tracking-[-0.02em] text-white shadow-none"
+                className="relative size-18 text-[40px]/[100%] font-semibold tracking-[-0.02em] before:absolute before:inset-0 before:top-1/2 before:left-1/2 before:size-full before:-translate-1/2 before:rounded-full before:border before:border-[#00000014]"
               />
               <FieldLabel
                 htmlFor={field.name}
