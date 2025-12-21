@@ -10,14 +10,16 @@ const Banner = (props: {
   return (
     <section
       className={cn(
-        'flex justify-center border-b border-[#00000014] px-30',
+        'flex justify-center border-b border-[#00000014]',
         className,
       )}
     >
-      <div className="flex w-full max-w-360 items-center justify-between">
+      <div className="flex w-full max-w-300 justify-between max-md:px-5 max-sm:flex-col max-sm:gap-4 sm:items-center md:max-lg:px-8">
         <div className="flex flex-col gap-2">
-          <h1 className="text-[2rem]/10 text-[#212121]">{header}</h1>
-          <p className="font-inter leading-[100%] -tracking-[0.02em] text-[#626262]">
+          <h1 className="text-2xl/8 text-[#212121] md:text-[2rem]/10">
+            {header}
+          </h1>
+          <p className="font-inter -tracking-[0.02em] text-[#626262] max-md:text-sm/6 md:leading-[100%]">
             {description}
           </p>
         </div>

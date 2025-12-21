@@ -4,8 +4,8 @@ import EmptyState from './empty-state';
 
 const MainContent = () => {
   return (
-    <section className="flex h-[calc(100vh-297px)] justify-center px-30">
-      <div className="flex w-full max-w-360 items-center justify-center">
+    <section className="flex h-[calc(100vh-297px)] justify-center">
+      <div className="flex w-full max-w-300 items-center justify-center">
         <EmptyState />
       </div>
     </section>
