@@ -9,6 +9,7 @@ import { useState } from 'react';
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const [openSmall, setOpenSmall] = useState(false);
 
   return (
     <nav className="flex justify-center border-b border-[#00000014] py-4">
@@ -48,7 +49,12 @@ const Navbar = () => {
         </div>
         <div className="flex items-center gap-3 md:gap-4">
           <div className="max-md:hidden">
-            <UpgradeModal open={open} setOpen={setOpen}>
+            <UpgradeModal
+              open={open}
+              setOpen={setOpen}
+              openSmall={openSmall}
+              setOpenSmall={setOpenSmall}
+            >
               <Button variant={'secondary'} className="">
                 Upgrade
                 <Bolt />
@@ -56,7 +62,12 @@ const Navbar = () => {
             </UpgradeModal>
           </div>
           <div className="md:hidden">
-            <UpgradeSheet open={open} setOpen={setOpen}>
+            <UpgradeSheet
+              open={open}
+              setOpen={setOpen}
+              openSmall={openSmall}
+              setOpenSmall={setOpenSmall}
+            >
               <Button variant={'secondary'} className="">
                 Upgrade
                 <Bolt />
