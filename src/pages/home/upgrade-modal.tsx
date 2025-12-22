@@ -18,6 +18,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useMediaQuery } from '@/lib/hooks/useMediaQueries';
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 
@@ -29,6 +30,7 @@ const UpgradeModal = (props: {
   const { children, open, setOpen } = props;
   const [period, setPeriod] = useState<string>('monthly');
   const [currency, setCurrency] = useState<string>('usd');
+  const isMobile = useMediaQuery('(max-width: 767px)');
 
   const openDialog = () => {
     setOpen(true);
@@ -63,7 +65,7 @@ const UpgradeModal = (props: {
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col items-center">
-          <UpgradeIllustration />
+          {!isMobile && <UpgradeIllustration />}
           <div className="flex flex-col gap-1 text-center">
             <h1 className="text-[2rem]/10 text-[#212121]">
               Do more with Invia!
@@ -114,6 +116,7 @@ export const UpgradeSheet = (props: {
   const { children, open, setOpen } = props;
   const [period, setPeriod] = useState<string>('monthly');
   const [currency, setCurrency] = useState<string>('usd');
+  const isMobile = useMediaQuery('(max-width: 767px)');
 
   const openDialog = () => {
     setOpen(true);
@@ -149,7 +152,7 @@ export const UpgradeSheet = (props: {
           </SheetDescription>
         </SheetHeader>
         <div className="flex flex-col items-center gap-2">
-          <UpgradeIllustration size={'88'} />
+          {isMobile && <UpgradeIllustration size={'88'} />}
           <div className="flex flex-col gap-1 text-center">
             <h1 className="text-2xl/8 text-[#212121]">Do more with Invia!</h1>
             <p className="font-inter max-w-120 text-sm/[22px] -tracking-[0.02em] text-[#575554]">
