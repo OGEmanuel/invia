@@ -18,7 +18,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useMediaQuery } from '@/lib/hooks/useMediaQueries';
+import { useMediaQuery } from '@/lib/hooks/useMediaQuery';
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 
@@ -26,14 +26,22 @@ const UpgradeModal = (props: {
   children?: React.ReactNode;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  openSmall: boolean;
+  setOpenSmall: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { children, open, setOpen } = props;
+  const { children, open, setOpen, setOpenSmall } = props;
   const [period, setPeriod] = useState<string>('monthly');
   const [currency, setCurrency] = useState<string>('usd');
   const isMobile = useMediaQuery('(max-width: 767px)');
 
   const openDialog = () => {
-    setOpen(true);
+    if (!isMobile) {
+      setOpen(true);
+      setOpenSmall(false);
+    } else {
+      setOpenSmall(true);
+      setOpen(false);
+    }
 
     sessionStorage.setItem('hasSeenModal', 'true');
   };
@@ -55,7 +63,7 @@ const UpgradeModal = (props: {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent
         className="flex flex-col gap-10 overflow-auto rounded-4xl p-10 max-md:hidden md:h-170 md:max-w-180 [&>button]:top-2 [&>button]:right-2 [&>button]:rounded-full [&>button]:bg-[#FEFCF9] [&>button]:p-2"
-        overlayClassName="max-md:hidden"
+        overlayClassName={'max-md:hidden'}
       >
         <DialogHeader className="sr-only">
           <DialogTitle>Do more with Invia!</DialogTitle>
@@ -112,14 +120,22 @@ export const UpgradeSheet = (props: {
   children?: React.ReactNode;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  openSmall: boolean;
+  setOpenSmall: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { children, open, setOpen } = props;
+  const { children, openSmall, setOpen, setOpenSmall } = props;
   const [period, setPeriod] = useState<string>('monthly');
   const [currency, setCurrency] = useState<string>('usd');
   const isMobile = useMediaQuery('(max-width: 767px)');
 
   const openDialog = () => {
-    setOpen(true);
+    if (isMobile) {
+      setOpen(false);
+      setOpenSmall(true);
+    } else {
+      setOpenSmall(false);
+      setOpen(true);
+    }
 
     sessionStorage.setItem('hasSeenModal', 'true');
   };
@@ -137,12 +153,12 @@ export const UpgradeSheet = (props: {
   }, []);
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet open={openSmall} onOpenChange={setOpenSmall}>
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent
         side="bottom"
         className="flex h-170 flex-col gap-10 overflow-auto rounded-t-[24px] p-5 md:hidden [&>button]:top-2 [&>button]:right-2 [&>button]:rounded-full [&>button]:bg-[#FEFCF9] [&>button]:p-2"
-        overlayClassName="md:hidden"
+        overlayClassName={'md:hidden'}
       >
         <SheetHeader className="sr-only">
           <SheetTitle>Do more with Invia!</SheetTitle>
@@ -300,7 +316,7 @@ const PlanPriceCard = (props: { plan: string }) => {
         {plan === 'studio' && (
           <div className="flex items-center gap-2">
             <Bolt fill={'white'} />
-            <p className={cn('text-sm/[22px] -tracking-[0.0em] text-white')}>
+            <p className={cn('text-sm/[22px] -tracking-[0.02em] text-white')}>
               All Pro features
             </p>
           </div>
@@ -312,7 +328,7 @@ const PlanPriceCard = (props: { plan: string }) => {
               <Bolt fill={plan === 'pro' ? '#874CF980' : 'white'} />
               <p
                 className={cn(
-                  'text-sm/[22px] -tracking-[0.0em]',
+                  'text-sm/[22px] -tracking-[0.02em]',
                   plan === 'pro' ? 'text-[#575554]' : 'text-white',
                 )}
               >

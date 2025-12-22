@@ -1,7 +1,8 @@
-const UpgradeIllustration = (props: { size?: string }) => {
-  const { size = '120' } = props;
+const UpgradeIllustration = (props: { size?: string; className?: string }) => {
+  const { size = '120', className } = props;
   return (
     <svg
+      className={className}
       width={size}
       height={size}
       viewBox="0 0 120 120"
