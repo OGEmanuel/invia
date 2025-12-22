@@ -4,8 +4,12 @@ import { Button } from '@/components/ui/button';
 import AvatarCustom from '@/components/ui/custom/avatar';
 import Bolt from '@/assets/jsx-icons/bolt';
 import { Menu } from 'lucide-react';
+import UpgradeModal, { UpgradeSheet } from './upgrade-modal';
+import { useState } from 'react';
 
 const Navbar = () => {
+  const [open, setOpen] = useState(false);
+
   return (
     <nav className="flex justify-center border-b border-[#00000014] py-4">
       <div className="flex w-full max-w-7xl items-center justify-between px-5 md:px-8">
@@ -43,10 +47,22 @@ const Navbar = () => {
           </ul>
         </div>
         <div className="flex items-center gap-3 md:gap-4">
-          <Button variant={'secondary'} className="">
-            Upgrade
-            <Bolt />
-          </Button>
+          <div className="max-md:hidden">
+            <UpgradeModal open={open} setOpen={setOpen}>
+              <Button variant={'secondary'} className="">
+                Upgrade
+                <Bolt />
+              </Button>
+            </UpgradeModal>
+          </div>
+          <div className="md:hidden">
+            <UpgradeSheet open={open} setOpen={setOpen}>
+              <Button variant={'secondary'} className="">
+                Upgrade
+                <Bolt />
+              </Button>
+            </UpgradeSheet>
+          </div>
           <AvatarCustom src={''} alt={''} fallback={'A'} className="size-10" />
           <button className="cursor-pointer rounded-[12px] border border-[#00000014] p-2.5 sm:hidden">
             <Menu className="size-5" />
