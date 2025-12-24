@@ -23,6 +23,7 @@ interface InputFieldProps<TValue = string> extends ComponentProps<'input'> {
   label: string;
   icon?: React.ReactNode;
   iconPosition?: 'left' | 'right';
+  optional?: boolean;
 }
 
 const InputField = <TValue = string,>(props: InputFieldProps<TValue>) => {
@@ -35,16 +36,24 @@ const InputField = <TValue = string,>(props: InputFieldProps<TValue>) => {
     type = 'text',
     icon,
     iconPosition,
+    optional,
   } = props;
 
   return (
     <Field data-invalid={isInvalid} className="gap-1.5">
-      <FieldLabel
-        htmlFor={field.name}
-        className="font-inter text-sm/5 font-medium tracking-tight text-[#575554]"
-      >
-        {label}
-      </FieldLabel>
+      <FieldSet className="flex-row items-center justify-between">
+        <FieldLabel
+          htmlFor={field.name}
+          className="font-inter text-sm/5 font-medium tracking-tight text-[#575554]"
+        >
+          {label}
+        </FieldLabel>
+        {optional && (
+          <span className="font-inter text-sm/5 -tracking-[0.02em] text-[#A3A19D]">
+            Optional
+          </span>
+        )}
+      </FieldSet>
       <FieldSet className="relative">
         <Input
           id={field.name}
