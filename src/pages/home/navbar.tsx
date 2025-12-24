@@ -6,6 +6,15 @@ import Bolt from '@/assets/jsx-icons/bolt';
 import { Menu } from 'lucide-react';
 import UpgradeModal, { UpgradeSheet } from './upgrade-modal';
 import { useState } from 'react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import Edit from '@/assets/jsx-icons/edit';
+import Logout from '@/assets/jsx-icons/logout';
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -55,7 +64,11 @@ const Navbar = () => {
               openSmall={openSmall}
               setOpenSmall={setOpenSmall}
             >
-              <Button variant={'secondary'} className="">
+              <Button
+                variant={'secondary'}
+                className="outline-[#874CF933]"
+                size={'lg'}
+              >
                 Upgrade
                 <Bolt />
               </Button>
@@ -68,13 +81,24 @@ const Navbar = () => {
               openSmall={openSmall}
               setOpenSmall={setOpenSmall}
             >
-              <Button variant={'secondary'} className="">
+              <Button
+                variant={'secondary'}
+                className="outline-[#874CF933]"
+                size={'lg'}
+              >
                 Upgrade
                 <Bolt />
               </Button>
             </UpgradeSheet>
           </div>
-          <AvatarCustom src={''} alt={''} fallback={'A'} className="size-10" />
+          <ProfileDropdown>
+            <AvatarCustom
+              src={''}
+              alt={''}
+              fallback={'A'}
+              className="size-10"
+            />
+          </ProfileDropdown>
           <button className="cursor-pointer rounded-[12px] border border-[#00000014] p-2.5 sm:hidden">
             <Menu className="size-5" />
           </button>
@@ -85,3 +109,47 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+const ProfileDropdown = (props: { children?: React.ReactNode }) => {
+  const { children } = props;
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger className="rounded-full">
+        {children}
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        className="font-inter w-60 rounded-[12px] p-1"
+        align={'end'}
+        sideOffset={10}
+      >
+        <DropdownMenuLabel className="flex items-center gap-2 p-2">
+          <AvatarCustom
+            src={''}
+            alt={''}
+            fallback={'A'}
+            className="size-8 text-sm/[22px]"
+          />
+          <p className="font-medium -tracking-[0.02em] text-[#212121]">
+            Abolaji Events
+          </p>
+        </DropdownMenuLabel>
+        <hr className="h-1 w-full border-t border-dashed border-[#00000014]" />
+        <DropdownMenuItem className="rounded-xl px-2 py-2.5 hover:bg-[#F7F5F2]">
+          <Link
+            to={'/settings'}
+            className="flex items-center gap-2 text-base/6 -tracking-[0.02em] text-[#575554]"
+          >
+            <Edit />
+            Account settings
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem className="mt-1 rounded-xl px-2 py-2.5 hover:bg-[#F7F5F2]">
+          <button className="flex w-full cursor-pointer items-center gap-2 text-base/6 -tracking-[0.02em] text-[#575554]">
+            <Logout />
+            Logout
+          </button>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};

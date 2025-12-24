@@ -302,17 +302,17 @@ const PlanPriceCard = (props: { plan: string }) => {
         </div>
         <Button
           variant={'secondary'}
+          size={'lg'}
           className={cn(
-            'before:w-[101%]',
-            plan === 'studio' &&
-              'bg-white text-[#3A99FF] before:bg-[#FFFFFF33] hover:bg-white',
+            plan === 'studio' && 'bg-white text-[#3A99FF] hover:bg-white',
+            plan === 'studio' ? 'outline-[#FFFFFF33]' : 'outline-[#874CF933]',
           )}
         >
           Upgrade
           <Bolt fill={plan === 'pro' ? 'white' : '#3A99FF'} />
         </Button>
       </div>
-      <div className="flex flex-col gap-5">
+      <div className="font-inter flex flex-col gap-5">
         {plan === 'studio' && (
           <div className="flex items-center gap-2">
             <Bolt fill={'white'} />
