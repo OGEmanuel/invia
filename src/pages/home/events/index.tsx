@@ -39,6 +39,16 @@ import { CalendarIcon } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
 import { useState } from 'react';
 import Location from '@/assets/jsx-icons/location';
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 
 const Events = () => {
   return (
@@ -48,12 +58,18 @@ const Events = () => {
         description="Plan events effortlessly with structured guest lists and seamless invitations."
         className="pt-10 pb-5 md:pt-15 md:pb-18"
       >
-        <CreateEvent>
-          <Button className="max-sm:w-max [&_svg:not([class*='size-'])]:size-6">
+        <CreateEventDesktop>
+          <Button className="max-sm:hidden [&_svg:not([class*='size-'])]:size-6">
             <StarCalendar />
             Create event
           </Button>
-        </CreateEvent>
+        </CreateEventDesktop>
+        <CreateEventMobile>
+          <Button className="w-max sm:hidden [&_svg:not([class*='size-'])]:size-6">
+            <StarCalendar />
+            Create event
+          </Button>
+        </CreateEventMobile>
       </Banner>
       <MainContent />
     </>
@@ -61,6 +77,75 @@ const Events = () => {
 };
 
 export default Events;
+
+const CreateEventDesktop = (props: { children?: React.ReactNode }) => {
+  const { children } = props;
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className="flex h-160 flex-col gap-0 rounded-3xl p-0 max-sm:hidden sm:max-w-130 [&>button_svg:not([class*='size-'])]:size-6">
+        <DialogHeader className="gap-0.5 border-b border-[#00000014] p-4">
+          <DialogTitle className="text-xl/7 text-[#212121]">
+            Create new event
+          </DialogTitle>
+          <DialogDescription className="font-inter text-sm/5 -tracking-[0.02em] text-[#575554]">
+            Create an event and manage your guest list.
+          </DialogDescription>
+        </DialogHeader>
+        <FormSection>
+          <DialogFooter className="border-t border-[#00000014] p-4">
+            <DialogClose asChild>
+              <Button
+                type="button"
+                className="border border-[#00000014] bg-transparent text-[#575554] hover:bg-transparent"
+              >
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button type="submit">Create event</Button>
+          </DialogFooter>
+        </FormSection>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+const CreateEventMobile = (props: { children?: React.ReactNode }) => {
+  const { children } = props;
+
+  return (
+    <Sheet>
+      <SheetTrigger asChild>{children}</SheetTrigger>
+      <SheetContent
+        side="bottom"
+        className="flex h-167.25 flex-col gap-0 rounded-t-3xl p-0 sm:hidden [&>button_svg:not([class*='size-'])]:size-6"
+      >
+        <SheetHeader className="gap-0.5 border-b border-[#00000014] p-4">
+          <SheetTitle className="text-xl/7 text-[#212121]">
+            Create new event
+          </SheetTitle>
+          <SheetDescription className="font-inter text-sm/5 -tracking-[0.02em] text-[#575554]">
+            Create an event and manage your guest list.
+          </SheetDescription>
+        </SheetHeader>
+        <FormSection>
+          <SheetFooter className="border-t border-[#00000014] p-4 max-sm:flex-row max-sm:justify-end">
+            <SheetClose asChild>
+              <Button
+                type="button"
+                className="border border-[#00000014] bg-transparent text-[#575554] hover:bg-transparent"
+              >
+                Cancel
+              </Button>
+            </SheetClose>
+            <Button type="submit">Create event</Button>
+          </SheetFooter>
+        </FormSection>
+      </SheetContent>
+    </Sheet>
+  );
+};
 
 const EVENT_TYPES = [
   {
@@ -97,7 +182,7 @@ const formSchema = z.object({
 
 type EventFormType = z.infer<typeof formSchema>;
 
-const CreateEvent = (props: { children?: React.ReactNode }) => {
+const FormSection = (props: { children?: React.ReactNode }) => {
   const { children } = props;
   const [openPopover, setOpenPopover] = useState(false);
 
@@ -119,263 +204,229 @@ const CreateEvent = (props: { children?: React.ReactNode }) => {
   });
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="flex h-160 flex-col gap-0 rounded-3xl p-0 sm:max-w-130 [&>button_svg:not([class*='size-'])]:size-6">
-        <DialogHeader className="gap-0.5 border-b border-[#00000014] p-4">
-          <DialogTitle className="text-xl/7 text-[#212121]">
-            Create new event
-          </DialogTitle>
-          <DialogDescription className="font-inter text-sm/5 -tracking-[0.02em] text-[#575554]">
-            Create an event and manage your guest list.
-          </DialogDescription>
-        </DialogHeader>
-        <form
-          id={`create-event-form`}
-          onSubmit={e => {
-            e.preventDefault();
-            form.handleSubmit();
-          }}
-          className="h-139.25 w-full p-0"
-        >
-          <FieldGroup className="flex h-119 flex-col justify-between overflow-auto p-4">
-            <FieldSet className="">
-              <form.Field
-                name="eventType"
-                children={field => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid;
-                  return (
-                    <FieldSet>
-                      <RadioGroup
-                        name={field.name}
-                        value={field.state.value}
-                        onValueChange={field.handleChange}
-                        className="grid grid-cols-2 gap-2"
-                      >
-                        {EVENT_TYPES.map(types => (
-                          <FieldLabel
-                            key={types.id}
-                            htmlFor={`${field.name}-${types.type}`}
-                            className={cn(
-                              'font-inter group transition-colors has-data-[state=checked]:border-transparent has-data-[state=checked]:text-white has-[>[data-slot=field]]:border-[#00000014] *:data-[slot=field]:py-3.25',
-                              types.type === 'wedding' &&
-                                'has-data-[state=checked]:bg-[#874CF9]',
-                              types.type === 'party' &&
-                                'has-data-[state=checked]:bg-[#479FFD]',
-                              types.type === 'corporate' &&
-                                'has-data-[state=checked]:bg-[#2EC31B]',
-                              types.type === 'others' &&
-                                'has-data-[state=checked]:bg-[#FD843D]',
-                            )}
-                          >
-                            <Field
-                              orientation="horizontal"
-                              data-invalid={isInvalid}
-                            >
-                              <FieldContent className="flex-row justify-center gap-1">
-                                {types.type === 'wedding' && (
-                                  <>
-                                    <Heart
-                                      fill={'#FFFFFF'}
-                                      size="20"
-                                      className="hidden group-has-data-[state=checked]:block"
-                                    />
-                                    <Heart
-                                      fill={'#575554'}
-                                      size="20"
-                                      className="block group-has-data-[state=checked]:hidden"
-                                    />
-                                  </>
-                                )}
-                                {types.type === 'party' && (
-                                  <>
-                                    <Party
-                                      fill={'#FFFFFF'}
-                                      size="20"
-                                      className="hidden group-has-data-[state=checked]:block"
-                                    />
-                                    <Party
-                                      fill={'#575554'}
-                                      size="20"
-                                      className="block group-has-data-[state=checked]:hidden"
-                                    />
-                                  </>
-                                )}
-                                {types.type === 'corporate' && (
-                                  <>
-                                    <Corporate
-                                      fill={'#FFFFFF'}
-                                      size="20"
-                                      className="hidden group-has-data-[state=checked]:block"
-                                    />
-                                    <Corporate
-                                      fill={'#575554'}
-                                      size="20"
-                                      className="block group-has-data-[state=checked]:hidden"
-                                    />
-                                  </>
-                                )}
-                                {types.type === 'others' && (
-                                  <>
-                                    <Others
-                                      fill={'#FFFFFF'}
-                                      size="20"
-                                      className="hidden group-has-data-[state=checked]:block"
-                                    />
-                                    <Others
-                                      fill={'#575554'}
-                                      size="20"
-                                      className="block group-has-data-[state=checked]:hidden"
-                                    />
-                                  </>
-                                )}
-                                <FieldTitle className="text-sm/[100%] font-medium -tracking-[0.02em] capitalize">
-                                  {types.type}
-                                </FieldTitle>
-                              </FieldContent>
-                              <RadioGroupItem
-                                value={types.type}
-                                id={`${field.name}-${types.type}`}
-                                aria-invalid={isInvalid}
-                                className="hidden"
+    <form
+      id={`create-event-form`}
+      onSubmit={e => {
+        e.preventDefault();
+        form.handleSubmit();
+      }}
+      className="h-[calc(100%-83px)] w-full p-0"
+    >
+      <FieldGroup className="flex h-[calc(100%-81px)] flex-col justify-between overflow-auto p-4">
+        <form.Field
+          name="eventType"
+          children={field => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+            return (
+              <FieldSet>
+                <RadioGroup
+                  name={field.name}
+                  value={field.state.value}
+                  onValueChange={field.handleChange}
+                  className="grid grid-cols-2 gap-2"
+                >
+                  {EVENT_TYPES.map(types => (
+                    <FieldLabel
+                      key={types.id}
+                      htmlFor={`${field.name}-${types.type}`}
+                      className={cn(
+                        'font-inter group transition-colors has-data-[state=checked]:border-transparent has-data-[state=checked]:text-white has-[>[data-slot=field]]:border-[#00000014] *:data-[slot=field]:py-3.25',
+                        types.type === 'wedding' &&
+                          'has-data-[state=checked]:bg-[#874CF9]',
+                        types.type === 'party' &&
+                          'has-data-[state=checked]:bg-[#479FFD]',
+                        types.type === 'corporate' &&
+                          'has-data-[state=checked]:bg-[#2EC31B]',
+                        types.type === 'others' &&
+                          'has-data-[state=checked]:bg-[#FD843D]',
+                      )}
+                    >
+                      <Field orientation="horizontal" data-invalid={isInvalid}>
+                        <FieldContent className="flex-row justify-center gap-1">
+                          {types.type === 'wedding' && (
+                            <>
+                              <Heart
+                                fill={'#FFFFFF'}
+                                size="20"
+                                className="hidden group-has-data-[state=checked]:block"
                               />
-                            </Field>
-                          </FieldLabel>
-                        ))}
-                      </RadioGroup>
-                      {isInvalid && (
-                        <FieldError errors={field.state.meta.errors} />
+                              <Heart
+                                fill={'#575554'}
+                                size="20"
+                                className="block group-has-data-[state=checked]:hidden"
+                              />
+                            </>
+                          )}
+                          {types.type === 'party' && (
+                            <>
+                              <Party
+                                fill={'#FFFFFF'}
+                                size="20"
+                                className="hidden group-has-data-[state=checked]:block"
+                              />
+                              <Party
+                                fill={'#575554'}
+                                size="20"
+                                className="block group-has-data-[state=checked]:hidden"
+                              />
+                            </>
+                          )}
+                          {types.type === 'corporate' && (
+                            <>
+                              <Corporate
+                                fill={'#FFFFFF'}
+                                size="20"
+                                className="hidden group-has-data-[state=checked]:block"
+                              />
+                              <Corporate
+                                fill={'#575554'}
+                                size="20"
+                                className="block group-has-data-[state=checked]:hidden"
+                              />
+                            </>
+                          )}
+                          {types.type === 'others' && (
+                            <>
+                              <Others
+                                fill={'#FFFFFF'}
+                                size="20"
+                                className="hidden group-has-data-[state=checked]:block"
+                              />
+                              <Others
+                                fill={'#575554'}
+                                size="20"
+                                className="block group-has-data-[state=checked]:hidden"
+                              />
+                            </>
+                          )}
+                          <FieldTitle className="text-sm/[100%] font-medium -tracking-[0.02em] capitalize">
+                            {types.type}
+                          </FieldTitle>
+                        </FieldContent>
+                        <RadioGroupItem
+                          value={types.type}
+                          id={`${field.name}-${types.type}`}
+                          aria-invalid={isInvalid}
+                          className="hidden"
+                        />
+                      </Field>
+                    </FieldLabel>
+                  ))}
+                </RadioGroup>
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </FieldSet>
+            );
+          }}
+        />
+        <form.Field
+          name="eventName"
+          children={field => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+            return (
+              <InputField
+                field={field}
+                isInvalid={isInvalid}
+                label="Event name"
+                placeholder="Mr & Mrs Williams’ Wedding"
+              />
+            );
+          }}
+        />
+        <form.Field
+          name="eventDate"
+          children={field => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+            return (
+              <FieldSet className="gap-1.5">
+                <FieldLabel
+                  htmlFor={field.name}
+                  className="font-inter text-sm/5 font-medium tracking-tight text-[#575554]"
+                >
+                  Event Date
+                </FieldLabel>
+                <Popover open={openPopover} onOpenChange={setOpenPopover}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      data-empty={!field.state.value}
+                      className="font-inter h-auto w-full justify-start border border-[#00000014] py-2.25 text-left text-sm/6 font-normal -tracking-[0.02em] shadow-none hover:bg-transparent active:scale-100 has-[>svg]:px-3.5 data-[empty=true]:text-[#A3A19D]"
+                    >
+                      <CalendarIcon className="size-5 text-[#A3A19D]" />
+                      {field.state.value ? (
+                        new Date(field.state.value).toLocaleDateString('en-GB')
+                      ) : (
+                        <span className="text-sm/6 -tracking-[0.02em]">
+                          dd/mm/yyyy
+                        </span>
                       )}
-                    </FieldSet>
-                  );
-                }}
-              />
-              <form.Field
-                name="eventName"
-                children={field => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid;
-                  return (
-                    <InputField
-                      field={field}
-                      isInvalid={isInvalid}
-                      label="Event name"
-                      placeholder="Mr & Mrs Williams’ Wedding"
-                    />
-                  );
-                }}
-              />
-              <form.Field
-                name="eventDate"
-                children={field => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid;
-                  return (
-                    <FieldSet className="gap-1.5">
-                      <FieldLabel
-                        htmlFor={field.name}
-                        className="font-inter text-sm/5 font-medium tracking-tight text-[#575554]"
-                      >
-                        Event Date
-                      </FieldLabel>
-                      <Popover open={openPopover} onOpenChange={setOpenPopover}>
-                        <PopoverTrigger asChild>
-                          <Button
-                            variant="outline"
-                            data-empty={!field.state.value}
-                            className="font-inter h-auto w-full justify-start border border-[#00000014] py-2.25 text-left text-sm/6 font-normal -tracking-[0.02em] shadow-none hover:bg-transparent active:scale-100 has-[>svg]:px-3.5 data-[empty=true]:text-[#A3A19D]"
-                          >
-                            <CalendarIcon className="size-5 text-[#A3A19D]" />
-                            {field.state.value ? (
-                              new Date(field.state.value).toLocaleDateString(
-                                'en-GB',
-                              )
-                            ) : (
-                              <span className="text-sm/6 -tracking-[0.02em]">
-                                dd/mm/yyyy
-                              </span>
-                            )}
-                          </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="z-999 w-auto p-0">
-                          <Calendar
-                            mode="single"
-                            id={field.name}
-                            disabled={date => {
-                              const today = new Date();
-                              today.setHours(0, 0, 0, 0);
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="z-999 w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      id={field.name}
+                      disabled={date => {
+                        const today = new Date();
+                        today.setHours(0, 0, 0, 0);
 
-                              return date < today;
-                            }}
-                            aria-invalid={isInvalid}
-                            onDayBlur={field.handleBlur}
-                            selected={new Date(field.state.value)}
-                            onSelect={date => (
-                              field.handleChange(`${date}`),
-                              setOpenPopover(false)
-                            )}
-                          />
-                        </PopoverContent>
-                      </Popover>
-                      {isInvalid && (
-                        <FieldError errors={field.state.meta.errors} />
+                        return date < today;
+                      }}
+                      aria-invalid={isInvalid}
+                      onDayBlur={field.handleBlur}
+                      selected={new Date(field.state.value)}
+                      onSelect={date => (
+                        field.handleChange(`${date}`),
+                        setOpenPopover(false)
                       )}
-                    </FieldSet>
-                  );
-                }}
-              />
-              <hr className="border-t border-dashed border-[#00000014] bg-transparent" />
-              <form.Field
-                name="eventTime"
-                children={field => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid;
-                  return (
-                    <InputField
-                      field={field}
-                      isInvalid={isInvalid}
-                      label="Event time"
-                      placeholder="Enter email"
-                      type="time"
-                      optional
                     />
-                  );
-                }}
+                  </PopoverContent>
+                </Popover>
+                {isInvalid && <FieldError errors={field.state.meta.errors} />}
+              </FieldSet>
+            );
+          }}
+        />
+        <hr className="border-t border-dashed border-[#00000014] bg-transparent" />
+        <form.Field
+          name="eventTime"
+          children={field => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+            return (
+              <InputField
+                field={field}
+                isInvalid={isInvalid}
+                label="Event time"
+                placeholder="Enter email"
+                type="time"
+                optional
               />
-              <form.Field
-                name="eventLocation"
-                children={field => {
-                  const isInvalid =
-                    field.state.meta.isTouched && !field.state.meta.isValid;
-                  return (
-                    <InputField
-                      field={field}
-                      isInvalid={isInvalid}
-                      label="Event location"
-                      placeholder="Add location.."
-                      iconPosition="left"
-                      icon={<Location />}
-                      optional
-                    />
-                  );
-                }}
+            );
+          }}
+        />
+        <form.Field
+          name="eventLocation"
+          children={field => {
+            const isInvalid =
+              field.state.meta.isTouched && !field.state.meta.isValid;
+            return (
+              <InputField
+                field={field}
+                isInvalid={isInvalid}
+                label="Event location"
+                placeholder="Add location.."
+                iconPosition="left"
+                icon={<Location />}
+                optional
               />
-            </FieldSet>
-          </FieldGroup>
-          <DialogFooter className="border-t border-[#00000014] p-4">
-            <DialogClose>
-              <Button
-                type="button"
-                className="border border-[#00000014] bg-transparent text-[#575554] hover:bg-transparent"
-              >
-                Cancel
-              </Button>
-            </DialogClose>
-            <Button type="submit">Create event</Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+            );
+          }}
+        />
+      </FieldGroup>
+      {children}
+    </form>
   );
 };
