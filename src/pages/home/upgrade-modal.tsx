@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/sheet';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useMediaQuery } from '@/lib/hooks/useMediaQuery';
+import { useSwipe } from '@/lib/hooks/useSwipe';
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 
@@ -127,6 +128,9 @@ export const UpgradeSheet = (props: {
   const [period, setPeriod] = useState<string>('monthly');
   const [currency, setCurrency] = useState<string>('usd');
   const isMobile = useMediaQuery('(max-width: 767px)');
+  const { handleTouchEnd, handleTouchMove, handleTouchStart } = useSwipe({
+    setOpen,
+  });
 
   const openDialog = () => {
     if (isMobile) {
@@ -159,6 +163,9 @@ export const UpgradeSheet = (props: {
         side="bottom"
         className="flex h-170 flex-col gap-10 overflow-auto rounded-t-[24px] p-5 md:hidden [&>button]:top-2 [&>button]:right-2 [&>button]:rounded-full [&>button]:bg-[#FEFCF9] [&>button]:p-2"
         overlayClassName={'md:hidden'}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         <SheetHeader className="sr-only">
           <SheetTitle>Do more with Invia!</SheetTitle>
