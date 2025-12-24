@@ -14,7 +14,7 @@ const Banner = (props: {
         className,
       )}
     >
-      <div className="flex w-full max-w-300 justify-between max-md:px-5 max-sm:flex-col max-sm:gap-4 sm:items-center md:max-lg:px-8">
+      <div className="flex w-full max-w-300 justify-between max-md:px-5 max-sm:flex-col max-sm:gap-4 sm:items-center md:max-xl:px-8">
         <div className="flex flex-col gap-2">
           <h1 className="text-2xl/8 text-[#212121] md:text-[2rem]/10">
             {header}
