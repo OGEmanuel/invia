@@ -129,7 +129,7 @@ export const UpgradeSheet = (props: {
   const [currency, setCurrency] = useState<string>('usd');
   const isMobile = useMediaQuery('(max-width: 767px)');
   const { handleTouchEnd, handleTouchMove, handleTouchStart } = useSwipe({
-    setOpen,
+    setOpen: setOpenSmall,
   });
 
   const openDialog = () => {

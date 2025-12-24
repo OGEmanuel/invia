@@ -17,7 +17,7 @@ export const useSwipe = (props: {
     const deltaY = currentY - startY.current;
 
     // swipe down threshold
-    if (deltaY > 80) {
+    if (deltaY > 120) {
       setOpen(false);
       startY.current = null;
     }
