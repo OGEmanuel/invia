@@ -49,6 +49,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { useSwipe } from '@/lib/hooks/useSwipe';
 
 const Events = () => {
   return (
@@ -113,12 +114,19 @@ const CreateEventDesktop = (props: { children?: React.ReactNode }) => {
 
 const CreateEventMobile = (props: { children?: React.ReactNode }) => {
   const { children } = props;
+  const [open, setOpen] = useState(false);
+  const { handleTouchEnd, handleTouchMove, handleTouchStart } = useSwipe({
+    setOpen,
+  });
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent
         side="bottom"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
         className="flex h-167.25 flex-col gap-0 rounded-t-3xl p-0 sm:hidden [&>button_svg:not([class*='size-'])]:size-6"
       >
         <SheetHeader className="gap-0.5 border-b border-[#00000014] p-4">
