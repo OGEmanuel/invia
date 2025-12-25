@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router';
+import { Link, useLocation } from '@tanstack/react-router';
 import Logo from '../auth/components/logo';
 import { Button } from '@/components/ui/button';
 import AvatarCustom from '@/components/ui/custom/avatar';
@@ -15,10 +15,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Edit from '@/assets/jsx-icons/edit';
 import Logout from '@/assets/jsx-icons/logout';
+import { cn } from '@/lib/utils';
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [openSmall, setOpenSmall] = useState(false);
+  const { pathname } = useLocation();
 
   return (
     <nav className="flex justify-center border-b border-[#00000014] py-4">
@@ -33,7 +35,12 @@ const Navbar = () => {
             <li>
               <Link
                 to={'/'}
-                className="[.active]:bg-[#F7F5F2] [.active]:font-medium [.active]:text-[#212121]"
+                className={cn(
+                  '[.active]:bg-[#F7F5F2] [.active]:font-medium [.active]:text-[#212121]',
+                  !pathname.startsWith('/settings') &&
+                    !pathname.startsWith('/messages') &&
+                    'bg-[#F7F5F2] font-medium text-[#212121]',
+                )}
               >
                 Events
               </Link>

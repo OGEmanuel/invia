@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as EventIdRouteImport } from './routes/$eventId'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SettingsIndexRouteImport } from './routes/settings/index'
 import { Route as MessagesIndexRouteImport } from './routes/messages/index'
@@ -22,6 +23,11 @@ import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-pas
 import { Route as AuthCreatePasswordRouteImport } from './routes/auth/create-password'
 import { Route as AuthBusinessInfoRouteImport } from './routes/auth/business-info'
 
+const EventIdRoute = EventIdRouteImport.update({
+  id: '/$eventId',
+  path: '/$eventId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -85,6 +91,7 @@ const AuthBusinessInfoRoute = AuthBusinessInfoRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$eventId': typeof EventIdRoute
   '/auth/business-info': typeof AuthBusinessInfoRoute
   '/auth/create-password': typeof AuthCreatePasswordRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$eventId': typeof EventIdRoute
   '/auth/business-info': typeof AuthBusinessInfoRoute
   '/auth/create-password': typeof AuthCreatePasswordRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -114,6 +122,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$eventId': typeof EventIdRoute
   '/auth/business-info': typeof AuthBusinessInfoRoute
   '/auth/create-password': typeof AuthCreatePasswordRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -130,6 +139,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/$eventId'
     | '/auth/business-info'
     | '/auth/create-password'
     | '/auth/forgot-password'
@@ -144,6 +154,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/$eventId'
     | '/auth/business-info'
     | '/auth/create-password'
     | '/auth/forgot-password'
@@ -158,6 +169,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/$eventId'
     | '/auth/business-info'
     | '/auth/create-password'
     | '/auth/forgot-password'
@@ -173,6 +185,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  EventIdRoute: typeof EventIdRoute
   AuthBusinessInfoRoute: typeof AuthBusinessInfoRoute
   AuthCreatePasswordRoute: typeof AuthCreatePasswordRoute
   AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
@@ -188,6 +201,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/$eventId': {
+      id: '/$eventId'
+      path: '/$eventId'
+      fullPath: '/$eventId'
+      preLoaderRoute: typeof EventIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -277,6 +297,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  EventIdRoute: EventIdRoute,
   AuthBusinessInfoRoute: AuthBusinessInfoRoute,
   AuthCreatePasswordRoute: AuthCreatePasswordRoute,
   AuthForgotPasswordRoute: AuthForgotPasswordRoute,
