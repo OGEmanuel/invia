@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
+import { Link } from '@tanstack/react-router';
 import { useQueryState } from 'nuqs';
 
 const EVENTS = [
@@ -140,6 +141,7 @@ const EventsView = () => {
 export default EventsView;
 
 const EventCard = ({
+  id,
   type,
   title,
   date,
@@ -150,7 +152,7 @@ const EventCard = ({
   failed,
 }: (typeof EVENTS)[0]) => {
   return (
-    <div className="font-inter rounded-[12px] border border-[#00000014] bg-[#FEFCF9]">
+    <div className="font-inter relative rounded-[12px] border border-[#00000014] bg-[#FEFCF9]">
       <div className="flex flex-col gap-3 p-4">
         <div className="flex flex-col gap-2">
           <div
@@ -178,7 +180,16 @@ const EventCard = ({
               {type}
             </p>
           </div>
-          <p className="font-serif leading-6 text-[#212121]">{title}</p>
+          <Link
+            to={'/$eventId'}
+            params={{
+              eventId: `${id}`,
+            }}
+            className="font-serif leading-6 text-[#212121]"
+          >
+            <span className="absolute inset-0"></span>
+            {title}
+          </Link>
         </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
@@ -191,7 +202,7 @@ const EventCard = ({
             <People />
             <p className="text-sm/[100%] -tracking-[0.02em] text-[#626262]">
               {invitees > 0 ? (
-                invitees
+                invitees.toLocaleString()
               ) : (
                 <span className="text-[#A3A19D]">-- --</span>
               )}
@@ -202,7 +213,11 @@ const EventCard = ({
       <div className="flex items-center justify-between border-t border-[#0000000D] p-4 text-center">
         <div className="flex flex-col gap-0.5">
           <p className="leading-[100%] font-semibold -tracking-[0.02em] text-[#212121]">
-            {sent > 0 ? sent : <span className="text-[#A3A19D]">-- --</span>}
+            {sent > 0 ? (
+              sent.toLocaleString()
+            ) : (
+              <span className="text-[#A3A19D]">-- --</span>
+            )}
           </p>
           <p className="text-xs/[100%] -tracking-[0.02em] text-[#575554]">
             Sent
@@ -211,7 +226,7 @@ const EventCard = ({
         <div className="flex flex-col gap-0.5">
           <p className="leading-[100%] font-semibold -tracking-[0.02em] text-[#212121]">
             {confirmed > 0 ? (
-              confirmed
+              confirmed.toLocaleString()
             ) : (
               <span className="text-[#A3A19D]">-- --</span>
             )}
@@ -223,7 +238,7 @@ const EventCard = ({
         <div className="flex flex-col gap-0.5">
           <p className="leading-[100%] font-semibold -tracking-[0.02em] text-[#212121]">
             {pending > 0 ? (
-              pending
+              pending.toLocaleString()
             ) : (
               <span className="text-[#A3A19D]">-- --</span>
             )}
@@ -235,7 +250,7 @@ const EventCard = ({
         <div className="flex flex-col gap-0.5">
           <p className="leading-[100%] font-semibold -tracking-[0.02em] text-[#FF383C]">
             {failed > 0 ? (
-              failed
+              failed.toLocaleString()
             ) : (
               <span className="text-[#A3A19D]">-- --</span>
             )}

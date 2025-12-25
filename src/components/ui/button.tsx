@@ -5,17 +5,19 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none font-inter focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive active:scale-95 transition-transform cursor-pointer",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap tracking-[-0.02em] rounded-md text-base/6 font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none font-inter focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive active:scale-95 transition-transform cursor-pointer",
   {
     variants: {
       variant: {
         default:
-          'bg-[#479FFD] text-white hover:bg-[#479FFD]/90 text-base/6 tracking-[-0.02em] disabled:opacity-50',
+          'bg-[#479FFD] text-white hover:bg-[#479FFD]/90 disabled:opacity-50',
         destructive:
           'bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60',
         outline:
           'border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50',
         secondary: 'bg-[#874CF9] text-white z-10 outline-2 outline-solid ',
+        neutral:
+          'border border-[#00000014] bg-transparent text-[#575554] hover:bg-transparent',
         ghost:
           'hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50',
         link: 'text-primary underline-offset-4 hover:underline',
@@ -26,7 +28,7 @@ const buttonVariants = cva(
         lg: 'h-10 rounded-[12px] px-3! has-[>svg]:px-[5px]',
         icon: 'size-9',
         'icon-sm': 'size-8',
-        'icon-lg': 'size-10',
+        'icon-lg': 'size-12 rounded-[12px]',
       },
     },
     defaultVariants: {
