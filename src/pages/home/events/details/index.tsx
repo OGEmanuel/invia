@@ -12,14 +12,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Link } from '@tanstack/react-router';
-import {
-  ArrowLeft,
-  ChevronDown,
-  Link2,
-  MoreVertical,
-  Send,
-} from 'lucide-react';
+import { ArrowLeft, ChevronDown, Link2, Send } from 'lucide-react';
 import EmptyState from './empty-state';
+import MenuDropdownDialog from './menu-dropdown-dialog';
 
 const EventsDetails = () => {
   return (
@@ -34,7 +29,7 @@ const EventsDetails = () => {
               <ArrowLeft className="size-5" />
               Back to events
             </Link>
-            <Menu className="lg:hidden" />
+            <MenuDropdownDialog className="lg:hidden" />
           </div>
           <GuestDetails />
         </div>
@@ -67,7 +62,7 @@ const GuestDetails = () => {
           <Send />
           Send invites
         </Button>
-        <Menu className="max-lg:hidden" />
+        <MenuDropdownDialog className="max-lg:hidden" />
       </div>
     </div>
   );
@@ -127,41 +122,18 @@ const AddGuest = (props: { className?: string }) => {
           <ChevronDown className="size-5 text-[#A3A19D]" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="font-inter w-50 rounded-[12px] border-[#1D1D1D0D] p-1 shadow-[0px_16px_16px_0px_#00000008]"
-        align="end"
-      >
-        <DropdownMenuItem className="rounded-[8px] py-2 text-base/6 -tracking-[0.02em] text-[#575554] hover:bg-[#F7F5F2] [&_svg:not([class*='size-'])]:size-5">
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem>
           <Person />
           Edit guest
         </DropdownMenuItem>
-        <DropdownMenuItem className="justify-between rounded-[8px] text-base/6 -tracking-[0.02em] text-[#575554] hover:bg-[#F7F5F2] [&_svg:not([class*='size-'])]:size-5">
+        <DropdownMenuItem className="justify-between">
           <span className="flex items-center gap-2">
             <Link2 className="-rotate-45 text-[#575554]" />
             Share form
           </span>
           <Premium />
         </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-};
-
-const Menu = (props: { className?: string }) => {
-  const { className } = props;
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild className={className}>
-        <Button size={'icon-lg'} variant={'neutral'}>
-          <MoreVertical className="text-[#575554]" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem>Billing</DropdownMenuItem>
-        <DropdownMenuItem>Team</DropdownMenuItem>
-        <DropdownMenuItem>Subscription</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
