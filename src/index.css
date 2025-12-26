@@ -127,5 +127,15 @@
 }
 
 body {
-  font-family: 'DM Serif Text', 'Inter', serif;
+  font-family: 'Inter', sans-serif;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hidden {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefoxx */
 }
