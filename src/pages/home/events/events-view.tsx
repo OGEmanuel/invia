@@ -122,7 +122,7 @@ const EventsView = () => {
     <div className="flex w-full flex-col gap-4 py-5 max-md:px-5 md:gap-6 md:py-6 md:max-xl:px-8">
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-0.5">
-          <p className="leading-6 text-[#212121]">Your Events</p>
+          <p className="font-serif leading-6 text-[#212121]">Your Events</p>
           <p className="font-inter text-sm/5 -tracking-[0.02em]">
             <span className="font-medium">3</span> active projects
           </p>
