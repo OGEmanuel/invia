@@ -66,7 +66,7 @@ const BusinessInfo = () => {
               />
               <FieldLabel
                 htmlFor={field.name}
-                className="font-inter relative flex-col gap-2 text-base/6 font-medium tracking-tight text-[#212121]"
+                className="relative flex-col gap-2 text-base/6 font-medium tracking-tight text-[#212121]"
               >
                 <span className="absolute inset-0"></span>
                 Business logo

@@ -27,7 +27,7 @@ const DialogContentWrapper = (props: {
           {title}
         </DialogTitle>
         {description && (
-          <DialogDescription className="font-inter text-sm/5 -tracking-[0.02em] text-[#575554]">
+          <DialogDescription className="text-sm/5 -tracking-[0.02em] text-[#575554]">
             {description}
           </DialogDescription>
         )}

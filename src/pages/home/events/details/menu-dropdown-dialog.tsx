@@ -96,10 +96,7 @@ const MenuDropdownDialog = (props: { className?: string }) => {
           <CreateEventsForm className="h-[calc(100%-61px)]">
             <DialogFooter className="border-t border-[#00000014] p-4">
               <DialogClose asChild>
-                <Button
-                  type="button"
-                  className="border border-[#00000014] bg-transparent text-[#575554] hover:bg-transparent"
-                >
+                <Button type="button" variant={'neutral'}>
                   Cancel
                 </Button>
               </DialogClose>

@@ -10,7 +10,7 @@ const AuthLayout = (props: { children: React.ReactNode }) => {
           <Logo />
           {children}
         </div>
-        <footer className="font-inter flex items-center justify-between px-5 py-8 leading-6 tracking-[-0.02em] text-[#626262] sm:p-10">
+        <footer className="flex items-center justify-between px-5 py-8 leading-6 tracking-[-0.02em] text-[#626262] sm:p-10">
           <p>Privacy policy</p>
           <p>Terms of service</p>
         </footer>

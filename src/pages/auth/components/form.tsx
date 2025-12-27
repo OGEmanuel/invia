@@ -35,7 +35,7 @@ const AuthFormWrapper = <TFormValues extends Record<string, any>>(
         <FieldLegend className="font-serif text-2xl/8! font-normal text-[#212121]">
           {legend}
         </FieldLegend>
-        <FieldDescription className="font-inter text-base/6 font-normal tracking-[-0.02em] text-[#626262]">
+        <FieldDescription className="text-base/6 font-normal tracking-[-0.02em] text-[#626262]">
           {description}
         </FieldDescription>
         <FieldGroup className="flex flex-col gap-4">{children}</FieldGroup>
@@ -57,7 +57,7 @@ export const FormFooter = (props: {
   return (
     <FieldContent
       className={cn(
-        'font-inter w-full flex-row items-center justify-between text-[#575554]',
+        'w-full flex-row items-center justify-between text-[#575554]',
         className,
       )}
     >

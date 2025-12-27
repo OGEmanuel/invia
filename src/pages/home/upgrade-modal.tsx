@@ -79,7 +79,7 @@ const UpgradeModal = (props: {
             <h1 className="text-[2rem]/10 text-[#212121]">
               Do more with Invia!
             </h1>
-            <p className="font-inter max-w-120 text-sm/5 -tracking-[0.02em] text-[#575554]">
+            <p className="max-w-120 text-sm/5 -tracking-[0.02em] text-[#575554]">
               Unlock advanced guest list tools, follow-ups, and team features as
               your events grow.
             </p>
@@ -89,7 +89,7 @@ const UpgradeModal = (props: {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <PlanPeriod period={period} setPeriod={setPeriod} />
-              <p className="-tracking-[0.02em font-inter text-sm/[22px]">
+              <p className="text-sm/[22px] -tracking-[0.02em]">
                 {' '}
                 <span className="font-semibold">Save 30%</span>on a yearly
                 subscription
@@ -102,7 +102,7 @@ const UpgradeModal = (props: {
             <PlanPriceCard plan="studio" />
           </div>
           <hr className="h-2.5 border-none bg-[#0000000D]" />
-          <p className="font-inter text-sm/[22px] -tracking-[0.02em] text-[#575554]">
+          <p className="text-sm/[22px] -tracking-[0.02em] text-[#575554]">
             Morem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
             vulputate libero et velit interdum, ac aliquet odio mattis. Class
             aptent taciti sociosqu ad litora torquent per conubia nostra, per
@@ -178,7 +178,7 @@ export const UpgradeSheet = (props: {
           {isMobile && <UpgradeIllustration size={'88'} />}
           <div className="flex flex-col gap-1 text-center">
             <h1 className="text-2xl/8 text-[#212121]">Do more with Invia!</h1>
-            <p className="font-inter max-w-120 text-sm/[22px] -tracking-[0.02em] text-[#575554]">
+            <p className="max-w-120 text-sm/[22px] -tracking-[0.02em] text-[#575554]">
               Unlock advanced guest list tools, follow-ups, and team features as
               your events grow.
             </p>
@@ -190,7 +190,7 @@ export const UpgradeSheet = (props: {
               <PlanPeriod period={period} setPeriod={setPeriod} />
               <PlanCurrency currency={currency} setCurrency={setCurrency} />
             </div>
-            <p className="-tracking-[0.02em font-inter text-sm/[22px]">
+            <p className="text-sm/[22px] -tracking-[0.02em]">
               {' '}
               <span className="font-semibold">Save 30%</span>on a yearly
               subscription
@@ -201,7 +201,7 @@ export const UpgradeSheet = (props: {
             <PlanPriceCard plan="studio" />
           </div>
           <hr className="h-2.5 border-none bg-[#0000000D]" />
-          <p className="font-inter text-sm/[22px] -tracking-[0.02em] text-[#575554]">
+          <p className="text-sm/[22px] -tracking-[0.02em] text-[#575554]">
             Morem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
             vulputate libero et velit interdum, ac aliquet odio mattis. Class
             aptent taciti sociosqu ad litora torquent per conubia nostra, per
@@ -282,7 +282,7 @@ const PlanPriceCard = (props: { plan: string }) => {
           </p>
           <p
             className={cn(
-              'font-inter text-sm/[22px] -tracking-[0.02em]',
+              'text-sm/[22px] -tracking-[0.02em]',
               plan === 'pro' ? 'text-[#575554]' : '#FFFFFFCC',
             )}
           >
@@ -300,7 +300,7 @@ const PlanPriceCard = (props: { plan: string }) => {
           </p>
           <p
             className={cn(
-              'font-inter text-end text-sm/4 -tracking-[0.02em]',
+              'text-end text-sm/4 -tracking-[0.02em]',
               plan === 'pro' ? 'text-[#A3A19D]' : 'text-[#FFFFFFB2]',
             )}
           >
@@ -319,7 +319,7 @@ const PlanPriceCard = (props: { plan: string }) => {
           <Bolt fill={plan === 'pro' ? 'white' : '#3A99FF'} />
         </Button>
       </div>
-      <div className="font-inter flex flex-col gap-5">
+      <div className="flex flex-col gap-5">
         {plan === 'studio' && (
           <div className="flex items-center gap-2">
             <Bolt fill={'white'} />

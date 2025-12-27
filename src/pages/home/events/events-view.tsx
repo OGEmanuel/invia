@@ -123,7 +123,7 @@ const EventsView = () => {
       <div className="flex items-center justify-between">
         <div className="flex flex-col gap-0.5">
           <p className="font-serif leading-6 text-[#212121]">Your Events</p>
-          <p className="font-inter text-sm/5 -tracking-[0.02em]">
+          <p className="text-sm/5 -tracking-[0.02em]">
             <span className="font-medium">3</span> active projects
           </p>
         </div>
@@ -152,7 +152,7 @@ const EventCard = ({
   failed,
 }: (typeof EVENTS)[0]) => {
   return (
-    <div className="font-inter relative rounded-[12px] border border-[#00000014] bg-[#FEFCF9]">
+    <div className="relative rounded-[12px] border border-[#00000014] bg-[#FEFCF9]">
       <div className="flex flex-col gap-3 p-4">
         <div className="flex flex-col gap-2">
           <div
@@ -271,7 +271,7 @@ const SelectEvents = () => {
       <SelectTrigger>
         <SelectValue placeholder="All events" />
       </SelectTrigger>
-      <SelectContent className="font-inter">
+      <SelectContent>
         <SelectItem value="light">Light</SelectItem>
         <SelectItem value="dark">Dark</SelectItem>
         <SelectItem value="system">System</SelectItem>

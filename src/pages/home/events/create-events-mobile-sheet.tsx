@@ -41,7 +41,7 @@ const CreateEventsMobileSheet = (props: {
             {title}
           </SheetTitle>
           {description && (
-            <SheetDescription className="font-inter text-sm/5 -tracking-[0.02em] text-[#575554]">
+            <SheetDescription className="text-sm/5 -tracking-[0.02em] text-[#575554]">
               {description}
             </SheetDescription>
           )}
@@ -49,10 +49,7 @@ const CreateEventsMobileSheet = (props: {
         <CreateEventsForm className={cn('h-[calc(100%-83px)]', className)}>
           <SheetFooter className="border-t border-[#00000014] p-4 max-sm:flex-row max-sm:justify-end">
             <SheetClose asChild>
-              <Button
-                type="button"
-                className="border border-[#00000014] bg-transparent text-[#575554] hover:bg-transparent"
-              >
+              <Button type="button" variant={'neutral'}>
                 Cancel
               </Button>
             </SheetClose>

@@ -13,13 +13,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Link } from '@tanstack/react-router';
 import { ArrowLeft, ChevronDown, Link2, Send } from 'lucide-react';
-import EmptyState from './empty-state';
+// import EmptyState from './empty-state';
 import MenuDropdownDialog from './menu-dropdown-dialog';
+import { cn } from '@/lib/utils';
+import GuestList from './guest-list';
 
 const EventsDetails = () => {
   return (
     <section className="flex min-h-[calc(100vh-326px)] justify-center md:min-h-[calc(100vh-73px)]">
-      <div className="font-inter flex w-full max-w-300 flex-col gap-6 max-md:py-5 sm:pt-6">
+      <div className="flex w-full max-w-300 flex-col gap-6 max-md:py-5 sm:pt-6">
         <div className="flex flex-col gap-2 max-md:px-5 md:gap-3 md:max-xl:px-8">
           <div className="flex items-center justify-between">
             <Link
@@ -34,7 +36,8 @@ const EventsDetails = () => {
           <GuestDetails />
         </div>
         <InviteStats />
-        <EmptyState />
+        {/* <EmptyState /> */}
+        <GuestList />
       </div>
     </section>
   );
@@ -68,6 +71,14 @@ const GuestDetails = () => {
   );
 };
 
+const Details = {
+  total_guests: 2291,
+  invite_sent: 2111,
+  confirmed_rsvp: 2291,
+  awaiting_response: 2291,
+  failed_delivery: 2291,
+};
+
 const InviteStats = () => {
   return (
     <div className="scrollbar-hidden max-lg:w-full max-lg:overflow-auto max-md:px-5 md:max-xl:px-8">
@@ -76,31 +87,46 @@ const InviteStats = () => {
           <p className="leading-6 -tracking-[0.02em] text-[#575554]">
             Total guest
           </p>
-          <p className="font-serif text-2xl/8 text-[#212121]">0</p>
+          <p className="font-serif text-2xl/8 text-[#212121]">
+            {Details.total_guests.toLocaleString()}
+          </p>
         </div>
         <div>
           <p className="leading-6 -tracking-[0.02em] text-[#575554]">
             Invite sent
           </p>
-          <p className="font-serif text-2xl/8 text-[#212121]">0</p>
+          <p className="font-serif text-2xl/8 text-[#212121]">
+            {Details.invite_sent.toLocaleString()}
+          </p>
         </div>
         <div>
           <p className="leading-6 -tracking-[0.02em] text-[#575554]">
             Confirmed RSVP
           </p>
-          <p className="font-serif text-2xl/8 text-[#212121]">0</p>
+          <p className="font-serif text-2xl/8 text-[#212121]">
+            {Details.confirmed_rsvp.toLocaleString()}
+          </p>
         </div>
         <div>
           <p className="leading-6 -tracking-[0.02em] text-[#575554]">
             Awaiting Response
           </p>
-          <p className="font-serif text-2xl/8 text-[#212121]">0</p>
+          <p className="font-serif text-2xl/8 text-[#212121]">
+            {Details.awaiting_response.toLocaleString()}
+          </p>
         </div>
         <div>
           <p className="leading-6 -tracking-[0.02em] text-[#575554]">
             Failed Delivery
           </p>
-          <p className="font-serif text-2xl/8 text-[#212121]">0</p>
+          <p
+            className={cn(
+              'font-serif text-2xl/8 text-[#212121]',
+              Details.failed_delivery > 0 && 'text-[#FF383C]',
+            )}
+          >
+            {Details.failed_delivery.toLocaleString()}
+          </p>
         </div>
       </div>
     </div>
