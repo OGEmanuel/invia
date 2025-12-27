@@ -44,12 +44,12 @@ const InputField = <TValue = string,>(props: InputFieldProps<TValue>) => {
       <FieldSet className="flex-row items-center justify-between">
         <FieldLabel
           htmlFor={field.name}
-          className="font-inter text-sm/5 font-medium tracking-tight text-[#575554]"
+          className="text-sm/5 font-medium tracking-tight text-[#575554]"
         >
           {label}
         </FieldLabel>
         {optional && (
-          <span className="font-inter text-sm/5 -tracking-[0.02em] text-[#A3A19D]">
+          <span className="text-sm/5 -tracking-[0.02em] text-[#A3A19D]">
             Optional
           </span>
         )}
@@ -65,7 +65,7 @@ const InputField = <TValue = string,>(props: InputFieldProps<TValue>) => {
           placeholder={placeholder}
           type={type}
           className={cn(
-            'font-inter h-11 rounded-[12px] border border-[#00000014] text-sm/6 tracking-[-0.02em] shadow-none placeholder:text-[#A3A19D]',
+            'h-11 rounded-[12px] border border-[#00000014] text-sm/6 tracking-[-0.02em] shadow-none placeholder:text-[#A3A19D]',
             className,
             iconPosition === 'left' && 'pl-10.5',
           )}

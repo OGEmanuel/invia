@@ -96,7 +96,9 @@ const CreateEventsForm = (props: {
       className={cn('w-full p-0', className)}
     >
       <FieldGroup
-        className={cn('flex flex-col justify-between overflow-auto p-4 h-[calc(100%-81px)]')}
+        className={cn(
+          'flex h-[calc(100%-81px)] flex-col justify-between overflow-auto p-4',
+        )}
       >
         <form.Field
           name="eventType"
@@ -116,7 +118,7 @@ const CreateEventsForm = (props: {
                       key={types.id}
                       htmlFor={`${field.name}-${types.type}`}
                       className={cn(
-                        'font-inter group transition-colors has-data-[state=checked]:border-transparent has-data-[state=checked]:text-white has-[>[data-slot=field]]:border-[#00000014] *:data-[slot=field]:py-3.25',
+                        'group transition-colors has-data-[state=checked]:border-transparent has-data-[state=checked]:text-white has-[>[data-slot=field]]:border-[#00000014] *:data-[slot=field]:py-3.25',
                         types.type === 'wedding' &&
                           'has-data-[state=checked]:bg-[#874CF9]',
                         types.type === 'party' &&
@@ -228,7 +230,7 @@ const CreateEventsForm = (props: {
               <FieldSet className="gap-1.5">
                 <FieldLabel
                   htmlFor={field.name}
-                  className="font-inter text-sm/5 font-medium tracking-tight text-[#575554]"
+                  className="text-sm/5 font-medium tracking-tight text-[#575554]"
                 >
                   Event Date
                 </FieldLabel>
@@ -237,7 +239,7 @@ const CreateEventsForm = (props: {
                     <Button
                       variant="outline"
                       data-empty={!field.state.value}
-                      className="font-inter h-auto w-full justify-start border border-[#00000014] py-2.25 text-left text-sm/6 font-normal -tracking-[0.02em] shadow-none hover:bg-transparent active:scale-100 has-[>svg]:px-3.5 data-[empty=true]:text-[#A3A19D]"
+                      className="h-auto w-full justify-start border border-[#00000014] py-2.25 text-left text-sm/6 font-normal -tracking-[0.02em] shadow-none hover:bg-transparent active:scale-100 has-[>svg]:px-3.5 data-[empty=true]:text-[#A3A19D]"
                     >
                       <CalendarIcon className="size-5 text-[#A3A19D]" />
                       {field.state.value ? (

@@ -31,7 +31,7 @@ const Navbar = () => {
               <Logo className="max-sm:hidden" />
             </Link>
           </div>
-          <ul className="font-inter flex items-center gap-2 max-sm:hidden [&_a]:rounded-[12px] [&_a]:px-3 [&_a]:py-2 [&_a]:leading-6 [&_a]:tracking-[-0.02em] [&_a]:text-[#575554]">
+          <ul className="flex items-center gap-2 max-sm:hidden [&_a]:rounded-[12px] [&_a]:px-3 [&_a]:py-2 [&_a]:leading-6 [&_a]:tracking-[-0.02em] [&_a]:text-[#575554]">
             <li>
               <Link
                 to={'/'}
@@ -125,7 +125,7 @@ const ProfileDropdown = (props: { children?: React.ReactNode }) => {
         {children}
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="font-inter w-60 rounded-[12px] p-1"
+        className="w-60 rounded-[12px] p-1"
         align={'end'}
         sideOffset={10}
       >

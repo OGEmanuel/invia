@@ -19,7 +19,7 @@ const Banner = (props: {
           <h1 className="font-serif text-2xl/8 text-[#212121] md:text-[2rem]/10">
             {header}
           </h1>
-          <p className="font-inter -tracking-[0.02em] text-[#626262] max-md:text-sm/6 md:leading-[100%]">
+          <p className="-tracking-[0.02em] text-[#626262] max-md:text-sm/6 md:leading-[100%]">
             {description}
           </p>
         </div>
