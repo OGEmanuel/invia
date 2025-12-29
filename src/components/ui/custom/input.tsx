@@ -4,8 +4,8 @@ import { Input } from '../input';
 import type { ComponentProps } from 'react';
 import type { FormFieldApi } from '@/lib/constants';
 
-interface InputFieldProps extends ComponentProps<'input'> {
-  field: FormFieldApi<string>;
+interface InputFieldProps<TValue = string> extends ComponentProps<'input'> {
+  field: FormFieldApi<TValue>;
   isInvalid?: boolean;
   label: string;
   icon?: React.ReactNode;
@@ -15,7 +15,7 @@ interface InputFieldProps extends ComponentProps<'input'> {
   wrapperClassName?: string;
 }
 
-const InputField = (props: InputFieldProps) => {
+const InputField = <TValue = string,>(props: InputFieldProps<TValue>) => {
   const {
     field,
     label,
@@ -55,7 +55,7 @@ const InputField = (props: InputFieldProps) => {
           name={field.name}
           value={field.state.value as string}
           onBlur={field.handleBlur}
-          onChange={e => field.handleChange(e.target.value)}
+          onChange={e => field.handleChange(e.target.value as TValue)}
           aria-invalid={isInvalid}
           placeholder={placeholder}
           type={type}

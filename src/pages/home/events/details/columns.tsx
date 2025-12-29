@@ -130,8 +130,7 @@ export const columns: ColumnDef<Guests>[] = [
   {
     id: 'actions',
     header: () => <p className="text-end">Action</p>,
-    cell: ({ row }) => {
-      const payment = row.original;
+    cell: () => {
       return (
         <div className="flex justify-end">
           <GuestActions>
