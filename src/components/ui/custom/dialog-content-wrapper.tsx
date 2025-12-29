@@ -26,11 +26,14 @@ const DialogContentWrapper = (props: {
         <DialogTitle className="font-serif text-xl/7 text-[#212121] max-sm:text-start">
           {title}
         </DialogTitle>
-        {description && (
-          <DialogDescription className="text-sm/5 -tracking-[0.02em] text-[#575554]">
-            {description}
-          </DialogDescription>
-        )}
+        <DialogDescription
+          className={cn(
+            'text-sm/5 -tracking-[0.02em] text-[#575554]',
+            !description && 'sr-only',
+          )}
+        >
+          {description ?? title}
+        </DialogDescription>
       </DialogHeader>
       {children}
     </DialogContent>

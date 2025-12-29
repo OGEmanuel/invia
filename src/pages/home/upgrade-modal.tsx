@@ -91,8 +91,7 @@ const UpgradeModal = (props: {
               <PlanPeriod period={period} setPeriod={setPeriod} />
               <p className="text-sm/[22px] -tracking-[0.02em]">
                 {' '}
-                <span className="font-semibold">Save 30%</span>on a yearly
-                subscription
+                <span className="font-semibold">Save 30%</span> on a yearly plan
               </p>
             </div>
             <PlanCurrency currency={currency} setCurrency={setCurrency} />
@@ -192,8 +191,7 @@ export const UpgradeSheet = (props: {
             </div>
             <p className="text-sm/[22px] -tracking-[0.02em]">
               {' '}
-              <span className="font-semibold">Save 30%</span>on a yearly
-              subscription
+              <span className="font-semibold">Save 30%</span> on a yearly plan
             </p>
           </div>
           <div className="flex flex-col gap-4">

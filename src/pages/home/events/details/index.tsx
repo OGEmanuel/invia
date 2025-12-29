@@ -151,7 +151,7 @@ const AddGuest = (props: { className?: string }) => {
       <DropdownMenuContent align="end">
         <DropdownMenuItem>
           <Person />
-          Edit guest
+          Add guest
         </DropdownMenuItem>
         <DropdownMenuItem className="justify-between">
           <span className="flex items-center gap-2">
