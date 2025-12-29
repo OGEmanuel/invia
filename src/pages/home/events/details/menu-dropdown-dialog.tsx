@@ -63,10 +63,10 @@ const MenuDropdownDialog = (props: { className?: string }) => {
             Edit event
           </DropdownMenuItem>
           <DropdownMenuItem
-            className="text-[#FF383C] hover:text-[#FF383C]!"
+            variant="destructive"
             onSelect={() => setShowDeleteEventDialog(true)}
           >
-            <Trash2 className="text-[#FF383C]" />
+            <Trash2 />
             Remove event
           </DropdownMenuItem>
         </DropdownMenuContent>

@@ -1,16 +1,8 @@
-import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import type { Guests } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
+import GuestActions from './guest-actions';
 import { MoreVertical } from 'lucide-react';
 
 export const columns: ColumnDef<Guests>[] = [
@@ -24,7 +16,7 @@ export const columns: ColumnDef<Guests>[] = [
             table.getIsAllPageRowsSelected() ||
             (table.getIsSomePageRowsSelected() && 'indeterminate')
           }
-          className="rounded-[6px] border border-[#00000014] bg-[#FEFCF9] shadow-none"
+          className="size-3.75 rounded-none border border-[#A3A19D] bg-[#FEFCF9] shadow-none"
           onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"
         />
@@ -36,7 +28,7 @@ export const columns: ColumnDef<Guests>[] = [
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={value => row.toggleSelected(!!value)}
-          className="rounded-[6px] border border-[#00000014] bg-[#FEFCF9] shadow-none"
+          className="size-5 rounded-[6px] border border-[#00000014] bg-[#FEFCF9] shadow-none"
           aria-label="Select row"
         />
         <p className="pl-2 font-medium text-[#222222]">{row.original.guest}</p>
@@ -142,25 +134,9 @@ export const columns: ColumnDef<Guests>[] = [
       const payment = row.original;
       return (
         <div className="flex justify-end">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreVertical className="text-[#5B5B5B]" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => navigator.clipboard.writeText(payment.id)}
-              >
-                Copy payment ID
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>View customer</DropdownMenuItem>
-              <DropdownMenuItem>View payment details</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <GuestActions>
+            <MoreVertical className="size-5 text-[#5B5B5B]" />
+          </GuestActions>
         </div>
       );
     },

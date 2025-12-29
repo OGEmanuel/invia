@@ -2,20 +2,7 @@ import type { ComponentProps } from 'react';
 import { Field, FieldError } from '../field';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '../input-otp';
 import { cn } from '@/lib/utils';
-
-type FormFieldApi<TValue> = {
-  name: string;
-  state: {
-    value: TValue;
-    meta: {
-      isTouched: boolean;
-      isValid: boolean;
-      errors: ({ message?: string | undefined } | undefined)[];
-    };
-  };
-  handleBlur: () => void;
-  handleChange: (value: TValue) => void;
-};
+import type { FormFieldApi } from '@/lib/constants';
 
 interface InputFieldProps<TValue = string> extends ComponentProps<'input'> {
   field: FormFieldApi<TValue>;

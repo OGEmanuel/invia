@@ -1,31 +1,36 @@
 import { cn } from '@/lib/utils';
 import { Field, FieldError, FieldLabel, FieldSet } from '../field';
-import { Input } from '../input';
 import type { ComponentProps } from 'react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from '../select';
 import type { FormFieldApi } from '@/lib/constants';
 
-interface InputFieldProps extends ComponentProps<'input'> {
+interface SelectFieldProps extends ComponentProps<'select'> {
   field: FormFieldApi<string>;
   isInvalid?: boolean;
   label: string;
-  icon?: React.ReactNode;
-  iconPosition?: 'left' | 'right';
   optional?: boolean;
+  options: { value: string; label: string }[];
+  placeholder?: string;
   orientation?: 'vertical' | 'horizontal' | 'responsive' | null;
   wrapperClassName?: string;
 }
 
-const InputField = (props: InputFieldProps) => {
+const SelectField = (props: SelectFieldProps) => {
   const {
     field,
     label,
     placeholder,
     className,
     isInvalid,
-    type = 'text',
-    icon,
-    iconPosition,
     optional,
+    options,
     orientation = 'vertical',
     wrapperClassName,
   } = props;
@@ -50,35 +55,35 @@ const InputField = (props: InputFieldProps) => {
         )}
       </FieldSet>
       <FieldSet className="relative">
-        <Input
-          id={field.name}
+        <Select
           name={field.name}
           value={field.state.value as string}
-          onBlur={field.handleBlur}
-          onChange={e => field.handleChange(e.target.value)}
-          aria-invalid={isInvalid}
-          placeholder={placeholder}
-          type={type}
-          className={cn(
-            'h-11 rounded-[12px] border border-[#00000014] text-sm/6 tracking-[-0.02em] shadow-none placeholder:text-[#A3A19D]',
-            className,
-            iconPosition === 'left' && 'pl-10.5',
-          )}
-        />
-        <span
-          className={cn(
-            'absolute flex items-center',
-            iconPosition === 'left'
-              ? 'top-1/2 left-3.5 -translate-y-1/2'
-              : 'top-1/2 right-3.5 -translate-y-1/2',
-          )}
+          onValueChange={(value: string) => field.handleChange(value)}
         >
-          {icon}
-        </span>
+          <SelectTrigger
+            id={field.name}
+            aria-invalid={isInvalid}
+            className={cn(
+              'h-11! rounded-[12px] border border-[#00000014] text-sm/6 tracking-[-0.02em] shadow-none placeholder:text-[#A3A19D]',
+              className,
+            )}
+          >
+            <SelectValue placeholder={placeholder} />
+          </SelectTrigger>
+          <SelectContent position="item-aligned" className="z-999">
+            <SelectItem value="auto">Auto</SelectItem>
+            <SelectSeparator />
+            {options.map(option => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </FieldSet>
       {isInvalid && <FieldError errors={field.state.meta.errors} />}
     </Field>
   );
 };
 
-export default InputField;
+export default SelectField;

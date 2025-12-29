@@ -11,8 +11,11 @@ import { useQueryState, type Options } from 'nuqs';
 import DataTable from './data-table';
 import { columns } from './columns';
 import type { Guests } from '@/lib/constants';
+import { Pagination } from '@/components/ui/custom/pagination';
+import { useState } from 'react';
 
 const GuestList = () => {
+  const [page, setPage] = useState(1);
   const data: Guests[] = [];
   const statuses = ['sent', 'pending', 'delivered', 'seen'] as const;
 
@@ -33,7 +36,10 @@ const GuestList = () => {
   return (
     <section className="flex flex-col gap-6">
       <GuestListConfig />
-      <DataTable data={data} columns={columns} />
+      <div className="flex flex-col gap-2">
+        <DataTable data={data} columns={columns} />
+        <Pagination currentPage={page} totalPages={10} onPageChange={setPage} />
+      </div>
     </section>
   );
 };
@@ -128,7 +134,9 @@ const FilterGuestList = (props: {
       </SelectTrigger>
       <SelectContent>
         {options.map(option => (
-          <SelectItem value={option.value}>{option.label}</SelectItem>
+          <SelectItem key={option.value} value={option.value}>
+            {option.label}
+          </SelectItem>
         ))}
       </SelectContent>
     </Select>
