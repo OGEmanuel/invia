@@ -45,7 +45,17 @@ const GuestActions = (props: {
           {children}
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onSelect={() => setShowEditGuestDialog(true)}>
+          <DropdownMenuItem
+            onSelect={() => setShowEditGuestDialog(true)}
+            className="max-sm:hidden"
+          >
+            <Edit />
+            Edit guest
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={() => setShowEditGuestDialog(true)}
+            className="sm:hidden"
+          >
             <Edit />
             Edit guest
           </DropdownMenuItem>

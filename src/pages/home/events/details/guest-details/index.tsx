@@ -6,6 +6,7 @@ import EventDetailsLayout, {
 import Whatsapp from '@/assets/jsx-icons/whatsapp';
 import EmptyState from '../empty-state';
 import Envelope from '@/assets/jsx-icons/envelope';
+import Timeline from './timeline';
 
 const GuestDetailsPage = () => {
   const { eventId } = useParams({
@@ -34,11 +35,12 @@ const GuestDetailsPage = () => {
           </div>
         </GuestDetails>
       </EventDetailsLayoutHeader>
-      <hr className="border-y-[0.5px] border-[#00000014]" />
-      <EmptyState
+      <hr className="border-y-[0.5px] border-[#00000014] max-md:mx-5 md:max-xl:mx-8" />
+      {/* <EmptyState
         header="No invites yet"
         description="Send an invite to this guest."
-      />
+      /> */}
+      <Timeline />
     </EventDetailsLayout>
   );
 };
