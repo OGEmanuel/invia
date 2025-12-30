@@ -26,6 +26,10 @@ import { useState } from 'react';
 import z from 'zod';
 import PhoneField from '@/components/ui/custom/phone';
 import Notice from '@/assets/jsx-icons/notice';
+import SheetContentWrapper, {
+  SheetFooterWrapper,
+} from '@/components/ui/custom/sheet-content-wrapper';
+import { Sheet } from '@/components/ui/sheet';
 
 const GuestActions = (props: {
   children: React.ReactNode;
@@ -35,6 +39,8 @@ const GuestActions = (props: {
   const { children, className, asChild } = props;
   const [showEditGuestDialog, setShowEditGuestDialog] = useState(false);
   const [showRemoveGuestDialog, setShowRemoveGuestDialog] = useState(false);
+  const [showEditGuestSheet, setShowEditGuestSheet] = useState(false);
+
   return (
     <>
       <DropdownMenu modal={false}>
@@ -53,7 +59,7 @@ const GuestActions = (props: {
             Edit guest
           </DropdownMenuItem>
           <DropdownMenuItem
-            onSelect={() => setShowEditGuestDialog(true)}
+            onSelect={() => setShowEditGuestSheet(true)}
             className="sm:hidden"
           >
             <Edit />
@@ -94,6 +100,15 @@ const GuestActions = (props: {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      <Sheet open={showEditGuestSheet} onOpenChange={setShowEditGuestSheet}>
+        <SheetContentWrapper
+          title="Edit guest"
+          setOpen={setShowEditGuestSheet}
+          className="h-max"
+        >
+          <EditGuestForm className="h-[calc(100%-83px)]" />
+        </SheetContentWrapper>
+      </Sheet>
     </>
   );
 };
@@ -109,12 +124,9 @@ const formSchema = z.object({
   }),
   whatsappNumber: z.string().regex(/^\+?[1-9]\d{1,14}$/, {
     message: 'Please enter a valid WhatsApp number.',
+    error: 'Please enter a valid WhatsApp number.',
   }),
-  email: z
-    .email({
-      message: 'Please enter a valid email address.',
-    })
-    .optional(),
+  email: z.email().optional(),
 });
 
 type EditGuestFormType = z.infer<typeof formSchema>;
@@ -136,7 +148,7 @@ const EditGuestForm = (props: {
       guestName: '',
       party: '',
       whatsappNumber: '',
-      email: '',
+      email: undefined,
     } as EditGuestFormType,
     validationLogic: revalidateLogic(),
     validators: {
@@ -233,19 +245,15 @@ const EditGuestForm = (props: {
           />
         </FieldSet>
       </FieldGroup>
-      <DialogFooter className="flex-row justify-end border-t border-[#00000014] p-4 sm:justify-center">
+      <DialogFooter className="flex-row justify-end border-t border-[#00000014] p-4 max-sm:hidden sm:justify-end">
         <DialogClose asChild>
           <Button type="button" variant={'neutral'}>
             Cancel
           </Button>
         </DialogClose>
-        <Button
-          type={!form.state.isDirty ? 'button' : 'submit'}
-          className={cn(!form.state.isDirty && 'cursor-not-allowed opacity-50')}
-        >
-          Save changes
-        </Button>
+        <Button type={'submit'}>Save changes</Button>
       </DialogFooter>
+      <SheetFooterWrapper buttonLabel="Save changes" className="sm:hidden" />
     </form>
   );
 };

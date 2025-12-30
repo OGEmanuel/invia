@@ -1,17 +1,9 @@
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
-import { useSwipe } from '@/lib/hooks/useSwipe';
+import { Sheet, SheetTrigger } from '@/components/ui/sheet';
 import CreateEventsForm from './create-events-form';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import SheetContentWrapper, {
+  SheetFooterWrapper,
+} from '@/components/ui/custom/sheet-content-wrapper';
 
 const CreateEventsMobileSheet = (props: {
   children?: React.ReactNode;
@@ -22,44 +14,19 @@ const CreateEventsMobileSheet = (props: {
   className?: string;
 }) => {
   const { children, open, onSetOpen, title, description, className } = props;
-  const { handleTouchEnd, handleTouchMove, handleTouchStart } = useSwipe({
-    setOpen: onSetOpen,
-  });
 
   return (
     <Sheet open={open} onOpenChange={onSetOpen}>
       {children && <SheetTrigger asChild>{children}</SheetTrigger>}
-      <SheetContent
-        side="bottom"
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        className="flex h-167.25 flex-col gap-0 rounded-t-3xl p-0 sm:hidden [&>button_svg:not([class*='size-'])]:size-6"
+      <SheetContentWrapper
+        title={title}
+        description={description}
+        setOpen={onSetOpen}
       >
-        <SheetHeader className="gap-0.5 border-b border-[#00000014] p-4">
-          <SheetTitle className="font-serif text-xl/7 text-[#212121]">
-            {title}
-          </SheetTitle>
-          <SheetDescription
-            className={cn(
-              'text-sm/5 -tracking-[0.02em] text-[#575554]',
-              !description && 'sr-only',
-            )}
-          >
-            {description ?? title}
-          </SheetDescription>
-        </SheetHeader>
         <CreateEventsForm className={cn('h-[calc(100%-83px)]', className)}>
-          <SheetFooter className="border-t border-[#00000014] p-4 max-sm:flex-row max-sm:justify-end">
-            <SheetClose asChild>
-              <Button type="button" variant={'neutral'}>
-                Cancel
-              </Button>
-            </SheetClose>
-            <Button type="submit">Create event</Button>
-          </SheetFooter>
+          <SheetFooterWrapper buttonLabel="Create event" />
         </CreateEventsForm>
-      </SheetContent>
+      </SheetContentWrapper>
     </Sheet>
   );
 };
