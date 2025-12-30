@@ -26,7 +26,7 @@ import CreateEventsForm from '../create-events-form';
 import Notice from '@/assets/jsx-icons/notice';
 import CreateEventsMobileSheet from '../create-events-mobile-sheet';
 
-const MenuDropdownDialog = (props: { className?: string }) => {
+const EventMenuDropdownDialog = (props: { className?: string }) => {
   const { className } = props;
 
   const [showEventDetailsDialog, setShowEventDetailsDialog] = useState(false);
@@ -136,7 +136,7 @@ const MenuDropdownDialog = (props: { className?: string }) => {
   );
 };
 
-export default MenuDropdownDialog;
+export default EventMenuDropdownDialog;
 
 const EventDetails = () => {
   return (

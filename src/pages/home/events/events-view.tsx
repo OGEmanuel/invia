@@ -152,7 +152,7 @@ const EventCard = ({
   failed,
 }: (typeof EVENTS)[0]) => {
   return (
-    <div className="relative rounded-[12px] border border-[#00000014] bg-[#FEFCF9]">
+    <div className="relative rounded-[12px] border border-[#00000014] bg-[#FEFCF9] transition-transform active:scale-95">
       <div className="flex flex-col gap-3 p-4">
         <div className="flex flex-col gap-2">
           <div

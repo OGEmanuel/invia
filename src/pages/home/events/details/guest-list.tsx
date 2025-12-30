@@ -14,6 +14,7 @@ import type { Guests } from '@/lib/constants';
 import { Pagination } from '@/components/ui/custom/pagination';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { Link, useParams } from '@tanstack/react-router';
 
 const GuestList = () => {
   const [page, setPage] = useState(1);
@@ -49,7 +50,12 @@ const GuestList = () => {
         ))}
       </div>
       <div className="flex flex-col gap-2">
-        <DataTable data={data} columns={columns} className="max-xl:hidden" />
+        <DataTable
+          data={data}
+          columns={columns}
+          className="max-xl:hidden"
+          isFirstChildHidden
+        />
         <Pagination currentPage={page} totalPages={10} onPageChange={setPage} />
       </div>
     </section>
@@ -129,7 +135,11 @@ const GuestListConfig = () => {
   );
 };
 
-const GuestCard = ({ guest, party, contact, status, rsvp }: Guests) => {
+const GuestCard = ({ id, guest, party, contact, status, rsvp }: Guests) => {
+  const { eventId } = useParams({
+    from: '/$eventId',
+  });
+
   const statusTextColor =
     status === 'sent'
       ? 'text-[#0088FF]'
@@ -166,12 +176,22 @@ const GuestCard = ({ guest, party, contact, status, rsvp }: Guests) => {
     rsvp === 'awaiting' ? 'border-[#FF8D2833]' : 'border-[#3FC70A33]';
 
   return (
-    <div className="flex flex-col gap-4 text-sm/[100%] -tracking-[0.02em] text-[#575554]">
+    <div className="relative flex flex-col gap-4 text-sm/[100%] -tracking-[0.02em] text-[#575554]">
       <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between">
+        <Link
+          to={'/$eventId'}
+          params={{
+            eventId,
+          }}
+          search={{
+            guest: id,
+          }}
+          className="flex items-center justify-between"
+        >
+          <span className="absolute inset-0"></span>
           <p className="font-medium text-[#222222]">{guest}</p>
           <p className="rounded bg-[#F7F5F2] p-1">{party}</p>
-        </div>
+        </Link>
         <div className="flex items-center gap-1">
           <p>{contact.phone}</p>
           <span className="flex size-5 items-center justify-center">

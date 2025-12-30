@@ -3,7 +3,7 @@ import Logo from '../auth/components/logo';
 import { Button } from '@/components/ui/button';
 import AvatarCustom from '@/components/ui/custom/avatar';
 import Bolt from '@/assets/jsx-icons/bolt';
-import { Menu } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import UpgradeModal, { UpgradeSheet } from './upgrade-modal';
 import { useState } from 'react';
 import {
@@ -16,14 +16,24 @@ import {
 import Edit from '@/assets/jsx-icons/edit';
 import Logout from '@/assets/jsx-icons/logout';
 import { cn } from '@/lib/utils';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+import LogoIcon from '@/assets/jsx-icons/logo-icon';
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [openSmall, setOpenSmall] = useState(false);
+  const [openMobileNav, setOpenMobileNav] = useState(false);
   const { pathname } = useLocation();
 
   return (
-    <nav className="flex justify-center border-b border-[#00000014] py-4">
+    <nav className="bg-background fixed z-20 flex w-full justify-center border-b border-[#00000014] py-4">
       <div className="flex w-full max-w-7xl items-center justify-between px-5 md:px-8">
         <div className="flex items-center justify-between gap-6">
           <div>
@@ -81,34 +91,51 @@ const Navbar = () => {
               </Button>
             </UpgradeModal>
           </div>
-          <div className="md:hidden">
-            <UpgradeSheet
-              open={open}
-              setOpen={setOpen}
-              openSmall={openSmall}
-              setOpenSmall={setOpenSmall}
-            >
-              <Button
-                variant={'secondary'}
-                className="outline-[#874CF933]"
-                size={'lg'}
-              >
-                Upgrade
-                <Bolt />
-              </Button>
-            </UpgradeSheet>
-          </div>
-          <ProfileDropdown>
-            <AvatarCustom
-              src={''}
-              alt={''}
-              fallback={'A'}
-              className="size-10"
-            />
-          </ProfileDropdown>
-          <button className="cursor-pointer rounded-[12px] border border-[#00000014] p-2.5 sm:hidden">
-            <Menu className="size-5" />
-          </button>
+          {!openMobileNav && (
+            <>
+              <div className="md:hidden">
+                <UpgradeSheet
+                  open={open}
+                  setOpen={setOpen}
+                  openSmall={openSmall}
+                  setOpenSmall={setOpenSmall}
+                >
+                  <Button
+                    variant={'secondary'}
+                    className="outline-[#874CF933]"
+                    size={'lg'}
+                  >
+                    Upgrade
+                    <Bolt />
+                  </Button>
+                </UpgradeSheet>
+              </div>
+              <ProfileDropdown>
+                <AvatarCustom
+                  src={''}
+                  alt={''}
+                  fallback={'A'}
+                  className="size-10"
+                />
+              </ProfileDropdown>
+            </>
+          )}
+          <MobileNav
+            open={open}
+            setOpen={setOpen}
+            openSmall={openSmall}
+            setOpenSmall={setOpenSmall}
+            openMobileNav={openMobileNav}
+            onSetOpenMobileNav={setOpenMobileNav}
+          >
+            <Button size={'icon-lg'} variant={'neutral'} className="size-10">
+              {openMobileNav ? (
+                <X className="size-5" />
+              ) : (
+                <Menu className="size-5" />
+              )}
+            </Button>
+          </MobileNav>
         </div>
       </div>
     </nav>
@@ -158,5 +185,78 @@ const ProfileDropdown = (props: { children?: React.ReactNode }) => {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+  );
+};
+
+const MobileNav = (props: {
+  children?: React.ReactNode;
+  openMobileNav: boolean;
+  onSetOpenMobileNav: React.Dispatch<React.SetStateAction<boolean>>;
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  openSmall: boolean;
+  setOpenSmall: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
+  const {
+    children,
+    open,
+    setOpen,
+    openSmall,
+    setOpenSmall,
+    openMobileNav,
+    onSetOpenMobileNav,
+  } = props;
+
+  return (
+    <Sheet open={openMobileNav} onOpenChange={onSetOpenMobileNav}>
+      <SheetTrigger className="sm:hidden">{children}</SheetTrigger>
+      <SheetContent
+        side="right"
+        className="mt-18.25 h-[calc(100vh-73px)] w-full gap-10 px-5 [&>button]:hidden"
+        overlayClassName="bg-transparent"
+      >
+        <SheetHeader className="sr-only">
+          <SheetTitle>Navigation</SheetTitle>
+          <SheetDescription>
+            Navigate to the main sections of the website.
+          </SheetDescription>
+        </SheetHeader>
+        <nav className="pt-10">
+          <ul className="flex flex-col gap-2 font-serif text-2xl/8 [&>li]:rounded-[8px] [&>li]:p-2">
+            <li className="has-[.active]:bg-primary/10 has-[.active]:text-primary relative">
+              <Link to={'/'} className="absolute inset-0" />
+              Events
+            </li>
+            <li className="has-[.active]:bg-primary/10 has-[.active]:text-primary relative">
+              <Link to={'/messages'} className="absolute inset-0" />
+              Messages
+            </li>
+            <li className="has-[.active]:bg-primary/10 has-[.active]:text-primary relative">
+              <Link to={'/settings'} className="absolute inset-0" />
+              Settings
+            </li>
+          </ul>
+        </nav>
+        <div className="flex items-center gap-4">
+          <LogoIcon />
+          <div className="text-sm/6 -tracking-[0.02em]">
+            <p>Upgrade to do more with Invia!</p>
+            <UpgradeSheet
+              open={open}
+              setOpen={setOpen}
+              setOpenSmall={setOpenSmall}
+              openSmall={openSmall}
+            >
+              <Button
+                className="text-primary h-auto w-max p-0 text-sm/6 -tracking-[0.02em] underline"
+                variant={'ghost'}
+              >
+                Upgrade
+              </Button>
+            </UpgradeSheet>
+          </div>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 };

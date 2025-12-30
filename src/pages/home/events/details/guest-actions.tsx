@@ -27,14 +27,21 @@ import z from 'zod';
 import PhoneField from '@/components/ui/custom/phone';
 import Notice from '@/assets/jsx-icons/notice';
 
-const GuestActions = (props: { children: React.ReactNode }) => {
-  const { children } = props;
+const GuestActions = (props: {
+  children: React.ReactNode;
+  className?: string;
+  asChild?: boolean;
+}) => {
+  const { children, className, asChild } = props;
   const [showEditGuestDialog, setShowEditGuestDialog] = useState(false);
   const [showRemoveGuestDialog, setShowRemoveGuestDialog] = useState(false);
   return (
     <>
       <DropdownMenu modal={false}>
-        <DropdownMenuTrigger className="cursor-pointer">
+        <DropdownMenuTrigger
+          className={cn('cursor-pointer', className)}
+          asChild={asChild}
+        >
           {children}
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
@@ -52,10 +59,7 @@ const GuestActions = (props: { children: React.ReactNode }) => {
         </DropdownMenuContent>
       </DropdownMenu>
       <Dialog open={showEditGuestDialog} onOpenChange={setShowEditGuestDialog}>
-        <DialogContentWrapper
-          title="Edit Event"
-          className="h-max max-sm:hidden"
-        >
+        <DialogContentWrapper title="Edit Event" className="h-max">
           <EditGuestForm />
         </DialogContentWrapper>
       </Dialog>
@@ -96,10 +100,14 @@ const formSchema = z.object({
   whatsappNumber: z.string().regex(/^\+?[1-9]\d{1,14}$/, {
     message: 'Please enter a valid WhatsApp number.',
   }),
-  email: z.email({
-    message: 'Please enter a valid email address.',
-  }),
+  email: z
+    .email({
+      message: 'Please enter a valid email address.',
+    })
+    .optional(),
 });
+
+type EditGuestFormType = z.infer<typeof formSchema>;
 
 const spokenLanguages = [
   { label: 'Groom', value: 'groom' },
@@ -119,7 +127,7 @@ const EditGuestForm = (props: {
       party: '',
       whatsappNumber: '',
       email: '',
-    },
+    } as EditGuestFormType,
     validationLogic: revalidateLogic(),
     validators: {
       onSubmit: formSchema,
@@ -140,10 +148,10 @@ const EditGuestForm = (props: {
     >
       <FieldGroup
         className={cn(
-          'flex h-[calc(100%-81px)] flex-col justify-between overflow-auto p-4',
+          'flex h-[calc(100%-81px)] flex-col justify-between gap-6 overflow-auto p-4',
         )}
       >
-        <FieldSet className="flex-row items-end gap-2">
+        <FieldSet className="items-end gap-6 sm:flex-row sm:gap-2">
           <form.Field
             name="guestName"
             children={field => {
@@ -173,22 +181,14 @@ const EditGuestForm = (props: {
                   isInvalid={isInvalid}
                   field={field}
                   options={spokenLanguages}
-                  wrapperClassName="w-max"
-                  className="h-10! w-41"
+                  wrapperClassName="sm:w-max"
+                  className="h-10! w-full sm:w-41"
                 />
               );
             }}
           />
-          <Button
-            onClick={() => form.reset()}
-            type="button"
-            variant={'neutral'}
-            className="size-10"
-          >
-            <Trash2 className="text-destructive" />
-          </Button>
         </FieldSet>
-        <FieldSet className="flex-row gap-2">
+        <FieldSet className="gap-6 sm:flex-row sm:gap-2">
           <form.Field
             name="whatsappNumber"
             children={field => {
@@ -223,7 +223,7 @@ const EditGuestForm = (props: {
           />
         </FieldSet>
       </FieldGroup>
-      <DialogFooter className="border-t border-[#00000014] p-4">
+      <DialogFooter className="flex-row justify-end border-t border-[#00000014] p-4 sm:justify-center">
         <DialogClose asChild>
           <Button type="button" variant={'neutral'}>
             Cancel

@@ -1,0 +1,148 @@
+//73px is the height of the navbar
+//326px is the height of the navbar + the height of the banner for mobile
+
+import { Link, useSearch } from '@tanstack/react-router';
+import {
+  ArrowLeft,
+  ChevronDown,
+  Link2,
+  MoreVertical,
+  Send,
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import Person from '@/assets/jsx-icons/person';
+import Premium from '@/assets/jsx-icons/premium';
+import GuestActions from './guest-actions';
+import EventMenuDropdownDialog from './event-menu-dropdown-dialog';
+
+const EventDetailsLayout = (props: { children: React.ReactNode }) => {
+  const { children } = props;
+  return (
+    <section className="flex min-h-[calc(100vh-326px)] justify-center md:min-h-[calc(100vh-73px)]">
+      <div className="flex w-full max-w-300 flex-col gap-6 max-md:py-5 sm:pt-6">
+        {children}
+      </div>
+    </section>
+  );
+};
+
+export default EventDetailsLayout;
+
+export const EventDetailsLayoutHeader = (props: {
+  children?: React.ReactNode;
+  link: string;
+  linkLabel: string;
+  eventId?: string;
+}) => {
+  const { guest } = useSearch({
+    from: '/$eventId',
+  });
+
+  const { children, link, linkLabel, eventId } = props;
+  return (
+    <div className="flex flex-col gap-2 max-md:px-5 md:gap-3 md:max-xl:px-8">
+      <div className="flex items-center justify-between">
+        <Link
+          to={link}
+          params={{
+            eventId: eventId ?? undefined,
+          }}
+          className="flex items-center gap-2 leading-[100%] -tracking-[0.02em] text-[#575554]"
+        >
+          <ArrowLeft className="size-5" />
+          {linkLabel}
+        </Link>
+        {guest ? (
+          <GuestActions asChild className="lg:hidden">
+            <Button size={'icon-lg'} variant={'neutral'}>
+              <MoreVertical className="text-[#575554]" />
+            </Button>
+          </GuestActions>
+        ) : (
+          <EventMenuDropdownDialog className="lg:hidden" />
+        )}
+      </div>
+      {children}
+    </div>
+  );
+};
+
+export const GuestDetails = (props: {
+  header: string;
+  children: React.ReactNode;
+}) => {
+  const { guest } = useSearch({
+    from: '/$eventId',
+  });
+
+  const { header, children } = props;
+  return (
+    <div className="flex max-lg:flex-col max-lg:gap-6 md:justify-between lg:items-center">
+      <div className="flex flex-col gap-2">
+        <h1 className="font-serif text-2xl/8 text-[#212121]">{header}</h1>
+        {children}
+      </div>
+      <div className="flex items-center gap-2 md:max-lg:justify-end">
+        {!guest && <AddGuest className="max-md:flex-1" />}
+        {guest ? (
+          <Button className="max-md:flex-1">
+            <Send />
+            Send invite
+          </Button>
+        ) : (
+          <Button className="max-md:flex-1">
+            <Send />
+            Send invites
+          </Button>
+        )}
+        {guest ? (
+          <GuestActions asChild className="max-lg:hidden">
+            <Button size={'icon-lg'} variant={'neutral'}>
+              <MoreVertical className="text-[#575554]" />
+            </Button>
+          </GuestActions>
+        ) : (
+          <EventMenuDropdownDialog className="max-lg:hidden" />
+        )}
+      </div>
+    </div>
+  );
+};
+
+const AddGuest = (props: { className?: string }) => {
+  const { className } = props;
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild className={className}>
+        <Button
+          variant={'neutral'}
+          className="gap-2 [&_svg:not([class*='size-'])]:size-6"
+        >
+          <Person />
+          Add guest
+          <ChevronDown className="size-5 text-[#A3A19D]" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem>
+          <Person />
+          Add guest
+        </DropdownMenuItem>
+        <DropdownMenuItem className="justify-between">
+          <span className="flex items-center gap-2">
+            <Link2 className="-rotate-45 text-[#575554]" />
+            Share form
+          </span>
+          <Premium />
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
