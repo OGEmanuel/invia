@@ -27,7 +27,6 @@ interface DataTableProps<TData, TValue> {
 
 const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>) => {
   const { columns, data, className, children, isFirstChildHidden } = props;
-  const [_, setGuestId] = useQueryState('guest');
   const { eventId } = useParams({
     from: '/$eventId',
   });
