@@ -7,6 +7,10 @@ import { MoreVertical } from 'lucide-react';
 
 export const columns: ColumnDef<Guests>[] = [
   {
+    accessorKey: 'id',
+    header: () => null,
+  },
+  {
     id: 'select',
     accessorKey: 'guest',
     header: ({ table }) => (
@@ -16,7 +20,7 @@ export const columns: ColumnDef<Guests>[] = [
             table.getIsAllPageRowsSelected() ||
             (table.getIsSomePageRowsSelected() && 'indeterminate')
           }
-          className="size-3.75 rounded-none border border-[#A3A19D] bg-[#FEFCF9] shadow-none"
+          className="z-10 size-3.75 rounded-none border border-[#A3A19D] bg-[#FEFCF9] shadow-none"
           onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"
         />
@@ -28,7 +32,7 @@ export const columns: ColumnDef<Guests>[] = [
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={value => row.toggleSelected(!!value)}
-          className="size-5 rounded-[6px] border border-[#00000014] bg-[#FEFCF9] shadow-none"
+          className="z-10 size-5 rounded-[6px] border border-[#00000014] bg-[#FEFCF9] shadow-none"
           aria-label="Select row"
         />
         <p className="pl-2 font-medium text-[#222222]">{row.original.guest}</p>
