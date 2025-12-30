@@ -48,13 +48,13 @@ const EVENT_TYPES = [
 
 const formSchema = z.object({
   eventType: z.string().min(2, {
-    message: 'Please enter a valid type.',
+    error: 'Please enter a valid type.',
   }),
   eventName: z.string().min(2, {
-    message: 'Please enter a valid event name.',
+    error: 'Please enter a valid event name.',
   }),
   eventDate: z.string().min(2, {
-    message: 'Please enter a valid date.',
+    error: 'Please enter a valid date.',
   }),
   eventTime: z.string().optional(),
   eventLocation: z.string().optional(),

@@ -19,12 +19,12 @@ const formSchema = z.object({
             (file instanceof File &&
               file.size <= 10 * 1024 * 1024 &&
               file.type.startsWith('image/')),
-          { message: 'Please upload an image file not more than 10MB.' },
+          { error: 'Please upload an image file not more than 10MB.' },
         ),
     ])
     .optional(),
   businessName: z.string().min(2, {
-    message: 'Please enter a valid business name.',
+    error: 'Please enter a valid business name.',
   }),
 });
 
