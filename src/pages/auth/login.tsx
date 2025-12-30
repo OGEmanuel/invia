@@ -10,10 +10,10 @@ import { Link } from '@tanstack/react-router';
 
 const formSchema = z.object({
   email: z.email({
-    message: 'Please enter a valid email address.',
+    error: 'Please enter a valid email address.',
   }),
   password: z.string().min(6, {
-    message: 'Please enter a valid password.',
+    error: 'Please enter a valid password.',
   }),
 });
 

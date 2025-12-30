@@ -8,7 +8,7 @@ import EyeOpened from '@/assets/jsx-icons/eye-opened';
 
 const formSchema = z.object({
   password: z.string().min(6, {
-    message: 'Please enter a valid password.',
+    error: 'Please enter a valid password.',
   }),
 });
 

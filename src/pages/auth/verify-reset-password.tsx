@@ -7,7 +7,7 @@ import useTimer from '@/lib/hooks/useTimer';
 
 const formSchema = z.object({
   code: z.string().min(6, {
-    message: 'Code must be 6 digits.',
+    error: 'Code must be 6 digits.',
   }),
 });
 

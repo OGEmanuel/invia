@@ -272,7 +272,7 @@ const PlanPriceCard = (props: { plan: string }) => {
         <div className="flex flex-col gap-1">
           <p
             className={cn(
-              'text-2xl/8 capitalize',
+              'font-serif text-2xl/8 capitalize',
               plan === 'pro' && 'text-[#212121]',
             )}
           >
@@ -290,7 +290,7 @@ const PlanPriceCard = (props: { plan: string }) => {
         <div className="flex items-center justify-between">
           <p
             className={cn(
-              'text-2xl/8',
+              'font-serif text-2xl/8',
               plan === 'pro' ? 'text-[#212121]' : 'text-white',
             )}
           >

@@ -117,16 +117,19 @@ export default GuestActions;
 
 const formSchema = z.object({
   guestName: z.string().min(2, {
-    message: 'Please enter a valid guest name.',
+    error: 'Please enter a valid guest name.',
   }),
   party: z.string().min(2, {
-    message: 'Please select a party',
+    error: 'Please select a party',
   }),
   whatsappNumber: z.string().regex(/^\+?[1-9]\d{1,14}$/, {
-    message: 'Please enter a valid WhatsApp number.',
     error: 'Please enter a valid WhatsApp number.',
   }),
-  email: z.email().optional(),
+  email: z
+    .email({
+      error: 'Please enter a valid email address.',
+    })
+    .optional(),
 });
 
 type EditGuestFormType = z.infer<typeof formSchema>;
@@ -235,6 +238,7 @@ const EditGuestForm = (props: {
                 <InputField
                   field={field}
                   isInvalid={isInvalid}
+                  type="email"
                   label="Email"
                   placeholder="Enter email"
                   wrapperClassName="basis-full"
