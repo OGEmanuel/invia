@@ -1,4 +1,4 @@
-import { Link, useParams } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import EventDetailsLayout, {
   EventDetailsLayoutHeader,
   GuestDetails,
