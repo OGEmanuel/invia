@@ -206,10 +206,13 @@ const MobileNav = (props: {
     openMobileNav,
     onSetOpenMobileNav,
   } = props;
+  const { pathname } = useLocation();
 
   return (
     <Sheet open={openMobileNav} onOpenChange={onSetOpenMobileNav}>
-      <SheetTrigger className="sm:hidden">{children}</SheetTrigger>
+      <SheetTrigger className="sm:hidden" asChild>
+        {children}
+      </SheetTrigger>
       <SheetContent
         side="right"
         className="mt-18.25 h-[calc(100vh-73px)] w-full gap-10 px-5 [&>button]:hidden"
@@ -224,7 +227,15 @@ const MobileNav = (props: {
         <nav className="pt-10">
           <ul className="flex flex-col gap-2 font-serif text-2xl/8 [&>li]:rounded-[8px] [&>li]:p-2">
             <li className="has-[.active]:bg-primary/10 has-[.active]:text-primary relative">
-              <Link to={'/'} className="absolute inset-0" />
+              <Link
+                to={'/'}
+                className={cn(
+                  'absolute inset-0',
+                  !pathname.startsWith('/settings') &&
+                    !pathname.startsWith('/messages') &&
+                    'active',
+                )}
+              />
               Events
             </li>
             <li className="has-[.active]:bg-primary/10 has-[.active]:text-primary relative">

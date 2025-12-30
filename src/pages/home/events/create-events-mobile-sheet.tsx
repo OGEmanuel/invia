@@ -40,11 +40,14 @@ const CreateEventsMobileSheet = (props: {
           <SheetTitle className="font-serif text-xl/7 text-[#212121]">
             {title}
           </SheetTitle>
-          {description && (
-            <SheetDescription className="text-sm/5 -tracking-[0.02em] text-[#575554]">
-              {description}
-            </SheetDescription>
-          )}
+          <SheetDescription
+            className={cn(
+              'text-sm/5 -tracking-[0.02em] text-[#575554]',
+              !description && 'sr-only',
+            )}
+          >
+            {description ?? title}
+          </SheetDescription>
         </SheetHeader>
         <CreateEventsForm className={cn('h-[calc(100%-83px)]', className)}>
           <SheetFooter className="border-t border-[#00000014] p-4 max-sm:flex-row max-sm:justify-end">
