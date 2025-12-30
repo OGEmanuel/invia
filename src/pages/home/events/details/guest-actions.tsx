@@ -127,7 +127,7 @@ const formSchema = z.object({
   }),
   email: z
     .email({
-      error: '',
+      error: 'Please enter a valid email address.',
     })
     .optional(),
 });
