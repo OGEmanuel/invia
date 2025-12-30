@@ -14,7 +14,6 @@ import {
   useReactTable,
   type ColumnDef,
 } from '@tanstack/react-table';
-import { useQueryState } from 'nuqs';
 import type { ReactNode } from 'react';
 
 interface DataTableProps<TData, TValue> {
