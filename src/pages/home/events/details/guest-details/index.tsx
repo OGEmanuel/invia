@@ -4,7 +4,7 @@ import EventDetailsLayout, {
   GuestDetails,
 } from '../layout';
 import Whatsapp from '@/assets/jsx-icons/whatsapp';
-import EmptyState from '../empty-state';
+// import EmptyState from '../empty-state';
 import Envelope from '@/assets/jsx-icons/envelope';
 import Timeline from './timeline';
 
