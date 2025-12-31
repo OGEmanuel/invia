@@ -134,7 +134,7 @@ const formSchema = z.object({
 
 type EditGuestFormType = z.infer<typeof formSchema>;
 
-const spokenLanguages = [
+const partyOptions = [
   { label: 'Groom', value: 'groom' },
   { label: 'Bride', value: 'bride' },
   { label: 'Event Planner', value: 'planner' },
@@ -173,7 +173,7 @@ const EditGuestForm = (props: {
     >
       <FieldGroup
         className={cn(
-          'flex h-[calc(100%-81px)] flex-col justify-between gap-6 overflow-auto p-4',
+          'flex h-[calc(100%-81px)] flex-col gap-6 overflow-auto p-4',
         )}
       >
         <FieldSet className="items-end gap-6 sm:flex-row sm:gap-2">
@@ -205,7 +205,7 @@ const EditGuestForm = (props: {
                   placeholder="Groom"
                   isInvalid={isInvalid}
                   field={field}
-                  options={spokenLanguages}
+                  options={partyOptions}
                   wrapperClassName="sm:w-max"
                   className="h-10! w-full sm:w-41"
                 />

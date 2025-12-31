@@ -3,6 +3,7 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { NuqsAdapter } from 'nuqs/adapters/tanstack-router';
+import { Toaster } from '@/components/ui/sonner';
 
 const queryClient = new QueryClient();
 
@@ -16,6 +17,7 @@ function RootComponent() {
       <ReactQueryDevtools initialIsOpen={false} />
       <NuqsAdapter>
         <Outlet />
+        <Toaster />
       </NuqsAdapter>
       <TanStackRouterDevtools initialIsOpen={false} position="bottom-left" />
     </QueryClientProvider>

@@ -4,6 +4,8 @@ import { z } from 'zod';
 import InputField from '@/components/ui/custom/input';
 import Envelope from '@/assets/jsx-icons/envelope';
 import { useNavigate } from '@tanstack/react-router';
+import useSendRequest from '@/lib/hooks/useSendRequest';
+import { MUTATIONS } from '@/lib/queries';
 
 const formSchema = z.object({
   email: z.email({
@@ -14,6 +16,21 @@ const formSchema = z.object({
 const ForgotPassword = () => {
   const navigate = useNavigate({ from: '/auth/forgot-password' });
 
+  const { mutate, isPending } = useSendRequest<{ email: string }, any>({
+    mutationFn: (data: { email: string }) => MUTATIONS.authForgotPassword(data),
+    successToast: {
+      title: 'Success!',
+      description: 'Please check your email for a verification code.',
+    },
+    errorToast: {
+      title: 'Failed!',
+      description: 'Please try again.',
+    },
+    onSuccessCallback: () => {
+      navigate({ to: '/auth/verify-reset-password' });
+    },
+  });
+
   const form = useForm({
     defaultValues: {
       email: '',
@@ -22,8 +39,14 @@ const ForgotPassword = () => {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
-      navigate({ to: '/auth/verify-reset-password' });
+      mutate(
+        value,
+        {
+          onSuccess: () => {
+            sessionStorage.setItem('email', value.email);
+          },
+        },
+      );
     },
   });
 
@@ -52,7 +75,12 @@ const ForgotPassword = () => {
           );
         }}
       />
-      <FormFooter showSubmitButton className="justify-end" label="Send Code" />
+      <FormFooter
+        isPending={isPending}
+        showSubmitButton
+        className="justify-end"
+        label="Send Code"
+      />
     </AuthFormWrapper>
   );
 };

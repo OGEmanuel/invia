@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/field';
 import { cn } from '@/lib/utils';
 import { FormApi } from '@tanstack/react-form';
+import { Loader2 } from 'lucide-react';
 
 type FormWrapperProps<TValues extends Record<string, any>> = {
   legend: React.ReactNode;
@@ -51,8 +52,9 @@ export const FormFooter = (props: {
   label?: string;
   className?: string;
   showSubmitButton?: boolean;
+  isPending?: boolean;
 }) => {
-  const { children, className, label, showSubmitButton } = props;
+  const { children, className, label, showSubmitButton, isPending } = props;
 
   return (
     <FieldContent
@@ -62,7 +64,33 @@ export const FormFooter = (props: {
       )}
     >
       {children}
-      {showSubmitButton && <Button className={'w-max'}>{label}</Button>}
+      {showSubmitButton && (
+        <Button
+          type="submit"
+          disabled={isPending}
+          className={
+            'grid-stack grid w-max gap-0 overflow-hidden disabled:cursor-not-allowed disabled:opacity-50'
+          }
+        >
+          <span
+            className={cn(
+              'grid-area-stack visible translate-y-0 transition-all',
+              isPending && 'invisible -translate-y-50',
+              typeof label !== 'string' && 'flex items-center gap-2',
+            )}
+          >
+            {label}
+          </span>
+          <span
+            className={cn(
+              `grid-area-stack invisible flex w-full translate-y-50 justify-center transition-all`,
+              isPending && 'visible translate-y-0',
+            )}
+          >
+            <Loader2 aria-label="Loading" className="animate-spin" />
+          </span>
+        </Button>
+      )}
     </FieldContent>
   );
 };

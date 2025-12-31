@@ -20,6 +20,7 @@ import Person from '@/assets/jsx-icons/person';
 import Premium from '@/assets/jsx-icons/premium';
 import GuestActions from './guest-actions';
 import EventMenuDropdownDialog from './event-menu-dropdown-dialog';
+import SendInvitations from './send-invitations';
 
 const EventDetailsLayout = (props: { children: React.ReactNode }) => {
   const { children } = props;
@@ -96,10 +97,12 @@ export const GuestDetails = (props: {
             Send invite
           </Button>
         ) : (
-          <Button className="max-md:flex-1">
-            <Send />
-            Send invites
-          </Button>
+          <SendInvitations>
+            <Button className="max-md:flex-1">
+              <Send />
+              Send invites
+            </Button>
+          </SendInvitations>
         )}
         {guest ? (
           <GuestActions asChild className="max-lg:hidden">

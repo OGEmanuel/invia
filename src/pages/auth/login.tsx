@@ -6,7 +6,9 @@ import Envelope from '@/assets/jsx-icons/envelope';
 import EyeOpened from '@/assets/jsx-icons/eye-opened';
 import { useState } from 'react';
 import EyeClosed from '@/assets/jsx-icons/eye-closed';
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
+import { MUTATIONS } from '@/lib/queries';
+import useSendRequest from '@/lib/hooks/useSendRequest';
 
 const formSchema = z.object({
   email: z.email({
@@ -19,6 +21,33 @@ const formSchema = z.object({
 
 const Login = () => {
   const [passwordType, setPasswordType] = useState<string>('password');
+  const navigate = useNavigate({ from: '/auth/login' });
+
+  const { mutate, isPending } = useSendRequest<
+    { email: string; password: string },
+    { data: { token: string } }
+  >({
+    mutationFn: (data: { email: string; password: string }) =>
+      MUTATIONS.authSignin(data),
+    successToast: {
+      title: 'Success!',
+      description: 'Login successful.',
+    },
+    cookie: {
+      name: 'rf',
+      getValue: (data: { data: { token: string } }) => {
+        const [, token] = data.data.token.split(' ');
+        return token;
+      },
+    },
+    errorToast: {
+      title: 'Failed!',
+      description: 'Please try again.',
+    },
+    onSuccessCallback: () => {
+      navigate({ to: '/' });
+    },
+  });
 
   const form = useForm({
     defaultValues: {
@@ -30,7 +59,7 @@ const Login = () => {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
+      mutate(value);
     },
   });
 
@@ -100,7 +129,7 @@ const Login = () => {
         }}
       />
 
-      <FormFooter showSubmitButton label="Login">
+      <FormFooter isPending={isPending} showSubmitButton label="Login">
         <Link to="/auth/forgot-password">Forgot password?</Link>
       </FormFooter>
     </AuthFormWrapper>

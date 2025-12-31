@@ -23,3 +23,20 @@ export interface Guests {
   status: string;
   rsvp: string;
 }
+
+export interface AccountInfo {
+  id: string;
+  name: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  businessName: string;
+  email: string;
+  avatar: string;
+  role: string;
+  status: string;
+  isAccountDisabled: boolean;
+  businessAvatar: string;
+  isPasswordUpdated: boolean;
+  isBusinessProfileUpdated: boolean;
+}

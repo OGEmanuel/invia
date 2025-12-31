@@ -2,9 +2,12 @@ import { useForm } from '@tanstack/react-form';
 import AuthFormWrapper, { FormFooter } from './components/form';
 import { z } from 'zod';
 import InputField from '@/components/ui/custom/input';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import EyeClosed from '@/assets/jsx-icons/eye-closed';
 import EyeOpened from '@/assets/jsx-icons/eye-opened';
+import { MUTATIONS } from '@/lib/queries';
+import useSendRequest from '@/lib/hooks/useSendRequest';
+import { useNavigate } from '@tanstack/react-router';
 
 const formSchema = z.object({
   password: z.string().min(6, {
@@ -13,7 +16,42 @@ const formSchema = z.object({
 });
 
 const ResetPassword = () => {
+  const navigate = useNavigate({ from: '/auth/reset-password' });
   const [passwordType, setPasswordType] = useState<string>('password');
+  const [resetInfo, setResetInfo] = useState<{
+    accountId: string;
+    passwordResetToken: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const storedResetInfo = sessionStorage.getItem('resetInfo');
+    const resetInfo = storedResetInfo ? JSON.parse(storedResetInfo) : null;
+
+    setResetInfo(resetInfo);
+  }, []);
+
+  const { mutate, isPending } = useSendRequest<
+    { newPassword: string; passwordResetToken: string; accountId: string },
+    any
+  >({
+    mutationFn: (data: {
+      newPassword: string;
+      passwordResetToken: string;
+      accountId: string;
+    }) => MUTATIONS.authResetPassword(data),
+    successToast: {
+      title: 'Success!',
+      description: 'Now proceed to login.',
+    },
+    errorToast: {
+      title: 'Failed!',
+      description: 'Please try again.',
+    },
+    onSuccessCallback: () => {
+      navigate({ to: '/auth/login' });
+      sessionStorage.removeItem('resetInfo');
+    },
+  });
 
   const form = useForm({
     defaultValues: {
@@ -23,7 +61,11 @@ const ResetPassword = () => {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
+      mutate({
+        newPassword: value.password,
+        passwordResetToken: resetInfo?.passwordResetToken!!,
+        accountId: resetInfo?.accountId!!,
+      });
     },
   });
 
@@ -66,6 +108,7 @@ const ResetPassword = () => {
       />
       <FormFooter
         showSubmitButton
+        isPending={isPending}
         label="Continue to login"
         className="justify-end"
       />
