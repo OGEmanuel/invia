@@ -139,3 +139,11 @@ body {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefoxx */
 }
+
+.grid-template-stack {
+  grid-template-areas: 'stack';
+}
+
+.grid-area-stack {
+  grid-area: stack;
+}

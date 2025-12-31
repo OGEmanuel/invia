@@ -1,11 +1,11 @@
-import { Link, useLocation } from '@tanstack/react-router';
+import { Link, useLocation, useNavigate } from '@tanstack/react-router';
 import Logo from '../auth/components/logo';
 import { Button } from '@/components/ui/button';
 import AvatarCustom from '@/components/ui/custom/avatar';
 import Bolt from '@/assets/jsx-icons/bolt';
 import { Menu, X } from 'lucide-react';
 import UpgradeModal, { UpgradeSheet } from './upgrade-modal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,12 +25,24 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import LogoIcon from '@/assets/jsx-icons/logo-icon';
+import type { AccountInfo } from '@/lib/constants';
+import Cookies from 'js-cookie';
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [openSmall, setOpenSmall] = useState(false);
   const [openMobileNav, setOpenMobileNav] = useState(false);
   const { pathname } = useLocation();
+  const [accountInfo, setAccountInfo] = useState<AccountInfo | null>(null);
+
+  useEffect(() => {
+    const storedAccountInfo = localStorage.getItem('accountInfo');
+    const accountInfo = storedAccountInfo
+      ? JSON.parse(storedAccountInfo)
+      : null;
+
+    setAccountInfo(accountInfo);
+  }, []);
 
   return (
     <nav className="bg-background fixed z-20 flex w-full justify-center border-b border-[#00000014] py-4">
@@ -112,9 +124,9 @@ const Navbar = () => {
               </div>
               <ProfileDropdown>
                 <AvatarCustom
-                  src={''}
-                  alt={''}
-                  fallback={'A'}
+                  src={accountInfo?.avatar ?? ''}
+                  alt={accountInfo?.name ?? ''}
+                  fallback={accountInfo?.name[0] ?? 'A'}
                   className="size-10"
                 />
               </ProfileDropdown>
@@ -146,6 +158,25 @@ export default Navbar;
 
 const ProfileDropdown = (props: { children?: React.ReactNode }) => {
   const { children } = props;
+  const [accountInfo, setAccountInfo] = useState<AccountInfo | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedAccountInfo = localStorage.getItem('accountInfo');
+    const accountInfo = storedAccountInfo
+      ? JSON.parse(storedAccountInfo)
+      : null;
+
+    setAccountInfo(accountInfo);
+  }, []);
+
+  const handleLogOut = () => {
+    sessionStorage.removeItem('user');
+    sessionStorage.removeItem('svh');
+    Cookies.remove('rf');
+    navigate({ to: '/auth/login' });
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="rounded-full">
@@ -158,13 +189,13 @@ const ProfileDropdown = (props: { children?: React.ReactNode }) => {
       >
         <DropdownMenuLabel className="flex items-center gap-2 p-2">
           <AvatarCustom
-            src={''}
-            alt={''}
-            fallback={'A'}
+            src={accountInfo?.avatar ?? ''}
+            alt={accountInfo?.name ?? ''}
+            fallback={accountInfo?.name[0] ?? 'A'}
             className="size-8 text-sm/[22px]"
           />
           <p className="font-medium -tracking-[0.02em] text-[#212121]">
-            Abolaji Events
+            {accountInfo?.businessName ?? 'Abolaji Events'}
           </p>
         </DropdownMenuLabel>
         <hr className="h-1 w-full border-t border-dashed border-[#00000014]" />
@@ -178,7 +209,10 @@ const ProfileDropdown = (props: { children?: React.ReactNode }) => {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem className="mt-1 rounded-xl px-2 py-2.5 hover:bg-[#F7F5F2]">
-          <button className="flex w-full cursor-pointer items-center gap-2 text-base/6 -tracking-[0.02em] text-[#575554]">
+          <button
+            onClick={handleLogOut}
+            className="flex w-full cursor-pointer items-center gap-2 text-base/6 -tracking-[0.02em] text-[#575554]"
+          >
             <Logout />
             Logout
           </button>

@@ -1,4 +1,4 @@
-import { useForm } from '@tanstack/react-form';
+import { useField, useForm } from '@tanstack/react-form';
 import AuthFormWrapper, { FormFooter } from './components/form';
 import { z } from 'zod';
 import InputField from '@/components/ui/custom/input';
@@ -6,6 +6,11 @@ import { FieldError, FieldLabel, FieldSet } from '@/components/ui/field';
 import AvatarCustom from '@/components/ui/custom/avatar';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import useSendRequest from '@/lib/hooks/useSendRequest';
+import { MUTATIONS } from '@/lib/queries';
+import { cn } from '@/lib/utils';
+import type { AccountInfo } from '@/lib/constants';
+import { useNavigate } from '@tanstack/react-router';
 
 const formSchema = z.object({
   image: z
@@ -31,6 +36,24 @@ const formSchema = z.object({
 type BusinessInfoFormValues = z.infer<typeof formSchema>;
 
 const BusinessInfo = () => {
+  const navigate = useNavigate({ from: '/auth/business-info' });
+
+  const { mutate, isPending } = useSendRequest<
+    { businessName: string; businessAvatar: string },
+    { data: AccountInfo }
+  >({
+    mutationFn: (data: { businessName: string; businessAvatar: string }) =>
+      MUTATIONS.authInitializeBusinessProfile(data),
+    successToast: {
+      title: 'Success!',
+      description: 'Profile created successfully.',
+    },
+    errorToast: {
+      title: 'Failed!',
+      description: 'Please try again.',
+    },
+  });
+
   const form = useForm({
     defaultValues: {
       image: null as any,
@@ -40,7 +63,43 @@ const BusinessInfo = () => {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
+      mutate(
+        {
+          businessName: value.businessName,
+          businessAvatar: value.image,
+        },
+        {
+          onSuccess: (data?: { data: AccountInfo }) => {
+            localStorage.setItem('accountInfo', JSON.stringify(data?.data));
+            if (!data?.data.isAccountDisabled) {
+              navigate({ to: '/' });
+            } else {
+              navigate({ to: '/auth/sign-up' });
+            }
+          },
+        },
+      );
+    },
+  });
+
+  const image = useField({
+    name: 'image',
+    form,
+  });
+
+  const { mutate: uploadImage, isPending: isUploadingImage } = useSendRequest<
+    { file: File },
+    { data: { url: string } }
+  >({
+    mutationFn: (data: { file: File }) =>
+      MUTATIONS.authUploadFileCloudinary(data, data.file.name),
+    successToast: {
+      title: 'Success!',
+      description: 'Photo uploaded successfully.',
+    },
+    errorToast: {
+      title: 'Upload failed!',
+      description: 'Please try again.',
     },
   });
 
@@ -52,52 +111,84 @@ const BusinessInfo = () => {
       form={form}
     >
       <form.Field
-        name="businessName"
+        name="image"
         children={field => {
           const isInvalid =
             field.state.meta.isTouched && !field.state.meta.isValid;
           return (
             <FieldSet className="flex-row items-center gap-4">
               <AvatarCustom
-                src={''}
-                alt={''}
-                fallback={'A'}
+                src={image.state.value}
+                alt={'Business logo'}
+                fallback={'B'}
                 className="relative size-18 text-[40px]/[100%] font-semibold tracking-[-0.02em] before:absolute before:inset-0 before:top-1/2 before:left-1/2 before:size-full before:-translate-1/2 before:rounded-full before:border before:border-[#00000014]"
               />
-              <FieldLabel
-                htmlFor={field.name}
-                className="relative flex-col gap-2 text-base/6 font-medium tracking-tight text-[#212121]"
-              >
-                <span className="absolute inset-0"></span>
-                Business logo
-                <Button
-                  type="button"
-                  className="h-9 border border-[#00000014] bg-transparent text-base/6 font-medium tracking-[-0.02em] text-[#575554] hover:bg-transparent"
+              <FieldSet className="flex-row items-end gap-1">
+                <FieldLabel
+                  htmlFor={field.name}
+                  className={cn(
+                    'relative flex-col gap-2 text-base/6 font-medium tracking-tight text-[#212121]',
+                    isUploadingImage && 'pointer-events-none',
+                  )}
                 >
-                  Add image
-                </Button>
-                {/* Don't forget to set this up: Remove image */}
-                <Input
-                  id={field.name}
-                  name={field.name}
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onBlur={field.handleBlur}
-                  onChange={e => {
-                    const file = e.target.files?.[0];
-                    if (
-                      file &&
-                      file.type.startsWith('image/') &&
-                      file.size <= 10 * 1024 * 1024
-                    ) {
-                      field.handleChange(file as any);
-                    }
-                  }}
-                  aria-invalid={isInvalid}
-                  autoComplete="off"
-                />
-              </FieldLabel>
+                  <span
+                    className={cn(
+                      'absolute inset-0',
+                      isUploadingImage && 'pointer-events-none',
+                    )}
+                  ></span>
+                  Business logo
+                  <Button
+                    type="button"
+                    disabled={isUploadingImage}
+                    className="h-9 border border-[#00000014] bg-transparent text-base/6 font-medium tracking-[-0.02em] text-[#575554] hover:bg-transparent"
+                  >
+                    {isUploadingImage
+                      ? 'Adding image...'
+                      : field.state.value
+                        ? 'Change image'
+                        : 'Add image'}
+                  </Button>
+                  <Input
+                    id={field.name}
+                    name={field.name}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onBlur={field.handleBlur}
+                    onChange={e => {
+                      const file = e.target.files?.[0];
+                      if (
+                        file &&
+                        file.type.startsWith('image/') &&
+                        file.size <= 10 * 1024 * 1024
+                      ) {
+                        uploadImage(
+                          {
+                            file: file as any,
+                          },
+                          {
+                            onSuccess: (data?: { data: { url: string } }) => {
+                              field.handleChange(data?.data.url!!);
+                            },
+                          },
+                        );
+                      }
+                    }}
+                    aria-invalid={isInvalid}
+                    autoComplete="off"
+                  />
+                </FieldLabel>
+                {field.state.value && (
+                  <Button
+                    onClick={() => field.handleChange(null)}
+                    type="button"
+                    className="text-destructive h-9 bg-transparent hover:bg-transparent"
+                  >
+                    Remove Image
+                  </Button>
+                )}
+              </FieldSet>
               {isInvalid && <FieldError errors={field.state.meta.errors} />}
             </FieldSet>
           );
@@ -118,7 +209,12 @@ const BusinessInfo = () => {
           );
         }}
       />
-      <FormFooter showSubmitButton label="Sign in" className="justify-end" />
+      <FormFooter
+        isPending={isPending}
+        showSubmitButton
+        label="Sign in"
+        className="justify-end"
+      />
     </AuthFormWrapper>
   );
 };

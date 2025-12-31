@@ -3,39 +3,62 @@ import AuthFormWrapper, { FormFooter } from './components/form';
 import { z } from 'zod';
 import InputField from '@/components/ui/custom/input';
 import Envelope from '@/assets/jsx-icons/envelope';
-import EyeOpened from '@/assets/jsx-icons/eye-opened';
-import { useState } from 'react';
-import EyeClosed from '@/assets/jsx-icons/eye-closed';
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
+import useSendRequest from '@/lib/hooks/useSendRequest';
+import { MUTATIONS } from '@/lib/queries';
 
 const formSchema = z.object({
+  name: z.string().min(2, {
+    error: 'Please enter a valid name.',
+  }),
   email: z.email({
     error: 'Please enter a valid email address.',
-  }),
-  password: z.string().min(6, {
-    error: 'Please enter a valid password.',
   }),
 });
 
 const SignUp = () => {
-  const [passwordType, setPasswordType] = useState<string>('password');
+  const navigate = useNavigate({ from: '/auth/sign-up' });
+
+  const { mutate, isPending } = useSendRequest<
+    { name: string; email: string },
+    { data: { signupVerificationHash: string } }
+  >({
+    mutationFn: (data: { name: string; email: string }) =>
+      MUTATIONS.authSignup(data),
+    successToast: {
+      title: 'Success!',
+      description: 'Please check your email for a verification code.',
+    },
+    errorToast: {
+      title: 'Failed!',
+      description: 'Please try again.',
+    },
+    verificationHash: {
+      name: 'svh',
+      getValue: (data: { data: { signupVerificationHash: string } }) =>
+        data.data.signupVerificationHash,
+    },
+    onSuccessCallback: () => {
+      navigate({ to: '/auth/verify-email' });
+    },
+  });
 
   const form = useForm({
     defaultValues: {
+      name: '',
       email: '',
-      password: '',
     },
     validators: {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
+      mutate(value, {
+        onSuccess: () => {
+          sessionStorage.setItem('user', JSON.stringify(value));
+        },
+      });
     },
   });
-
-  const handlePasswordType = () => {
-    setPasswordType(passwordType === 'password' ? 'text' : 'password');
-  };
 
   return (
     <AuthFormWrapper
@@ -44,6 +67,21 @@ const SignUp = () => {
       formId="sign-up"
       form={form}
     >
+      <form.Field
+        name="name"
+        children={field => {
+          const isInvalid =
+            field.state.meta.isTouched && !field.state.meta.isValid;
+          return (
+            <InputField
+              field={field}
+              isInvalid={isInvalid}
+              label="Name"
+              placeholder="Enter your personal name"
+            />
+          );
+        }}
+      />
       <form.Field
         name="email"
         children={field => {
@@ -62,33 +100,8 @@ const SignUp = () => {
           );
         }}
       />
-      <form.Field
-        name="password"
-        children={field => {
-          const isInvalid =
-            field.state.meta.isTouched && !field.state.meta.isValid;
-          return (
-            <InputField
-              field={field}
-              isInvalid={isInvalid}
-              label="Enter your password"
-              placeholder="Enter password"
-              type={passwordType}
-              iconPosition="right"
-              icon={
-                <button
-                  type="button"
-                  className="cursor-pointer"
-                  onClick={handlePasswordType}
-                >
-                  {passwordType !== 'password' ? <EyeClosed /> : <EyeOpened />}
-                </button>
-              }
-            />
-          );
-        }}
-      />
-      <FormFooter showSubmitButton label="Continue">
+
+      <FormFooter showSubmitButton label="Continue" isPending={isPending}>
         <div className="leading-6">
           <p className="inline">Have an account?</p>{' '}
           <Link to="/auth/login" className="text-[#6155F5]">

@@ -20,6 +20,7 @@ interface SelectFieldProps extends ComponentProps<'select'> {
   placeholder?: string;
   orientation?: 'vertical' | 'horizontal' | 'responsive' | null;
   wrapperClassName?: string;
+  children?: React.ReactNode;
 }
 
 const SelectField = (props: SelectFieldProps) => {
@@ -33,6 +34,7 @@ const SelectField = (props: SelectFieldProps) => {
     options,
     orientation = 'vertical',
     wrapperClassName,
+    children,
   } = props;
 
   return (
@@ -81,6 +83,7 @@ const SelectField = (props: SelectFieldProps) => {
           </SelectContent>
         </Select>
       </FieldSet>
+      {children}
       {isInvalid && <FieldError errors={field.state.meta.errors} />}
     </Field>
   );

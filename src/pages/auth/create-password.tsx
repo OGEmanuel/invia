@@ -5,6 +5,10 @@ import InputField from '@/components/ui/custom/input';
 import { useState } from 'react';
 import EyeClosed from '@/assets/jsx-icons/eye-closed';
 import EyeOpened from '@/assets/jsx-icons/eye-opened';
+import useSendRequest from '@/lib/hooks/useSendRequest';
+import { MUTATIONS } from '@/lib/queries';
+import type { AccountInfo } from '@/lib/constants';
+import { useNavigate } from '@tanstack/react-router';
 
 const formSchema = z.object({
   password: z.string().min(6, {
@@ -13,7 +17,24 @@ const formSchema = z.object({
 });
 
 const CreatePassword = () => {
+  const navigate = useNavigate({ from: '/auth/create-password' });
   const [passwordType, setPasswordType] = useState<string>('password');
+
+  const { mutate, isPending } = useSendRequest<
+    { password: string },
+    { data: AccountInfo }
+  >({
+    mutationFn: (data: { password: string }) =>
+      MUTATIONS.authInitializeAccountPassword(data),
+    successToast: {
+      title: 'Success!',
+      description: 'Now proceed to customize your profile.',
+    },
+    errorToast: {
+      title: 'Failed!',
+      description: 'Please try again.',
+    },
+  });
 
   const form = useForm({
     defaultValues: {
@@ -23,7 +44,17 @@ const CreatePassword = () => {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
+      mutate(value, {
+        onSuccess: (data?: { data: AccountInfo }) => {
+          if (!data?.data.isBusinessProfileUpdated) {
+            navigate({ to: '/auth/business-info' });
+          } else if (!data?.data.isAccountDisabled) {
+            navigate({ to: '/' });
+          } else {
+            navigate({ to: '/auth/sign-up' });
+          }
+        },
+      });
     },
   });
 
@@ -64,7 +95,12 @@ const CreatePassword = () => {
           );
         }}
       />
-      <FormFooter showSubmitButton label="Continue" className="justify-end" />
+      <FormFooter
+        isPending={isPending}
+        showSubmitButton
+        label="Continue"
+        className="justify-end"
+      />
     </AuthFormWrapper>
   );
 };
