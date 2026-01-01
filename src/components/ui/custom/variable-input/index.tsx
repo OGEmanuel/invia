@@ -2,7 +2,6 @@ import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { Field, FieldError, FieldLabel, FieldSet } from '../../field';
 import type { FormFieldApi } from '@/lib/constants';
 import { $createVariableNode, VariableNode } from './variable-node';
-import { InsertVariableButton } from './insert-variable-button';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
