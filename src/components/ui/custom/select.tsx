@@ -5,7 +5,7 @@ import {
   Select,
   SelectContent,
   SelectItem,
-  SelectSeparator,
+  // SelectSeparator,
   SelectTrigger,
   SelectValue,
 } from '../select';
@@ -14,13 +14,14 @@ import type { FormFieldApi } from '@/lib/constants';
 interface SelectFieldProps extends ComponentProps<'select'> {
   field: FormFieldApi<string>;
   isInvalid?: boolean;
-  label: string;
+  label?: string;
   optional?: boolean;
   options: { value: string; label: string }[];
   placeholder?: string;
   orientation?: 'vertical' | 'horizontal' | 'responsive' | null;
   wrapperClassName?: string;
   children?: React.ReactNode;
+  errorClassName?: string;
 }
 
 const SelectField = (props: SelectFieldProps) => {
@@ -35,6 +36,7 @@ const SelectField = (props: SelectFieldProps) => {
     orientation = 'vertical',
     wrapperClassName,
     children,
+    errorClassName,
   } = props;
 
   return (
@@ -43,19 +45,23 @@ const SelectField = (props: SelectFieldProps) => {
       orientation={orientation}
       className={cn('gap-1.5', wrapperClassName)}
     >
-      <FieldSet className="flex-row items-center justify-between">
-        <FieldLabel
-          htmlFor={field.name}
-          className="text-sm/5 font-medium tracking-tight text-[#575554]"
-        >
-          {label}
-        </FieldLabel>
-        {optional && (
-          <span className="text-sm/5 -tracking-[0.02em] text-[#A3A19D]">
-            Optional
-          </span>
-        )}
-      </FieldSet>
+      {label && (
+        <FieldSet className="flex-row items-center justify-between">
+          {label && (
+            <FieldLabel
+              htmlFor={field.name}
+              className="text-sm/5 font-medium tracking-tight text-[#575554]"
+            >
+              {label}
+            </FieldLabel>
+          )}
+          {optional && (
+            <span className="text-sm/5 -tracking-[0.02em] text-[#A3A19D]">
+              Optional
+            </span>
+          )}
+        </FieldSet>
+      )}
       <FieldSet className="relative">
         <Select
           name={field.name}
@@ -73,8 +79,8 @@ const SelectField = (props: SelectFieldProps) => {
             <SelectValue placeholder={placeholder} />
           </SelectTrigger>
           <SelectContent position="item-aligned" className="z-999">
-            <SelectItem value="auto">Auto</SelectItem>
-            <SelectSeparator />
+            {/* <SelectItem value="auto">Auto</SelectItem>
+            <SelectSeparator /> */}
             {options.map(option => (
               <SelectItem key={option.value} value={option.value}>
                 {option.label}
@@ -84,7 +90,12 @@ const SelectField = (props: SelectFieldProps) => {
         </Select>
       </FieldSet>
       {children}
-      {isInvalid && <FieldError errors={field.state.meta.errors} />}
+      {isInvalid && (
+        <FieldError
+          className={cn(errorClassName)}
+          errors={field.state.meta.errors}
+        />
+      )}
     </Field>
   );
 };
