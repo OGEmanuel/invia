@@ -16,8 +16,10 @@ const SheetContentWrapper = (props: {
   description?: string;
   className?: string;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  hideHeader?: boolean;
 }) => {
-  const { children, title, description, className, setOpen } = props;
+  const { children, title, description, className, setOpen, hideHeader } =
+    props;
   const { handleTouchEnd, handleTouchMove, handleTouchStart } = useSwipe({
     setOpen,
   });
@@ -33,7 +35,12 @@ const SheetContentWrapper = (props: {
         className,
       )}
     >
-      <SheetHeader className="gap-0.5 border-b border-[#00000014] p-4">
+      <SheetHeader
+        className={cn(
+          'gap-0.5 border-b border-[#00000014] p-4',
+          hideHeader && 'sr-only',
+        )}
+      >
         <SheetTitle className="font-serif text-xl/7 text-[#212121]">
           {title}
         </SheetTitle>
