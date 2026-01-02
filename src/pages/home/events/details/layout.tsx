@@ -24,6 +24,20 @@ import SendInvitations, {
   SendInvitationsMobileSheet,
 } from './send-invitations';
 import { useState } from 'react';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import ShareFormIcon from '@/assets/jsx-icons/share-form';
+import { FieldDescription, FieldGroup, FieldSet } from '@/components/ui/field';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import Refresh from '@/assets/jsx-icons/refresh';
 
 const EventDetailsLayout = (props: { children: React.ReactNode }) => {
   const { children } = props;
@@ -137,32 +151,138 @@ export const GuestDetails = (props: {
 
 const AddGuest = (props: { className?: string }) => {
   const { className } = props;
+  const [showShareFormDialog, setShowShareFormDialog] = useState(false);
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild className={className}>
-        <Button
-          variant={'neutral'}
-          className="gap-2 [&_svg:not([class*='size-'])]:size-6"
+    <>
+      <DropdownMenu modal={false}>
+        <DropdownMenuTrigger asChild className={className}>
+          <Button
+            variant={'neutral'}
+            className="gap-2 [&_svg:not([class*='size-'])]:size-6"
+          >
+            <Person />
+            Add guest
+            <ChevronDown className="size-5 text-[#A3A19D]" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem>
+            <Person />
+            Add guest
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="justify-between"
+            onSelect={() => setShowShareFormDialog(true)}
+          >
+            <span className="flex items-center gap-2">
+              <Link2 className="-rotate-45 text-[#575554]" />
+              Share form
+            </span>
+            <Premium />
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <Dialog open={showShareFormDialog} onOpenChange={setShowShareFormDialog}>
+        <DialogContent className="flex max-w-88.25 flex-col gap-8 rounded-3xl bg-white p-6 sm:max-w-130 [&>button_svg:not([class*='size-'])]:size-6">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Share guest form</DialogTitle>
+            <DialogDescription>
+              Send the form link and access code for external submissions.
+            </DialogDescription>
+          </DialogHeader>
+          <ShareForm />
+          <DialogFooter className="w-full flex-row">
+            <DialogClose asChild>
+              <Button variant="neutral" className="w-full">
+                Done
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
+
+const ShareForm = () => {
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col items-center">
+        <ShareFormIcon />
+        <div className="flex w-full max-w-100 flex-col gap-1 text-center">
+          <h3 className="font-serif text-xl/7 text-[#212121]">
+            Share guest form
+          </h3>
+          <p className="text-sm/[22px] -tracking-[0.02em] text-[#575554]">
+            Send the form link and access code for external submissions.
+          </p>
+        </div>
+      </div>
+      <FieldGroup className="gap-1.5">
+        <Label
+          htmlFor="formLink"
+          className="text-sm/5 font-medium -tracking-[0.02em] text-[#575554]"
         >
-          <Person />
-          Add guest
-          <ChevronDown className="size-5 text-[#A3A19D]" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem>
-          <Person />
-          Add guest
-        </DropdownMenuItem>
-        <DropdownMenuItem className="justify-between">
-          <span className="flex items-center gap-2">
-            <Link2 className="-rotate-45 text-[#575554]" />
-            Share form
-          </span>
-          <Premium />
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          Form Link
+        </Label>
+        <FieldSet className="flex-row items-center gap-2">
+          <Input
+            id="formLink"
+            name="formLink"
+            value={
+              'https://preview-cccc35a7--invitejoy-bot.lovable.app/guest-form/1'
+            }
+            disabled
+            className="h-10 rounded-[12px] border border-black/8 bg-[#FEFCF9] px-3.5 text-ellipsis text-[#212121] shadow-none disabled:opacity-100"
+          />
+          <Button
+            className="h-10 w-24 text-sm/[22px] font-medium -tracking-[0.02em] text-[#479FFD]"
+            variant={'neutral'}
+          >
+            Copy link
+          </Button>
+        </FieldSet>
+      </FieldGroup>
+      <FieldGroup className="gap-1.5">
+        <Label
+          htmlFor="formCode"
+          className="text-sm/5 font-medium -tracking-[0.02em] text-[#575554]"
+        >
+          Access Passcode
+        </Label>
+        <FieldSet className="flex-row items-center gap-2">
+          <Input
+            id="formCode"
+            name="formCode"
+            value={'6AHPCE'}
+            disabled
+            className="h-10 rounded-[12px] border border-black/8 bg-[#FEFCF9] px-3.5 text-ellipsis text-[#212121] shadow-none disabled:opacity-100"
+          />
+          <Button
+            size={'icon'}
+            variant={'neutral'}
+            className="size-10 rounded-[12px] px-2"
+          >
+            <Refresh />
+          </Button>
+          <Button
+            className="h-10 w-24 text-sm/[22px] font-medium -tracking-[0.02em] text-[#479FFD]"
+            variant={'neutral'}
+          >
+            Copy code
+          </Button>
+        </FieldSet>
+        <FieldDescription className="text-sm/5 -tracking-[0.02em] text-[#575554]">
+          Your client will need this passcode to access the form
+        </FieldDescription>
+      </FieldGroup>
+      <ul className="list-inside list-disc rounded-3xl bg-[#F7F5F2] px-4 py-3 text-xs leading-6 -tracking-[0.02em] text-[#575554] sm:text-sm">
+        <li>Share the form link with your client</li>
+        <li>Provide them with the passcode above</li>
+        <li>They can add guests directly to your event</li>
+        <li>Reset the passcode anytime for security</li>
+      </ul>
+    </div>
   );
 };
