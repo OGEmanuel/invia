@@ -41,7 +41,7 @@ const SendInvitationsForm = (props: {
   children?: React.ReactNode;
   setPage: React.Dispatch<React.SetStateAction<number>>;
 }) => {
-  const { children } = props;
+  const { children, setPage } = props;
   const [editorResetKey, setEditorResetKey] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -60,7 +60,7 @@ const SendInvitationsForm = (props: {
       console.log(value);
       form.reset();
       handleReset();
-      // setPage(1);
+      setPage(1);
     },
   });
 

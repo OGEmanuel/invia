@@ -12,8 +12,9 @@ const DialogContentWrapper = (props: {
   title: string;
   description?: string;
   className?: string;
+  hideHeader?: boolean;
 }) => {
-  const { children, title, description, className } = props;
+  const { children, title, description, className, hideHeader } = props;
 
   return (
     <DialogContent
@@ -22,7 +23,12 @@ const DialogContentWrapper = (props: {
         className,
       )}
     >
-      <DialogHeader className="gap-0.5 border-b border-[#00000014] p-4">
+      <DialogHeader
+        className={cn(
+          'gap-0.5 border-b border-[#00000014] p-4',
+          hideHeader && 'sr-only',
+        )}
+      >
         <DialogTitle className="font-serif text-xl/7 text-[#212121] max-sm:text-start">
           {title}
         </DialogTitle>

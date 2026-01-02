@@ -20,7 +20,10 @@ import Person from '@/assets/jsx-icons/person';
 import Premium from '@/assets/jsx-icons/premium';
 import GuestActions from './guest-actions';
 import EventMenuDropdownDialog from './event-menu-dropdown-dialog';
-import SendInvitations from './send-invitations';
+import SendInvitations, {
+  SendInvitationsMobileSheet,
+} from './send-invitations';
+import { useState } from 'react';
 
 const EventDetailsLayout = (props: { children: React.ReactNode }) => {
   const { children } = props;
@@ -83,6 +86,8 @@ export const GuestDetails = (props: {
   });
 
   const { header, children } = props;
+
+  const [open, setOpen] = useState(false);
   return (
     <div className="flex max-lg:flex-col max-lg:gap-6 md:justify-between lg:items-center">
       <div className="flex flex-col gap-2">
@@ -97,12 +102,24 @@ export const GuestDetails = (props: {
             Send invite
           </Button>
         ) : (
-          <SendInvitations>
-            <Button className="max-md:flex-1">
-              <Send />
-              Send invites
-            </Button>
-          </SendInvitations>
+          <>
+            <SendInvitations className="max-sm:hidden">
+              <Button className="max-md:flex-1">
+                <Send />
+                Send invites
+              </Button>
+            </SendInvitations>
+            <SendInvitationsMobileSheet
+              open={open}
+              onSetOpen={setOpen}
+              className="sm:hidden"
+            >
+              <Button className="max-md:flex-1">
+                <Send />
+                Send invites
+              </Button>
+            </SendInvitationsMobileSheet>
+          </>
         )}
         {guest ? (
           <GuestActions asChild className="max-lg:hidden">
