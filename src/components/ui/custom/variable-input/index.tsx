@@ -26,12 +26,13 @@ interface VariableInputFieldProps<TValue = string> {
   isInvalid?: boolean;
   label: string;
   editorResetKey: number;
+  className?: string;
 }
 
 const VariableInputField = <TValue = string,>(
   props: VariableInputFieldProps<TValue>,
 ) => {
-  const { field, label, isInvalid, editorResetKey } = props;
+  const { field, label, isInvalid, editorResetKey, className } = props;
 
   return (
     <LexicalComposer
@@ -54,7 +55,7 @@ const VariableInputField = <TValue = string,>(
           <VariableDropdown>
             <Button
               type="button"
-              className="h-8! rounded-[8px] border border-dashed border-[#6155F5]/10 bg-[#6155F5]/5 text-sm/[22px] font-medium text-[#6155f5] hover:bg-[#6155F5]/2"
+              className="h-8! rounded-[8px] border border-dashed border-[#6155F5]/10 bg-[#6155F5]/5 px-1.5! text-sm/[22px] font-medium text-[#6155f5] hover:bg-[#6155F5]/2"
             >
               <Plus className="size-4 text-[#6155F5]" />
               Insert variable
@@ -64,6 +65,7 @@ const VariableInputField = <TValue = string,>(
         <div
           className={cn(
             'relative rounded-[12px] border border-black/8 p-3',
+            className,
             isInvalid && 'border-destructive',
           )}
         >
