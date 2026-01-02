@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Plus, X } from 'lucide-react';
 import React, { useState } from 'react';
+import { renderStyledVariables } from './styled-variables';
 
 const PreviewInvitations = (props: { children?: React.ReactNode }) => {
   const { children } = props;
@@ -222,19 +223,3 @@ const FollowUpMessages = () => {
     </Accordion>
   );
 };
-
-const VARIABLE_REGEX = /\{[a-zA-Z_][a-zA-Z0-9_]*\}/g;
-
-function renderStyledVariables(text: string) {
-  const tokens = text.split(VARIABLE_REGEX);
-  const matches = text.match(VARIABLE_REGEX) ?? [];
-
-  return tokens.map((chunk, index) => (
-    <React.Fragment key={index}>
-      {chunk}
-      {matches[index] && (
-        <span className="text-[#6155F5]">{matches[index]}</span>
-      )}
-    </React.Fragment>
-  ));
-}
