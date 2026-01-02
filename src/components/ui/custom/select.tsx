@@ -5,7 +5,7 @@ import {
   Select,
   SelectContent,
   SelectItem,
-  SelectSeparator,
+  // SelectSeparator,
   SelectTrigger,
   SelectValue,
 } from '../select';

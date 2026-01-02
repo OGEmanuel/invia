@@ -74,7 +74,7 @@ const VariableInputField = <TValue = string,>(
               <ContentEditable className="min-h-22 text-sm/[22px] -tracking-[0.02em] outline-none" />
             }
             placeholder={
-              <p className="pointer-events-none absolute top-2.5 text-sm/[22px] -tracking-[0.02em] text-gray-400">
+              <p className="pointer-events-none absolute top-2.5 text-sm/[22px] -tracking-[0.02em] text-[#A3A19D]">
                 Hi {`{guest_name}`}, you are cordially invited to{' '}
                 {`{event_name}`}...
               </p>
