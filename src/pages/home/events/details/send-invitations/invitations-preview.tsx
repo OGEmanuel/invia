@@ -11,12 +11,16 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Plus, X } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { Activity, useState } from 'react';
 import { renderStyledVariables } from './styled-variables';
+import { useSearch } from '@tanstack/react-router';
 
 const PreviewInvitations = (props: { children?: React.ReactNode }) => {
   const { children } = props;
   const [messageVia, setMessageVia] = useState<string[]>(['whatsapp', 'email']);
+  const { guest } = useSearch({
+    from: '/$eventId',
+  });
 
   const [files, setFiles] = useState<File[]>([]);
 
@@ -91,7 +95,12 @@ const PreviewInvitations = (props: { children?: React.ReactNode }) => {
               <p>Sending to:</p>
             </div>
             <p>
-              <span className="font-medium text-[#212121]">2,234</span> guests
+              <Activity mode={guest ? 'hidden' : 'visible'}>
+                <span className="font-medium text-[#212121]">2,234</span> guests
+              </Activity>
+              <Activity mode={guest ? 'visible' : 'hidden'}>
+                Mr & Mrs Olawale Cole
+              </Activity>
             </p>
           </div>
           <div className="flex items-center gap-2">

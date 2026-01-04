@@ -15,6 +15,7 @@ import { Activity, useRef, useState } from 'react';
 import z from 'zod';
 // import EmptyState from '../empty-state';
 import { renderStyledVariables } from './styled-variables';
+import { useSearch } from '@tanstack/react-router';
 
 const followUpSchema = z.object({
   rsvp: z.string().min(2, { error: 'Please select RSVP status' }),
@@ -53,9 +54,13 @@ const SendInvitationsForm = (props: {
   const { children, setPage } = props;
   const [editorResetKey, setEditorResetKey] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const { guest } = useSearch({
+    from: '/$eventId',
+  });
 
+  // Remember to update default sendTo value when guest is true
   const customDefaultValues = {
-    sendTo: '',
+    sendTo: 'all',
     message: '',
     followUp: [],
   } as SendInvitationsFormSchema;
@@ -106,28 +111,40 @@ const SendInvitationsForm = (props: {
         )}
         ref={scrollRef}
       >
-        <form.Field
-          name="sendTo"
-          children={field => {
-            const isInvalid =
-              field.state.meta.isTouched && !field.state.meta.isValid;
-            return (
-              <SelectField
-                label="Send to"
-                placeholder="Groom"
-                isInvalid={isInvalid}
-                field={field}
-                options={sendToOptions}
-                className="w-full"
-              >
-                <FieldDescription className="text-sm/5 -tracking-[0.02em] text-[#575554]">
-                  <span className="font-medium text-[#212121]">2,234</span>{' '}
-                  guests will receive this message
-                </FieldDescription>
-              </SelectField>
-            );
-          }}
-        />
+        <Activity mode={guest ? 'hidden' : 'visible'}>
+          <form.Field
+            name="sendTo"
+            children={field => {
+              const isInvalid =
+                field.state.meta.isTouched && !field.state.meta.isValid;
+              return (
+                <SelectField
+                  label="Send to"
+                  placeholder="Groom"
+                  isInvalid={isInvalid}
+                  field={field}
+                  options={sendToOptions}
+                  className="w-full"
+                >
+                  <FieldDescription className="text-sm/5 -tracking-[0.02em] text-[#575554]">
+                    <span className="font-medium text-[#212121]">2,234</span>{' '}
+                    guests will receive this message
+                  </FieldDescription>
+                </SelectField>
+              );
+            }}
+          />
+        </Activity>
+        <Activity mode={guest ? 'visible' : 'hidden'}>
+          <div className="flex flex-col gap-1.5">
+            <p className="text-sm/5 font-medium -tracking-[0.02em] text-[#575554]">
+              Send to:
+            </p>
+            <p className="leading-5 -tracking-[0.02em] text-[#212121]">
+              Mr & Mrs Olawale Cole
+            </p>
+          </div>
+        </Activity>
         <hr className="border-y-[0.5px] border-t border-dashed border-[#00000014]" />
         <FormMode mode={mode} setMode={setMode} />
         <Activity mode={mode === 'custom' ? 'visible' : 'hidden'}>

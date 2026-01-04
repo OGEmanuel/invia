@@ -23,7 +23,7 @@ import EventMenuDropdownDialog from './event-menu-dropdown-dialog';
 import SendInvitations, {
   SendInvitationsMobileSheet,
 } from './send-invitations';
-import { useState } from 'react';
+import { useReducer, useRef, useState } from 'react';
 import {
   Dialog,
   DialogClose,
@@ -111,10 +111,24 @@ export const GuestDetails = (props: {
       <div className="flex items-center gap-2 md:max-lg:justify-end">
         {!guest && <AddGuest className="max-md:flex-1" />}
         {guest ? (
-          <Button className="max-md:flex-1">
-            <Send />
-            Send invite
-          </Button>
+          <>
+            <SendInvitations className="max-sm:hidden">
+              <Button className="max-md:flex-1">
+                <Send />
+                Send invite
+              </Button>
+            </SendInvitations>
+            <SendInvitationsMobileSheet
+              open={open}
+              onSetOpen={setOpen}
+              className="sm:hidden"
+            >
+              <Button className="max-md:flex-1">
+                <Send />
+                Send invite
+              </Button>
+            </SendInvitationsMobileSheet>
+          </>
         ) : (
           <>
             <SendInvitations className="max-sm:hidden">
@@ -205,7 +219,47 @@ const AddGuest = (props: { className?: string }) => {
   );
 };
 
+type CopyType = 'link' | 'code' | null;
+
+type CopyState = {
+  copied: CopyType;
+};
+
+type CopyAction = { type: 'COPY'; payload: CopyType } | { type: 'RESET' };
+
+const copyReducer = (state: CopyState, action: CopyAction): CopyState => {
+  switch (action.type) {
+    case 'COPY':
+      return { copied: action.payload };
+
+    case 'RESET':
+      return { copied: null };
+
+    default:
+      return state;
+  }
+};
+
 const ShareForm = () => {
+  const [state, dispatch] = useReducer(copyReducer, { copied: null });
+  const timeoutRef = useRef<number | null>(null);
+
+  const handleCopy = async (text: string, type: 'link' | 'code') => {
+    try {
+      await navigator.clipboard.writeText(text);
+
+      dispatch({ type: 'COPY', payload: type });
+
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+      timeoutRef.current = window.setTimeout(() => {
+        dispatch({ type: 'RESET' });
+      }, 1000);
+    } catch (err) {
+      console.error('Failed to copy text:', err);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col items-center">
@@ -239,8 +293,14 @@ const ShareForm = () => {
           <Button
             className="h-10 w-24 text-sm/[22px] font-medium -tracking-[0.02em] text-[#479FFD]"
             variant={'neutral'}
+            onClick={() =>
+              handleCopy(
+                'https://preview-cccc35a7--invitejoy-bot.lovable.app/guest-form/1',
+                'link',
+              )
+            }
           >
-            Copy link
+            {state.copied === 'link' ? 'Copied!' : 'Copy link'}
           </Button>
         </FieldSet>
       </FieldGroup>
@@ -262,15 +322,16 @@ const ShareForm = () => {
           <Button
             size={'icon'}
             variant={'neutral'}
-            className="size-10 rounded-[12px] px-2"
+            className="size-10 rounded-[12px] px-2 [&_svg:not([class*='size-'])]:size-6"
           >
             <Refresh />
           </Button>
           <Button
             className="h-10 w-24 text-sm/[22px] font-medium -tracking-[0.02em] text-[#479FFD]"
             variant={'neutral'}
+            onClick={() => handleCopy('6AHPCE', 'code')}
           >
-            Copy code
+            {state.copied === 'code' ? 'Copied!' : 'Copy Code'}
           </Button>
         </FieldSet>
         <FieldDescription className="text-sm/5 -tracking-[0.02em] text-[#575554]">

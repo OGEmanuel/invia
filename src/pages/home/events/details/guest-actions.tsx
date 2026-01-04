@@ -91,7 +91,7 @@ const GuestActions = (props: {
               stop all future messages.
             </DialogDescription>
           </DialogHeader>
-          <RemoveGuest />
+          <RemoveGuest guestName="Abolaji Olunuga" />
           <DialogFooter className="flex-row justify-center sm:justify-center">
             <DialogClose asChild>
               <Button variant="neutral">Go back</Button>
@@ -262,19 +262,21 @@ const EditGuestForm = (props: {
   );
 };
 
-const RemoveGuest = () => {
+export const RemoveGuest = (props: {
+  guestName: string;
+  multipleGuests?: boolean;
+}) => {
+  const { guestName, multipleGuests } = props;
   return (
     <div className="flex justify-center">
       <div className="flex w-full max-w-100 flex-col items-center gap-5 text-center">
         <Notice />
         <div className="flex flex-col gap-2 text-sm/[22px] -tracking-[0.02em] text-[#575554]">
           <p>Are you sure you want to remove</p>
-          <h3 className="font-serif text-xl/7 text-[#212121]">
-            Abolaji Olunuga
-          </h3>
+          <h3 className="font-serif text-xl/7 text-[#212121]">{guestName}</h3>
           <p>
-            Removing this guest will delete their details from this event and
-            stop all future messages.
+            Removing {multipleGuests ? 'these guests' : `this guest`} will
+            delete their details from this event and stop all future messages.
           </p>
         </div>
       </div>
