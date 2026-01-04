@@ -20,7 +20,7 @@ export const columns: ColumnDef<Guests>[] = [
             table.getIsAllPageRowsSelected() ||
             (table.getIsSomePageRowsSelected() && 'indeterminate')
           }
-          className="z-10 size-3.75 rounded-none border border-[#A3A19D] bg-[#FEFCF9] shadow-none"
+          className="z-10 size-5 rounded-[6px] border border-black/8 shadow-none data-[state=checked]:border-[#6155F5] data-[state=checked]:bg-[#F9F5FF] data-[state=indeterminate]:border-[#6155F5] data-[state=indeterminate]:bg-[#F9F5FF]"
           onCheckedChange={value => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"
         />
@@ -32,7 +32,7 @@ export const columns: ColumnDef<Guests>[] = [
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={value => row.toggleSelected(!!value)}
-          className="z-10 size-5 rounded-[6px] border border-[#00000014] bg-[#FEFCF9] shadow-none"
+          className="z-10 size-5 rounded-[6px] border border-black/8 bg-[#FEFCF9] shadow-none data-[state=checked]:border-[#6155F5] data-[state=checked]:bg-[#F9F5FF] data-[state=indeterminate]:border-[#6155F5] data-[state=indeterminate]:bg-[#F9F5FF]"
           aria-label="Select row"
         />
         <p className="pl-2 font-medium text-[#222222]">{row.original.guest}</p>

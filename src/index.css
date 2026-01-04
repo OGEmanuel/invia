@@ -46,6 +46,16 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --font-inter: 'Inter', system-ui, sans-serif;
   --font-serif: 'DM Serif Text', serif;
+  --animate-appear: appear 0.5s ease-in-out 0.25s forwards;
+
+  @keyframes appear {
+    from {
+      width: 450px;
+    }
+    to {
+      width: 100%;
+    }
+  }
 }
 
 .dark {
