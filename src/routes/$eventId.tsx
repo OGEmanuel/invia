@@ -1,3 +1,4 @@
+import AddGuests from '@/pages/home/events/details/add-guests';
 import EventsDetails from '@/pages/home/events/details';
 import GuestDetailsPage from '@/pages/home/events/details/guest-details';
 import RootLayout from '@/pages/home/layout';
@@ -8,15 +9,24 @@ export const Route = createFileRoute('/$eventId')({
   component: RouteComponent,
   validateSearch: z.object({
     guest: z.string().optional(),
+    addGuest: z.boolean().optional(),
   }),
 });
 
 function RouteComponent() {
-  const { guest } = useSearch({
+  const { guest, addGuest } = useSearch({
     from: '/$eventId',
   });
 
   return (
-    <RootLayout>{guest ? <GuestDetailsPage /> : <EventsDetails />}</RootLayout>
+    <>
+      {addGuest ? (
+        <AddGuests />
+      ) : (
+        <RootLayout>
+          {guest ? <GuestDetailsPage /> : <EventsDetails />}
+        </RootLayout>
+      )}
+    </>
   );
 }
