@@ -31,7 +31,7 @@ const GuestCard = () => {
           <p>bojnuga.emire@gmail.com</p>
         </div>
       </div>
-      <GuestActions>
+      <GuestActions asChild>
         <Button className="size-5 rounded-none" variant={'ghost'} size={'icon'}>
           <MoreVertical className="size-5 text-[#575554]" />
         </Button>

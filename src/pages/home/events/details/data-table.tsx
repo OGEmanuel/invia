@@ -140,7 +140,7 @@ const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>) => {
         </div>
         <div className="flex items-center gap-2">
           <Dialog>
-            <DialogTrigger>
+            <DialogTrigger asChild>
               <Button
                 className="text-destructive border border-black/8 bg-[#FEFCF9] hover:bg-white"
                 variant={'destructive'}

@@ -20,8 +20,8 @@ const Navbar = () => {
   });
 
   return (
-    <nav className="flex justify-center border-b border-black/8">
-      <div className="flex w-full max-w-7xl items-center justify-between px-8 py-4">
+    <nav className="flex justify-center border-black/8 lg:border-b">
+      <div className="flex w-full max-w-7xl items-center justify-between px-4 pt-5 lg:px-8 lg:py-4">
         <div className="flex items-center gap-4">
           <Link
             to={'/$eventId'}
@@ -32,11 +32,13 @@ const Navbar = () => {
           >
             <Arrow />
           </Link>
-          <h1 className="font-serif text-xl/7 text-[#212121]">Add guests</h1>
+          <h1 className="font-serif leading-7 text-[#212121] lg:text-xl">
+            Add guests
+          </h1>
         </div>
         <div className="flex items-center gap-4">
           <Dialog>
-            <DialogTrigger>
+            <DialogTrigger asChild>
               <Button variant={'neutral'} className="h-10">
                 <LinkIcon className="text-[#6155F5]" />
                 Share form
@@ -59,7 +61,13 @@ const Navbar = () => {
               </DialogFooter>
             </DialogContent>
           </Dialog>
-          <Button className="h-10">Add Guests</Button>
+          <Button
+            type="submit"
+            form="add-guest-form"
+            className="h-10 max-lg:hidden"
+          >
+            Add Guests
+          </Button>
         </div>
       </div>
     </nav>
