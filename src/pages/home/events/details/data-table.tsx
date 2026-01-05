@@ -134,7 +134,8 @@ const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>) => {
         <div className="flex items-center gap-2">
           <TwoPeople />
           <p className="leading-6 font-medium -tracking-[0.02em] text-white">
-            {table.getFilteredSelectedRowModel().rows.length} guests
+            {table.getFilteredSelectedRowModel().rows.length} guest
+            {`${table.getFilteredSelectedRowModel().rows.length > 1 ? 's' : ''}`}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -156,14 +157,23 @@ const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>) => {
                 </DialogDescription>
               </DialogHeader>
               <RemoveGuest
-                guestName={`All ${table.getFilteredSelectedRowModel()?.rows.length} guests`}
+                guestName={
+                  table.getFilteredSelectedRowModel()?.rows.length > 1
+                    ? `All ${table.getFilteredSelectedRowModel()?.rows.length} guests`
+                    : `${table.getFilteredSelectedRowModel()?.rows.length} guest`
+                }
                 multipleGuests
               />
               <DialogFooter className="flex-row justify-center sm:justify-center">
                 <DialogClose asChild>
                   <Button variant="neutral">Go back</Button>
                 </DialogClose>
-                <Button variant={'destructive'}>Remove guests</Button>
+                <Button variant={'destructive'}>
+                  Remove guest
+                  {table.getFilteredSelectedRowModel()?.rows.length > 1
+                    ? 's'
+                    : ''}
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>

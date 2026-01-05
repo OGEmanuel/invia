@@ -13,6 +13,7 @@ interface InputFieldProps<TValue = string> extends ComponentProps<'input'> {
   optional?: boolean;
   orientation?: 'vertical' | 'horizontal' | 'responsive' | null;
   wrapperClassName?: string;
+  errorClassName?: string;
 }
 
 const InputField = <TValue = string,>(props: InputFieldProps<TValue>) => {
@@ -28,6 +29,7 @@ const InputField = <TValue = string,>(props: InputFieldProps<TValue>) => {
     optional,
     orientation = 'vertical',
     wrapperClassName,
+    errorClassName,
   } = props;
 
   return (
@@ -76,7 +78,12 @@ const InputField = <TValue = string,>(props: InputFieldProps<TValue>) => {
           {icon}
         </span>
       </FieldSet>
-      {isInvalid && <FieldError errors={field.state.meta.errors} />}
+      {isInvalid && (
+        <FieldError
+          className={cn(errorClassName)}
+          errors={field.state.meta.errors}
+        />
+      )}
     </Field>
   );
 };
