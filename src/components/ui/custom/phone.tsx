@@ -13,6 +13,7 @@ interface PhoneFieldProps extends ComponentProps<'input'> {
   placeholder?: string;
   orientation?: 'vertical' | 'horizontal' | 'responsive' | null;
   wrapperClassName?: string;
+  errorClassName?: string;
 }
 
 const PhoneField = (props: PhoneFieldProps) => {
@@ -23,6 +24,7 @@ const PhoneField = (props: PhoneFieldProps) => {
     optional,
     orientation = 'vertical',
     wrapperClassName,
+    errorClassName,
   } = props;
 
   return (
@@ -52,7 +54,12 @@ const PhoneField = (props: PhoneFieldProps) => {
         onBlur={field.handleBlur}
         className="phone-input h-11 rounded-[12px] border border-[#00000014] px-3.5 text-sm/6 tracking-[-0.02em] shadow-none placeholder:text-[#A3A19D] [&>input]:h-full [&>input]:focus:outline-none"
       />
-      {isInvalid && <FieldError errors={field.state.meta.errors} />}
+      {isInvalid && (
+        <FieldError
+          className={cn(errorClassName)}
+          errors={field.state.meta.errors}
+        />
+      )}
     </Field>
   );
 };
