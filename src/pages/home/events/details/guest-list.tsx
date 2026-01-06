@@ -137,7 +137,7 @@ const GuestListConfig = () => {
 
 const GuestCard = ({ id, guest, party, contact, status, rsvp }: Guests) => {
   const { eventId } = useParams({
-    from: '/$eventId',
+    from: '/_authenticated/$eventId',
   });
 
   const statusTextColor =

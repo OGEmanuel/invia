@@ -58,3 +58,12 @@ export const MUTATIONS = {
     return await https.post(`/auth/reset-password`, data);
   },
 };
+
+export const QUERIES = {
+  getAccountMeDetailed: async function () {
+    return await https.get(`/account/me/detailed`);
+  },
+  getBusinessInfo: async function () {
+    return await https.get(`/account/manage-business/business-info`);
+  },
+};

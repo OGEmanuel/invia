@@ -59,7 +59,7 @@ export const EventDetailsLayoutHeader = (props: {
   eventId?: string;
 }) => {
   const { guest } = useSearch({
-    from: '/$eventId',
+    from: '/_authenticated/$eventId',
   });
 
   const { children, link, linkLabel, eventId } = props;
@@ -96,7 +96,7 @@ export const GuestDetails = (props: {
   children: React.ReactNode;
 }) => {
   const { guest } = useSearch({
-    from: '/$eventId',
+    from: '/_authenticated/$eventId',
   });
 
   const { header, children } = props;
@@ -168,7 +168,7 @@ const AddGuest = (props: { className?: string }) => {
   const [open, setOpen] = useState(false);
   const [showShareFormDialog, setShowShareFormDialog] = useState(false);
   const { eventId } = useParams({
-    from: '/$eventId',
+    from: '/_authenticated/$eventId',
   });
 
   return (

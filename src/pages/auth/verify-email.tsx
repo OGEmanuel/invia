@@ -81,6 +81,9 @@ const VerifyEmail = () => {
       getValue: (data: { data: { signupVerificationHash: string } }) =>
         data.data.signupVerificationHash,
     },
+    onSuccessCallback: () => {
+      navigate({ to: '/auth/create-password' });
+    },
   });
 
   const handleResendCode = () => {
@@ -105,27 +108,10 @@ const VerifyEmail = () => {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      mutate(
-        {
-          signupVerificationHash: svh,
-          otp: value.code,
-        },
-        {
-          onSuccess: (data?: {
-            data: { token: string; accountInfo: AccountInfo };
-          }) => {
-            if (!data?.data.accountInfo.isPasswordUpdated) {
-              navigate({ to: '/auth/create-password' });
-            } else if (!data?.data.accountInfo.isBusinessProfileUpdated) {
-              navigate({ to: '/auth/business-info' });
-            } else if (!data?.data.accountInfo.isAccountDisabled) {
-              navigate({ to: '/' });
-            } else {
-              navigate({ to: '/auth/sign-up' });
-            }
-          },
-        },
-      );
+      mutate({
+        signupVerificationHash: svh,
+        otp: value.code,
+      });
     },
   });
 

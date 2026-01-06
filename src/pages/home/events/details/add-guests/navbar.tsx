@@ -16,7 +16,7 @@ import ShareForm from '../../share-events-form';
 
 const Navbar = () => {
   const { eventId } = useParams({
-    from: '/$eventId',
+    from: '/_authenticated/$eventId',
   });
 
   return (

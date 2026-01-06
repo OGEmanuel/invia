@@ -52,6 +52,9 @@ const BusinessInfo = () => {
       title: 'Failed!',
       description: 'Please try again.',
     },
+    onSuccessCallback: () => {
+      navigate({ to: '/' });
+    },
   });
 
   const form = useForm({
@@ -63,22 +66,10 @@ const BusinessInfo = () => {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      mutate(
-        {
-          businessName: value.businessName,
-          businessAvatar: value.image,
-        },
-        {
-          onSuccess: (data?: { data: AccountInfo }) => {
-            localStorage.setItem('accountInfo', JSON.stringify(data?.data));
-            if (!data?.data.isAccountDisabled) {
-              navigate({ to: '/' });
-            } else {
-              navigate({ to: '/auth/sign-up' });
-            }
-          },
-        },
-      );
+      mutate({
+        businessName: value.businessName,
+        businessAvatar: value.image,
+      });
     },
   });
 
@@ -117,12 +108,16 @@ const BusinessInfo = () => {
             field.state.meta.isTouched && !field.state.meta.isValid;
           return (
             <FieldSet className="flex-row items-center gap-4">
-              <AvatarCustom
-                src={image.state.value}
-                alt={'Business logo'}
-                fallback={'B'}
-                className="relative size-18 text-[40px]/[100%] font-semibold tracking-[-0.02em] before:absolute before:inset-0 before:top-1/2 before:left-1/2 before:size-full before:-translate-1/2 before:rounded-full before:border before:border-[#00000014]"
-              />
+              {isUploadingImage ? (
+                <div className="size-18 animate-pulse rounded-full bg-gray-300"></div>
+              ) : (
+                <AvatarCustom
+                  src={image.state.value}
+                  alt={'Business logo'}
+                  fallback={'B'}
+                  className="relative size-18 text-[40px]/[100%] font-semibold tracking-[-0.02em] before:absolute before:inset-0 before:top-1/2 before:left-1/2 before:size-full before:-translate-1/2 before:rounded-full before:border before:border-[#00000014]"
+                />
+              )}
               <FieldSet className="flex-row items-end gap-1">
                 <FieldLabel
                   htmlFor={field.name}
@@ -144,7 +139,7 @@ const BusinessInfo = () => {
                     className="h-9 border border-[#00000014] bg-transparent text-base/6 font-medium tracking-[-0.02em] text-[#575554] hover:bg-transparent"
                   >
                     {isUploadingImage
-                      ? 'Adding image...'
+                      ? 'Uploading...'
                       : field.state.value
                         ? 'Change image'
                         : 'Add image'}

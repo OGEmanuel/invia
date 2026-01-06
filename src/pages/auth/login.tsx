@@ -6,7 +6,7 @@ import Envelope from '@/assets/jsx-icons/envelope';
 import EyeOpened from '@/assets/jsx-icons/eye-opened';
 import { useState } from 'react';
 import EyeClosed from '@/assets/jsx-icons/eye-closed';
-import { Link, useNavigate } from '@tanstack/react-router';
+import { Link, useRouter, useSearch } from '@tanstack/react-router';
 import { MUTATIONS } from '@/lib/queries';
 import useSendRequest from '@/lib/hooks/useSendRequest';
 
@@ -21,7 +21,10 @@ const formSchema = z.object({
 
 const Login = () => {
   const [passwordType, setPasswordType] = useState<string>('password');
-  const navigate = useNavigate({ from: '/auth/login' });
+  const router = useRouter();
+  const search = useSearch({
+    from: '/auth/login',
+  });
 
   const { mutate, isPending } = useSendRequest<
     { email: string; password: string },
@@ -45,7 +48,11 @@ const Login = () => {
       description: 'Please try again.',
     },
     onSuccessCallback: () => {
-      navigate({ to: '/' });
+      if (search.redirect) {
+        router.history.push(search.redirect);
+      } else {
+        router.navigate({ to: '/' });
+      }
     },
   });
 
