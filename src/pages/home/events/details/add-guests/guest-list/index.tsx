@@ -14,10 +14,7 @@ const GuestList = (props: { className?: string }) => {
   const { className } = props;
   return (
     <section
-      className={cn(
-        '_lg:h-[calc(100vh-137px)] _lg:overflow-auto rounded-[12px] border-black/8 lg:border',
-        className,
-      )}
+      className={cn('rounded-[12px] border-black/8 lg:border', className)}
     >
       <div className="_pb-4 flex flex-col border-black/8 lg:gap-1 lg:border-b lg:bg-[#F7F5F2] lg:px-4 lg:pt-4">
         <div className="flex flex-col gap-3 max-lg:hidden">
