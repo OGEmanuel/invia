@@ -15,8 +15,10 @@ import {
 import { cn } from '@/lib/utils';
 import { revalidateLogic, useField, useForm } from '@tanstack/react-form';
 import { Plus, Trash2, X } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
 import z from 'zod';
+import { AddParty, AddPartyMobileSheet } from './modals/add-party';
+import { RemovePartyDialog } from './modals/remove-party';
 
 const addGuestFormSchema = z.object({
   guestName: z.string().min(2, {
@@ -52,6 +54,7 @@ const AddGuestForm = (props: {
   className?: string;
 }) => {
   const { className } = props;
+  const [open, setOpen] = useState(false);
 
   const form = useForm({
     defaultValues: {
@@ -102,36 +105,52 @@ const AddGuestForm = (props: {
               <p className="text-sm/[22px] font-medium -tracking-[0.02em] text-white">
                 Groom
               </p>
-              <Button
-                size={'icon'}
-                type="button"
-                className="size-4 rounded-none hover:bg-transparent"
-                variant={'ghost'}
-              >
-                <X className="text-white/50" />
-              </Button>
+              <RemovePartyDialog>
+                <Button
+                  size={'icon'}
+                  type="button"
+                  className="size-4 rounded-none hover:bg-transparent"
+                  variant={'ghost'}
+                >
+                  <X className="text-white/50" />
+                </Button>
+              </RemovePartyDialog>
             </div>
             <div className="flex w-max items-center gap-1 rounded-[99px] bg-[#6155F5] px-2.5 py-1.25">
               <p className="text-sm/[22px] font-medium -tracking-[0.02em] text-white">
                 Bride
               </p>
-              <Button
-                size={'icon'}
-                type="button"
-                className="size-4 rounded-none hover:bg-transparent"
-                variant={'ghost'}
-              >
-                <X className="text-white/50" />
-              </Button>
+              <RemovePartyDialog>
+                <Button
+                  size={'icon'}
+                  type="button"
+                  className="size-4 rounded-none hover:bg-transparent"
+                  variant={'ghost'}
+                >
+                  <X className="text-white/50" />
+                </Button>
+              </RemovePartyDialog>
             </div>
-            <Button
-              variant={'ghost'}
-              size={'icon-sm'}
-              type="button"
-              className="rounded-full border border-[#6155F5]/12"
-            >
-              <Plus className="size-5 text-[#6155F5]" />
-            </Button>
+            <AddParty>
+              <Button
+                variant={'ghost'}
+                size={'icon-sm'}
+                type="button"
+                className="rounded-full border border-[#6155F5]/12 max-sm:hidden"
+              >
+                <Plus className="size-5 text-[#6155F5]" />
+              </Button>
+            </AddParty>
+            <AddPartyMobileSheet open={open} onSetOpen={setOpen}>
+              <Button
+                variant={'ghost'}
+                size={'icon-sm'}
+                type="button"
+                className="rounded-full border border-[#6155F5]/12 sm:hidden"
+              >
+                <Plus className="size-5 text-[#6155F5]" />
+              </Button>
+            </AddPartyMobileSheet>
           </div>
         </FieldSet>
         <FieldGroup className="h-[calc(100vh-341px)] gap-6 overflow-auto max-lg:px-3.5 max-lg:pb-6 lg:h-[calc(100vh-283px)]">
