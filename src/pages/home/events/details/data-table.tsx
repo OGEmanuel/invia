@@ -42,7 +42,7 @@ interface DataTableProps<TData, TValue> {
 const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>) => {
   const { columns, data, className, children, isFirstChildHidden } = props;
   const { eventId } = useParams({
-    from: '/$eventId',
+    from: '/_authenticated/$eventId',
   });
 
   const table = useReactTable({

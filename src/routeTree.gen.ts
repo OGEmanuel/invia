@@ -9,11 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as EventIdRouteImport } from './routes/$eventId'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as SettingsIndexRouteImport } from './routes/settings/index'
-import { Route as MessagesIndexRouteImport } from './routes/messages/index'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthVerifyResetPasswordRouteImport } from './routes/auth/verify-reset-password'
 import { Route as AuthVerifyEmailRouteImport } from './routes/auth/verify-email'
 import { Route as AuthSignUpRouteImport } from './routes/auth/sign-up'
@@ -22,31 +20,23 @@ import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
 import { Route as AuthCreatePasswordRouteImport } from './routes/auth/create-password'
 import { Route as AuthBusinessInfoRouteImport } from './routes/auth/business-info'
+import { Route as AuthenticatedEventIdRouteImport } from './routes/_authenticated/$eventId'
+import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
+import { Route as AuthenticatedMessagesIndexRouteImport } from './routes/_authenticated/messages/index'
 
-const EventIdRoute = EventIdRouteImport.update({
-  id: '/$eventId',
-  path: '/$eventId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SettingsIndexRoute = SettingsIndexRouteImport.update({
-  id: '/settings/',
-  path: '/settings/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MessagesIndexRoute = MessagesIndexRouteImport.update({
-  id: '/messages/',
-  path: '/messages/',
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthIndexRoute = AuthIndexRouteImport.update({
   id: '/auth/',
   path: '/auth/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthVerifyResetPasswordRoute = AuthVerifyResetPasswordRouteImport.update({
   id: '/auth/verify-reset-password',
@@ -88,10 +78,26 @@ const AuthBusinessInfoRoute = AuthBusinessInfoRouteImport.update({
   path: '/auth/business-info',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedEventIdRoute = AuthenticatedEventIdRouteImport.update({
+  id: '/$eventId',
+  path: '/$eventId',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedSettingsIndexRoute =
+  AuthenticatedSettingsIndexRouteImport.update({
+    id: '/settings/',
+    path: '/settings/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedMessagesIndexRoute =
+  AuthenticatedMessagesIndexRouteImport.update({
+    id: '/messages/',
+    path: '/messages/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/$eventId': typeof EventIdRoute
+  '/$eventId': typeof AuthenticatedEventIdRoute
   '/auth/business-info': typeof AuthBusinessInfoRoute
   '/auth/create-password': typeof AuthCreatePasswordRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -100,13 +106,13 @@ export interface FileRoutesByFullPath {
   '/auth/sign-up': typeof AuthSignUpRoute
   '/auth/verify-email': typeof AuthVerifyEmailRoute
   '/auth/verify-reset-password': typeof AuthVerifyResetPasswordRoute
+  '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthIndexRoute
-  '/messages': typeof MessagesIndexRoute
-  '/settings': typeof SettingsIndexRoute
+  '/messages': typeof AuthenticatedMessagesIndexRoute
+  '/settings': typeof AuthenticatedSettingsIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/$eventId': typeof EventIdRoute
+  '/$eventId': typeof AuthenticatedEventIdRoute
   '/auth/business-info': typeof AuthBusinessInfoRoute
   '/auth/create-password': typeof AuthCreatePasswordRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -115,14 +121,15 @@ export interface FileRoutesByTo {
   '/auth/sign-up': typeof AuthSignUpRoute
   '/auth/verify-email': typeof AuthVerifyEmailRoute
   '/auth/verify-reset-password': typeof AuthVerifyResetPasswordRoute
+  '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthIndexRoute
-  '/messages': typeof MessagesIndexRoute
-  '/settings': typeof SettingsIndexRoute
+  '/messages': typeof AuthenticatedMessagesIndexRoute
+  '/settings': typeof AuthenticatedSettingsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/$eventId': typeof EventIdRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/_authenticated/$eventId': typeof AuthenticatedEventIdRoute
   '/auth/business-info': typeof AuthBusinessInfoRoute
   '/auth/create-password': typeof AuthCreatePasswordRoute
   '/auth/forgot-password': typeof AuthForgotPasswordRoute
@@ -131,14 +138,14 @@ export interface FileRoutesById {
   '/auth/sign-up': typeof AuthSignUpRoute
   '/auth/verify-email': typeof AuthVerifyEmailRoute
   '/auth/verify-reset-password': typeof AuthVerifyResetPasswordRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
   '/auth/': typeof AuthIndexRoute
-  '/messages/': typeof MessagesIndexRoute
-  '/settings/': typeof SettingsIndexRoute
+  '/_authenticated/messages/': typeof AuthenticatedMessagesIndexRoute
+  '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
     | '/$eventId'
     | '/auth/business-info'
     | '/auth/create-password'
@@ -148,12 +155,12 @@ export interface FileRouteTypes {
     | '/auth/sign-up'
     | '/auth/verify-email'
     | '/auth/verify-reset-password'
+    | '/'
     | '/auth'
     | '/messages'
     | '/settings'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/$eventId'
     | '/auth/business-info'
     | '/auth/create-password'
@@ -163,13 +170,14 @@ export interface FileRouteTypes {
     | '/auth/sign-up'
     | '/auth/verify-email'
     | '/auth/verify-reset-password'
+    | '/'
     | '/auth'
     | '/messages'
     | '/settings'
   id:
     | '__root__'
-    | '/'
-    | '/$eventId'
+    | '/_authenticated'
+    | '/_authenticated/$eventId'
     | '/auth/business-info'
     | '/auth/create-password'
     | '/auth/forgot-password'
@@ -178,14 +186,14 @@ export interface FileRouteTypes {
     | '/auth/sign-up'
     | '/auth/verify-email'
     | '/auth/verify-reset-password'
+    | '/_authenticated/'
     | '/auth/'
-    | '/messages/'
-    | '/settings/'
+    | '/_authenticated/messages/'
+    | '/_authenticated/settings/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  EventIdRoute: typeof EventIdRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AuthBusinessInfoRoute: typeof AuthBusinessInfoRoute
   AuthCreatePasswordRoute: typeof AuthCreatePasswordRoute
   AuthForgotPasswordRoute: typeof AuthForgotPasswordRoute
@@ -195,38 +203,15 @@ export interface RootRouteChildren {
   AuthVerifyEmailRoute: typeof AuthVerifyEmailRoute
   AuthVerifyResetPasswordRoute: typeof AuthVerifyResetPasswordRoute
   AuthIndexRoute: typeof AuthIndexRoute
-  MessagesIndexRoute: typeof MessagesIndexRoute
-  SettingsIndexRoute: typeof SettingsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/$eventId': {
-      id: '/$eventId'
-      path: '/$eventId'
-      fullPath: '/$eventId'
-      preLoaderRoute: typeof EventIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/settings/': {
-      id: '/settings/'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/messages/': {
-      id: '/messages/'
-      path: '/messages'
-      fullPath: '/messages'
-      preLoaderRoute: typeof MessagesIndexRouteImport
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/': {
@@ -235,6 +220,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth'
       preLoaderRoute: typeof AuthIndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/': {
+      id: '/_authenticated/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/auth/verify-reset-password': {
       id: '/auth/verify-reset-password'
@@ -292,12 +284,50 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthBusinessInfoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/$eventId': {
+      id: '/_authenticated/$eventId'
+      path: '/$eventId'
+      fullPath: '/$eventId'
+      preLoaderRoute: typeof AuthenticatedEventIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/settings/': {
+      id: '/_authenticated/settings/'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/messages/': {
+      id: '/_authenticated/messages/'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof AuthenticatedMessagesIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedEventIdRoute: typeof AuthenticatedEventIdRoute
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedMessagesIndexRoute: typeof AuthenticatedMessagesIndexRoute
+  AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedEventIdRoute: AuthenticatedEventIdRoute,
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedMessagesIndexRoute: AuthenticatedMessagesIndexRoute,
+  AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  EventIdRoute: EventIdRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AuthBusinessInfoRoute: AuthBusinessInfoRoute,
   AuthCreatePasswordRoute: AuthCreatePasswordRoute,
   AuthForgotPasswordRoute: AuthForgotPasswordRoute,
@@ -307,8 +337,6 @@ const rootRouteChildren: RootRouteChildren = {
   AuthVerifyEmailRoute: AuthVerifyEmailRoute,
   AuthVerifyResetPasswordRoute: AuthVerifyResetPasswordRoute,
   AuthIndexRoute: AuthIndexRoute,
-  MessagesIndexRoute: MessagesIndexRoute,
-  SettingsIndexRoute: SettingsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

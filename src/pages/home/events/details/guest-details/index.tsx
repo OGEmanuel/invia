@@ -11,7 +11,7 @@ import ScrollToTop from '@/components/scroll-to-top';
 
 const GuestDetailsPage = () => {
   const { eventId } = useParams({
-    from: '/$eventId',
+    from: '/_authenticated/$eventId',
   });
   return (
     <>

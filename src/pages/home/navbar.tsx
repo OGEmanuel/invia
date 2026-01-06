@@ -1,11 +1,11 @@
-import { Link, useLocation, useNavigate } from '@tanstack/react-router';
+import { Link, useLocation, useRouter } from '@tanstack/react-router';
 import Logo from '../auth/components/logo';
 import { Button } from '@/components/ui/button';
 import AvatarCustom from '@/components/ui/custom/avatar';
 import Bolt from '@/assets/jsx-icons/bolt';
 import { Menu, X } from 'lucide-react';
 import UpgradeModal, { UpgradeSheet } from './upgrade-modal';
-import { useEffect, useState } from 'react';
+import { Activity, useState } from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,24 +25,18 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import LogoIcon from '@/assets/jsx-icons/logo-icon';
-import type { AccountInfo } from '@/lib/constants';
+import type { BusinessInfoType } from '@/lib/constants';
 import Cookies from 'js-cookie';
+import { useGetBusinessInfo } from '@/lib/queries/hooks';
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [openSmall, setOpenSmall] = useState(false);
   const [openMobileNav, setOpenMobileNav] = useState(false);
   const { pathname } = useLocation();
-  const [accountInfo, setAccountInfo] = useState<AccountInfo | null>(null);
+  const { data, isPending, isError } = useGetBusinessInfo();
 
-  useEffect(() => {
-    const storedAccountInfo = localStorage.getItem('accountInfo');
-    const accountInfo = storedAccountInfo
-      ? JSON.parse(storedAccountInfo)
-      : null;
-
-    setAccountInfo(accountInfo);
-  }, []);
+  const businessInfo: BusinessInfoType = data?.data;
 
   return (
     <nav className="bg-background fixed z-20 flex w-full justify-center border-b border-[#00000014] py-4">
@@ -122,14 +116,20 @@ const Navbar = () => {
                   </Button>
                 </UpgradeSheet>
               </div>
-              <ProfileDropdown>
-                <AvatarCustom
-                  src={accountInfo?.avatar ?? ''}
-                  alt={accountInfo?.name ?? ''}
-                  fallback={accountInfo?.name[0] ?? 'A'}
-                  className="size-10"
-                />
-              </ProfileDropdown>
+              {isPending ? (
+                <div className="size-10 animate-pulse rounded-full bg-gray-300"></div>
+              ) : (
+                <Activity mode={isError ? 'hidden' : 'visible'}>
+                  <ProfileDropdown>
+                    <AvatarCustom
+                      src={businessInfo.avatar}
+                      alt={businessInfo.name}
+                      fallback={businessInfo.name[0]}
+                      className="size-10"
+                    />
+                  </ProfileDropdown>
+                </Activity>
+              )}
             </>
           )}
           <MobileNav
@@ -158,23 +158,17 @@ export default Navbar;
 
 const ProfileDropdown = (props: { children?: React.ReactNode }) => {
   const { children } = props;
-  const [accountInfo, setAccountInfo] = useState<AccountInfo | null>(null);
-  const navigate = useNavigate();
+  const { data } = useGetBusinessInfo();
+  const router = useRouter();
 
-  useEffect(() => {
-    const storedAccountInfo = localStorage.getItem('accountInfo');
-    const accountInfo = storedAccountInfo
-      ? JSON.parse(storedAccountInfo)
-      : null;
+  const businessInfo: BusinessInfoType = data?.data;
 
-    setAccountInfo(accountInfo);
-  }, []);
-
-  const handleLogOut = () => {
+  const handleLogOut = async () => {
     sessionStorage.removeItem('user');
     sessionStorage.removeItem('svh');
     Cookies.remove('rf');
-    navigate({ to: '/auth/login' });
+
+    await router.invalidate();
   };
 
   return (
@@ -189,13 +183,13 @@ const ProfileDropdown = (props: { children?: React.ReactNode }) => {
       >
         <DropdownMenuLabel className="flex items-center gap-2 p-2">
           <AvatarCustom
-            src={accountInfo?.avatar ?? ''}
-            alt={accountInfo?.name ?? ''}
-            fallback={accountInfo?.name[0] ?? 'A'}
+            src={businessInfo.avatar}
+            alt={businessInfo.name}
+            fallback={businessInfo.name[0]}
             className="size-8 text-sm/[22px]"
           />
           <p className="font-medium -tracking-[0.02em] text-[#212121]">
-            {accountInfo?.businessName ?? 'Abolaji Events'}
+            {businessInfo.name}
           </p>
         </DropdownMenuLabel>
         <hr className="h-1 w-full border-t border-dashed border-[#00000014]" />

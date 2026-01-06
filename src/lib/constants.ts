@@ -40,3 +40,9 @@ export interface AccountInfo {
   isPasswordUpdated: boolean;
   isBusinessProfileUpdated: boolean;
 }
+
+export interface BusinessInfoType {
+  id: string;
+  name: string;
+  avatar: string;
+}

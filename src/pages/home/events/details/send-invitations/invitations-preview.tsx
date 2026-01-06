@@ -19,7 +19,7 @@ const PreviewInvitations = (props: { children?: React.ReactNode }) => {
   const { children } = props;
   const [messageVia, setMessageVia] = useState<string[]>(['whatsapp', 'email']);
   const { guest } = useSearch({
-    from: '/$eventId',
+    from: '/_authenticated/$eventId',
   });
 
   const [files, setFiles] = useState<File[]>([]);

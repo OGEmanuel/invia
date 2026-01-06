@@ -55,7 +55,7 @@ const SendInvitationsForm = (props: {
   const [editorResetKey, setEditorResetKey] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { guest } = useSearch({
-    from: '/$eventId',
+    from: '/_authenticated/$eventId',
   });
 
   // Remember to update default sendTo value when guest is true

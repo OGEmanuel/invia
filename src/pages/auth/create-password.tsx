@@ -34,6 +34,9 @@ const CreatePassword = () => {
       title: 'Failed!',
       description: 'Please try again.',
     },
+    onSuccessCallback: () => {
+      navigate({ to: '/auth/business-info' });
+    },
   });
 
   const form = useForm({
@@ -44,17 +47,7 @@ const CreatePassword = () => {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      mutate(value, {
-        onSuccess: (data?: { data: AccountInfo }) => {
-          if (!data?.data.isBusinessProfileUpdated) {
-            navigate({ to: '/auth/business-info' });
-          } else if (!data?.data.isAccountDisabled) {
-            navigate({ to: '/' });
-          } else {
-            navigate({ to: '/auth/sign-up' });
-          }
-        },
-      });
+      mutate(value);
     },
   });
 
