@@ -20,7 +20,7 @@ import { useQueryState } from 'nuqs';
 
 const EventsView = () => {
   const { page } = useSearch({ from: '/_authenticated/' });
-  const { data } = useGetAllEvents(page, 12);
+  const { data, isPending } = useGetAllEvents(page, 12);
   const navigate = useNavigate({
     from: '/',
   });
@@ -38,38 +38,42 @@ const EventsView = () => {
         <SelectEvents />
       </div>
       <div className="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
-        {events?.events?.map(event => (
-          <EventCard key={event.id} {...event} />
-        ))}
+        {isPending
+          ? Array(12)
+              .fill(null)
+              .map((_, i) => <EventCardSkeleton key={i} />)
+          : events.events.map(event => <EventCard key={event.id} {...event} />)}
       </div>
-      <Pagination
-        currentPage={page}
-        totalPages={events?.totalPages}
-        onPageChange={page =>
-          navigate({
-            search: () => ({
-              limit: 12,
-              page,
-            }),
-          })
-        }
-        onNextPage={() =>
-          navigate({
-            search: () => ({
-              limit: 12,
-              page: page + 1,
-            }),
-          })
-        }
-        onPreviousPage={() =>
-          navigate({
-            search: () => ({
-              limit: 12,
-              page: page - 1,
-            }),
-          })
-        }
-      />
+      {events && (
+        <Pagination
+          currentPage={page}
+          totalPages={events.totalPages}
+          onPageChange={page =>
+            navigate({
+              search: () => ({
+                limit: 12,
+                page,
+              }),
+            })
+          }
+          onNextPage={() =>
+            navigate({
+              search: () => ({
+                limit: 12,
+                page: page + 1,
+              }),
+            })
+          }
+          onPreviousPage={() =>
+            navigate({
+              search: () => ({
+                limit: 12,
+                page: page - 1,
+              }),
+            })
+          }
+        />
+      )}
     </div>
   );
 };
@@ -233,9 +237,11 @@ export const EventsLoadingView = () => {
         <div className="h-10 w-36 animate-pulse rounded-lg bg-gray-200"></div>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
-        {[1, 2, 3].map(i => (
-          <EventCardSkeleton key={i} />
-        ))}
+        {Array(12)
+          .fill(0)
+          .map((_, i) => (
+            <EventCardSkeleton key={i} />
+          ))}
       </div>
     </div>
   );
