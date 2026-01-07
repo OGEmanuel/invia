@@ -90,4 +90,16 @@ export const QUERIES = {
 
     return await https.get(url);
   },
+  getEventInfo: async function (id: string) {
+    const params = new URLSearchParams();
+
+    if (id) {
+      params.append('id', id);
+    }
+
+    const queryString = params.toString();
+    const url = `/event/info?${queryString}`;
+
+    return await https.get(url);
+  },
 };
