@@ -60,6 +60,9 @@ const VerifyEmail = () => {
         return token;
       },
     },
+    onSuccessCallback: () => {
+      navigate({ to: '/auth/create-password' });
+    },
   });
 
   const { mutate: resentCode, isPending: resendCodeIsPending } = useSendRequest<

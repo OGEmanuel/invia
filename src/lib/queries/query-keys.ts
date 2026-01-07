@@ -10,5 +10,6 @@ export const QUERY_KEYS = {
       ...QUERY_KEYS.events.all,
       { page, limit },
     ],
+    event: (id: string) => [...QUERY_KEYS.events.all, { id }],
   },
 };
