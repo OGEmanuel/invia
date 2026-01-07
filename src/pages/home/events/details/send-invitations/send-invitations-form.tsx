@@ -205,7 +205,7 @@ const SendInvitationsForm = (props: {
                 children={field => {
                   return (
                     <FieldGroup className="gap-6">
-                      {field.state.value.map((_, i) => {
+                      {field?.state?.value?.map((_, i) => {
                         return (
                           <FieldSet
                             key={i}
@@ -334,7 +334,7 @@ const SendInvitationsForm = (props: {
                 );
               }}
             />
-            <div className="flex flex-col gap-4 rounded-[12px] bg-[#FEFCF9] p-3">
+            <div className="flex flex-col gap-4 rounded-[12px] border border-black/8 bg-[#FEFCF9] p-3">
               <p className="line-clamp-2 text-sm/[22px] -tracking-[0.02em] text-ellipsis text-[#212121]">
                 {renderStyledVariables(
                   'Hi {guest_name}, you are cordially invited to {event_name}. Sorem ipsum dolor sit amet, consectetur adipiscing elit. ipsum dolor sit amet, consectetur adipiscing elit.',

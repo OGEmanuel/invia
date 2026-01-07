@@ -15,3 +15,10 @@ export const useGetBusinessInfo = () => {
     queryFn: () => QUERIES.getBusinessInfo(),
   });
 };
+
+export const useGetAllEvents = (page: number, limit: number) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.events.paginated(page, limit),
+    queryFn: () => QUERIES.getEvents(page, limit),
+  });
+};

@@ -53,7 +53,13 @@ const BusinessInfo = () => {
       description: 'Please try again.',
     },
     onSuccessCallback: () => {
-      navigate({ to: '/' });
+      navigate({
+        to: '/',
+        search: {
+          page: 1,
+          limit: 12,
+        },
+      });
     },
   });
 

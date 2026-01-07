@@ -57,6 +57,15 @@ export const MUTATIONS = {
   }) {
     return await https.post(`/auth/reset-password`, data);
   },
+  createEvent: async function (data: {
+    name: string;
+    category: string;
+    date: string;
+    time: string;
+    location: string;
+  }) {
+    return await https.post(`/event/create`, data);
+  },
 };
 
 export const QUERIES = {
@@ -65,5 +74,20 @@ export const QUERIES = {
   },
   getBusinessInfo: async function () {
     return await https.get(`/account/manage-business/business-info`);
+  },
+  getEvents: async function (page?: number, limit?: number) {
+    const params = new URLSearchParams();
+
+    if (page) {
+      params.append('page', page.toString());
+    }
+    if (limit) {
+      params.append('pageSize', limit.toString());
+    }
+
+    const queryString = params.toString();
+    const url = `/event/fetch?${queryString}`;
+
+    return await https.get(url);
   },
 };

@@ -11,13 +11,13 @@ import { useQueryState, type Options } from 'nuqs';
 import DataTable from './data-table';
 import { columns } from './columns';
 import type { Guests } from '@/lib/constants';
-import { Pagination } from '@/components/ui/custom/pagination';
-import { useState } from 'react';
+// import { Pagination } from '@/components/ui/custom/pagination';
+// import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Link, useParams } from '@tanstack/react-router';
 
 const GuestList = () => {
-  const [page, setPage] = useState(1);
+  // const [page, setPage] = useState(1);
   const data: Guests[] = [];
   const statuses = ['sent', 'pending', 'delivered', 'seen'] as const;
 
@@ -56,7 +56,7 @@ const GuestList = () => {
           className="max-xl:hidden"
           isFirstChildHidden
         />
-        <Pagination currentPage={page} totalPages={10} onPageChange={setPage} />
+        {/* <Pagination currentPage={page} totalPages={10} onPageChange={setPage} /> */}
       </div>
     </section>
   );

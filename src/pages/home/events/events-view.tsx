@@ -4,6 +4,7 @@ import Others from '@/assets/jsx-icons/others';
 import Party from '@/assets/jsx-icons/party';
 import People from '@/assets/jsx-icons/people';
 import StarCalendar from '@/assets/jsx-icons/star-calendar';
+import { Pagination } from '@/components/ui/custom/pagination';
 import {
   Select,
   SelectContent,
@@ -11,113 +12,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { cn } from '@/lib/utils';
-import { Link } from '@tanstack/react-router';
+import type { EventData, Events } from '@/lib/constants';
+import { useGetAllEvents } from '@/lib/queries/hooks';
+import { cn, formatDateToShortMonth } from '@/lib/utils';
+import { Link, useNavigate, useSearch } from '@tanstack/react-router';
 import { useQueryState } from 'nuqs';
 
-const EVENTS = [
-  {
-    id: 1,
-    type: 'wedding',
-    title: 'Mr. & Mrs. Williams’ Wedding',
-    date: 'Jun 15, 2026',
-    invitees: 1321,
-    sent: 1321,
-    confirmed: 1210,
-    pending: 321,
-    failed: 24,
-  },
-  {
-    id: 2,
-    type: 'party',
-    title: 'Mr. & Mrs. Williams’ Wedding',
-    date: 'Jun 15, 2026',
-    invitees: 0,
-    sent: 0,
-    confirmed: 0,
-    pending: 0,
-    failed: 0,
-  },
-  {
-    id: 3,
-    type: 'others',
-    title: 'Mr. & Mrs. Williams’ Wedding',
-    date: 'Jun 15, 2026',
-    invitees: 1321,
-    sent: 1321,
-    confirmed: 1210,
-    pending: 321,
-    failed: 24,
-  },
-  {
-    id: 4,
-    type: 'corporate',
-    title: 'Mr. & Mrs. Williams’ Wedding',
-    date: 'Jun 15, 2026',
-    invitees: 1321,
-    sent: 1321,
-    confirmed: 1210,
-    pending: 321,
-    failed: 24,
-  },
-  {
-    id: 5,
-    type: 'wedding',
-    title: 'Mr. & Mrs. Williams’ Wedding',
-    date: 'Jun 15, 2026',
-    invitees: 1321,
-    sent: 1321,
-    confirmed: 1210,
-    pending: 321,
-    failed: 24,
-  },
-  {
-    id: 6,
-    type: 'corporate',
-    title: 'Mr. & Mrs. Williams’ Wedding',
-    date: 'Jun 15, 2026',
-    invitees: 1321,
-    sent: 1321,
-    confirmed: 1210,
-    pending: 321,
-    failed: 24,
-  },
-  {
-    id: 7,
-    type: 'wedding',
-    title: 'Mr. & Mrs. Williams’ Wedding',
-    date: 'Jun 15, 2026',
-    invitees: 1321,
-    sent: 1321,
-    confirmed: 1210,
-    pending: 321,
-    failed: 24,
-  },
-  {
-    id: 8,
-    type: 'party',
-    title: 'Mr. & Mrs. Williams’ Wedding',
-    date: 'Jun 15, 2026',
-    invitees: 0,
-    sent: 0,
-    confirmed: 0,
-    pending: 0,
-    failed: 0,
-  },
-  {
-    id: 9,
-    type: 'others',
-    title: 'Mr. & Mrs. Williams’ Wedding',
-    date: 'Jun 15, 2026',
-    invitees: 1321,
-    sent: 1321,
-    confirmed: 1210,
-    pending: 321,
-    failed: 24,
-  },
-];
-
 const EventsView = () => {
+  const { page } = useSearch({ from: '/_authenticated/' });
+  const { data, isPending } = useGetAllEvents(page, 12);
+  const navigate = useNavigate({
+    from: '/',
+  });
+  const events: EventData = data?.data;
+
   return (
     <div className="flex w-full flex-col gap-4 py-5 max-md:px-5 md:gap-6 md:py-6 md:max-xl:px-8">
       <div className="flex items-center justify-between">
@@ -130,10 +38,42 @@ const EventsView = () => {
         <SelectEvents />
       </div>
       <div className="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
-        {EVENTS.map(event => (
-          <EventCard key={event.id} {...event} />
-        ))}
+        {isPending
+          ? Array(12)
+              .fill(null)
+              .map((_, i) => <EventCardSkeleton key={i} />)
+          : events.events.map(event => <EventCard key={event.id} {...event} />)}
       </div>
+      {events && (
+        <Pagination
+          currentPage={page}
+          totalPages={events.totalPages}
+          onPageChange={page =>
+            navigate({
+              search: () => ({
+                limit: 12,
+                page,
+              }),
+            })
+          }
+          onNextPage={() =>
+            navigate({
+              search: () => ({
+                limit: 12,
+                page: page + 1,
+              }),
+            })
+          }
+          onPreviousPage={() =>
+            navigate({
+              search: () => ({
+                limit: 12,
+                page: page - 1,
+              }),
+            })
+          }
+        />
+      )}
     </div>
   );
 };
@@ -142,42 +82,46 @@ export default EventsView;
 
 const EventCard = ({
   id,
-  type,
-  title,
+  acceptedInvites,
+  pendingInvites,
+  failedInvites,
+  sentInvites,
+  totalGuests,
+  category,
   date,
-  invitees,
-  sent,
-  confirmed,
-  pending,
-  failed,
-}: (typeof EVENTS)[0]) => {
+  name,
+}: Events) => {
   return (
     <div className="relative rounded-[12px] border border-[#00000014] bg-[#FEFCF9] transition-transform active:scale-95">
       <div className="flex flex-col gap-3 p-4">
         <div className="flex flex-col gap-2">
           <div
             className={cn(
-              'flex w-max items-center gap-1 rounded-xl border px-3 py-2',
-              type === 'wedding' && 'border-[#874CF933] bg-[#F9F6FF]',
-              type === 'party' && 'border-[#479FFD33] bg-[#F6FAFF]',
-              type === 'others' && 'border-[#FD843D33] bg-[#FFF9F5]',
-              type === 'corporate' && 'border-[#2EC31B33] bg-[#F5FCF4]',
+              'flex w-max items-center gap-1 rounded-[8px] border px-3 py-2',
+              category.toLowerCase() === 'wedding' &&
+                'border-[#874CF933] bg-[#F9F6FF]',
+              category.toLowerCase() === 'party' &&
+                'border-[#479FFD33] bg-[#F6FAFF]',
+              category.toLowerCase() === 'others' &&
+                'border-[#FD843D33] bg-[#FFF9F5]',
+              category.toLowerCase() === 'corporate' &&
+                'border-[#2EC31B33] bg-[#F5FCF4]',
             )}
           >
-            {type === 'wedding' && <Heart />}
-            {type === 'party' && <Party />}
-            {type === 'others' && <Others />}
-            {type === 'corporate' && <Corporate />}
+            {category.toLowerCase() === 'wedding' && <Heart />}
+            {category.toLowerCase() === 'party' && <Party />}
+            {category.toLowerCase() === 'others' && <Others />}
+            {category.toLowerCase() === 'corporate' && <Corporate />}
             <p
               className={cn(
                 'text-xs/[100%] font-medium -tracking-[0.02em] capitalize',
-                type === 'wedding' && 'text-[#874CF9]',
-                type === 'party' && 'text-[#479FFD]',
-                type === 'others' && 'text-[#FD843D]',
-                type === 'corporate' && 'text-[#2EC31B]',
+                category.toLowerCase() === 'wedding' && 'text-[#874CF9]',
+                category.toLowerCase() === 'party' && 'text-[#479FFD]',
+                category.toLowerCase() === 'others' && 'text-[#FD843D]',
+                category.toLowerCase() === 'corporate' && 'text-[#2EC31B]',
               )}
             >
-              {type}
+              {category}
             </p>
           </div>
           <Link
@@ -188,21 +132,21 @@ const EventCard = ({
             className="font-serif leading-6 text-[#212121]"
           >
             <span className="absolute inset-0"></span>
-            {title}
+            {name}
           </Link>
         </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1.5">
             <StarCalendar fill={'#A3A19D'} size="20" />
             <p className="text-sm/[100%] -tracking-[0.02em] text-[#575554]">
-              {date}
+              {formatDateToShortMonth(date)}
             </p>
           </div>
           <div className="flex items-center gap-1.5">
             <People />
             <p className="text-sm/[100%] -tracking-[0.02em] text-[#626262]">
-              {invitees > 0 ? (
-                invitees.toLocaleString()
+              {totalGuests > 0 ? (
+                totalGuests.toLocaleString()
               ) : (
                 <span className="text-[#A3A19D]">-- --</span>
               )}
@@ -213,8 +157,8 @@ const EventCard = ({
       <div className="flex items-center justify-between border-t border-[#0000000D] p-4 text-center">
         <div className="flex flex-col gap-0.5">
           <p className="leading-[100%] font-semibold -tracking-[0.02em] text-[#212121]">
-            {sent > 0 ? (
-              sent.toLocaleString()
+            {sentInvites > 0 ? (
+              sentInvites.toLocaleString()
             ) : (
               <span className="text-[#A3A19D]">-- --</span>
             )}
@@ -225,8 +169,8 @@ const EventCard = ({
         </div>
         <div className="flex flex-col gap-0.5">
           <p className="leading-[100%] font-semibold -tracking-[0.02em] text-[#212121]">
-            {confirmed > 0 ? (
-              confirmed.toLocaleString()
+            {acceptedInvites > 0 ? (
+              acceptedInvites.toLocaleString()
             ) : (
               <span className="text-[#A3A19D]">-- --</span>
             )}
@@ -237,8 +181,8 @@ const EventCard = ({
         </div>
         <div className="flex flex-col gap-0.5">
           <p className="leading-[100%] font-semibold -tracking-[0.02em] text-[#212121]">
-            {pending > 0 ? (
-              pending.toLocaleString()
+            {pendingInvites > 0 ? (
+              pendingInvites.toLocaleString()
             ) : (
               <span className="text-[#A3A19D]">-- --</span>
             )}
@@ -249,8 +193,8 @@ const EventCard = ({
         </div>
         <div className="flex flex-col gap-0.5">
           <p className="leading-[100%] font-semibold -tracking-[0.02em] text-[#FF383C]">
-            {failed > 0 ? (
-              failed.toLocaleString()
+            {failedInvites > 0 ? (
+              failedInvites.toLocaleString()
             ) : (
               <span className="text-[#A3A19D]">-- --</span>
             )}
@@ -266,16 +210,90 @@ const EventCard = ({
 
 const SelectEvents = () => {
   const [_, setEvents] = useQueryState('events');
+
   return (
-    <Select onValueChange={setEvents}>
+    <Select onValueChange={setEvents} defaultValue="all">
       <SelectTrigger>
         <SelectValue placeholder="All events" />
       </SelectTrigger>
       <SelectContent>
+        <SelectItem value="all">All events</SelectItem>
         <SelectItem value="light">Light</SelectItem>
         <SelectItem value="dark">Dark</SelectItem>
         <SelectItem value="system">System</SelectItem>
       </SelectContent>
     </Select>
+  );
+};
+
+export const EventsLoadingView = () => {
+  return (
+    <div className="flex w-full flex-col gap-4 py-5 max-md:px-5 md:gap-6 md:py-6 md:max-xl:px-8">
+      <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-0.5">
+          <div className="h-6 w-32 animate-pulse rounded bg-gray-200"></div>
+          <div className="mt-1 h-5 w-28 animate-pulse rounded bg-gray-200"></div>
+        </div>
+        <div className="h-10 w-36 animate-pulse rounded-lg bg-gray-200"></div>
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
+        {Array(12)
+          .fill(0)
+          .map((_, i) => (
+            <EventCardSkeleton key={i} />
+          ))}
+      </div>
+    </div>
+  );
+};
+
+const EventCardSkeleton = () => {
+  return (
+    <div className="relative rounded-[12px] border border-[#00000014] bg-[#FEFCF9]">
+      <div className="flex flex-col gap-3 p-4">
+        <div className="flex flex-col gap-2">
+          {/* Type badge skeleton */}
+          <div className="h-9 w-28 animate-pulse rounded-xl bg-gray-200"></div>
+
+          {/* Title skeleton */}
+          <div className="flex flex-col gap-2">
+            <div className="h-6 w-full animate-pulse rounded bg-gray-200"></div>
+            <div className="h-6 w-3/4 animate-pulse rounded bg-gray-200"></div>
+          </div>
+        </div>
+
+        {/* Date and invitees skeleton */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <div className="h-5 w-5 animate-pulse rounded bg-gray-200"></div>
+            <div className="h-4 w-20 animate-pulse rounded bg-gray-200"></div>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="h-5 w-5 animate-pulse rounded bg-gray-200"></div>
+            <div className="h-4 w-12 animate-pulse rounded bg-gray-200"></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats footer skeleton */}
+      <div className="flex items-center justify-between border-t border-[#0000000D] p-4 text-center">
+        <div className="flex flex-col items-center gap-0.5">
+          <div className="h-4 w-10 animate-pulse rounded bg-gray-200"></div>
+          <div className="mt-1 h-3 w-8 animate-pulse rounded bg-gray-200"></div>
+        </div>
+        <div className="flex flex-col items-center gap-0.5">
+          <div className="h-4 w-10 animate-pulse rounded bg-gray-200"></div>
+          <div className="mt-1 h-3 w-12 animate-pulse rounded bg-gray-200"></div>
+        </div>
+        <div className="flex flex-col items-center gap-0.5">
+          <div className="h-4 w-10 animate-pulse rounded bg-gray-200"></div>
+          <div className="mt-1 h-3 w-11 animate-pulse rounded bg-gray-200"></div>
+        </div>
+        <div className="flex flex-col items-center gap-0.5">
+          <div className="h-4 w-10 animate-pulse rounded bg-gray-200"></div>
+          <div className="mt-1 h-3 w-9 animate-pulse rounded bg-gray-200"></div>
+        </div>
+      </div>
+    </div>
   );
 };

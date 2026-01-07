@@ -4,6 +4,7 @@ import { QUERY_KEYS } from '@/lib/queries/query-keys';
 import Events from '@/pages/home/events';
 import RootLayout from '@/pages/home/layout';
 import { createFileRoute, redirect } from '@tanstack/react-router';
+import z from 'zod';
 
 export const Route = createFileRoute('/_authenticated/')({
   loader: async ({ context }) => {
@@ -38,6 +39,11 @@ export const Route = createFileRoute('/_authenticated/')({
     return user;
   },
   component: RouteComponent,
+  validateSearch: z.object({
+    page: z.number().catch(1),
+    limit: z.number().catch(12),
+    category: z.string().optional(),
+  }),
 });
 
 function RouteComponent() {

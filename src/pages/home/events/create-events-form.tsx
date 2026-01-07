@@ -21,10 +21,15 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import useSendRequest from '@/lib/hooks/useSendRequest';
+import { MUTATIONS } from '@/lib/queries';
+import { QUERY_KEYS } from '@/lib/queries/query-keys';
 import { cn } from '@/lib/utils';
+import { useFormStore } from '@/store/submitting-store';
 import { revalidateLogic, useForm } from '@tanstack/react-form';
+import { useQueryClient } from '@tanstack/react-query';
 import { CalendarIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import z from 'zod';
 
 const EVENT_TYPES = [
@@ -65,9 +70,51 @@ type EventFormType = z.infer<typeof formSchema>;
 const CreateEventsForm = (props: {
   children?: React.ReactNode;
   className?: string;
+  onSetOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const { children, className } = props;
+  const { children, className, onSetOpen } = props;
   const [openPopover, setOpenPopover] = useState(false);
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending } = useSendRequest<
+    {
+      name: string;
+      category: string;
+      date: string;
+      time: string;
+      location: string;
+    },
+    any
+  >({
+    mutationFn: (data: {
+      name: string;
+      category: string;
+      date: string;
+      time: string;
+      location: string;
+    }) => MUTATIONS.createEvent(data),
+    successToast: {
+      title: 'Success!',
+      description: 'Event created successfully.',
+    },
+    errorToast: {
+      title: 'Failed!',
+      description: 'Please try again.',
+    },
+    onSuccessCallback: () => {
+      form.reset();
+      onSetOpen?.(false);
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.events.all,
+      });
+    },
+  });
+
+  const { setFormSubmitting } = useFormStore();
+
+  useEffect(() => {
+    setFormSubmitting(isPending);
+  }, [isPending]);
 
   const form = useForm({
     defaultValues: {
@@ -82,7 +129,13 @@ const CreateEventsForm = (props: {
       onSubmit: formSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
+      mutate({
+        name: value.eventName,
+        category: value.eventType,
+        date: value.eventDate,
+        time: `${value.eventTime}`,
+        location: `${value.eventLocation}`,
+      });
     },
   });
 
@@ -192,7 +245,7 @@ const CreateEventsForm = (props: {
                           </FieldTitle>
                         </FieldContent>
                         <RadioGroupItem
-                          value={types.type}
+                          value={types.type.toUpperCase()}
                           id={`${field.name}-${types.type}`}
                           aria-invalid={isInvalid}
                           className="hidden"
