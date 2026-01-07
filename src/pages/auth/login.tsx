@@ -51,7 +51,7 @@ const Login = () => {
       if (search.redirect) {
         router.history.push(search.redirect);
       } else {
-        router.navigate({ to: '/' });
+        router.navigate({ to: '/', search: { page: 1, limit: 12 } });
       }
     },
   });

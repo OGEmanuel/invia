@@ -12,6 +12,8 @@ import { useState } from 'react';
 import DialogContentWrapper from '@/components/ui/custom/dialog-content-wrapper';
 import CreateEventsForm from './create-events-form';
 import CreateEventsMobileSheet from './create-events-mobile-sheet';
+import { useFormStore } from '@/store/submitting-store';
+import ButtonLoading from '@/components/ui/custom/button-loading';
 
 const Events = () => {
   const [open, setOpen] = useState(false);
@@ -50,24 +52,26 @@ const Events = () => {
 export default Events;
 
 const CreateEventDesktop = (props: { children?: React.ReactNode }) => {
+  const [open, setOpen] = useState(false);
   const { children } = props;
+  const { isFormSubmitting } = useFormStore();
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContentWrapper
         title="Create new event"
         description="Create an event and manage your guest list."
         className="max-sm:hidden"
       >
-        <CreateEventsForm className="h-[calc(100%-83px)]">
+        <CreateEventsForm onSetOpen={setOpen} className="h-[calc(100%-83px)]">
           <DialogFooter className="border-t border-[#00000014] p-4">
             <DialogClose asChild>
               <Button type="button" variant={'neutral'}>
                 Cancel
               </Button>
             </DialogClose>
-            <Button type="submit">Create event</Button>
+            <ButtonLoading label="Create event" isPending={isFormSubmitting} />
           </DialogFooter>
         </CreateEventsForm>
       </DialogContentWrapper>

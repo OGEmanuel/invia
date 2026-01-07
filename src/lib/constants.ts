@@ -11,7 +11,6 @@ export type FormFieldApi<TValue> = {
   handleBlur: () => void;
   handleChange: (value: TValue) => void;
 };
-
 export interface Guests {
   id: string;
   guest: string;
@@ -23,7 +22,6 @@ export interface Guests {
   status: string;
   rsvp: string;
 }
-
 export interface AccountInfo {
   id: string;
   name: string;
@@ -40,9 +38,29 @@ export interface AccountInfo {
   isPasswordUpdated: boolean;
   isBusinessProfileUpdated: boolean;
 }
-
 export interface BusinessInfoType {
   id: string;
   name: string;
   avatar: string;
+}
+export interface Events {
+  id: string;
+  name: string;
+  category: string;
+  date: string;
+  time: string;
+  location: string;
+  hash: string;
+  totalGuests: number;
+  totalInvites: number;
+  sentInvites: number;
+  acceptedInvites: number;
+  pendingInvites: number;
+  failedInvites: number;
+}
+export interface EventData {
+  events: Events[];
+  hasNext: boolean;
+  totalPages: number;
+  totalInvites: number;
 }

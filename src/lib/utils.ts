@@ -9,3 +9,13 @@ export function cn(...inputs: ClassValue[]) {
 export const isAuthenticated = () => {
   return Boolean(Cookies.get('rf'));
 };
+
+export function formatDateToShortMonth(dateString: string): string {
+  const date = new Date(dateString);
+
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: '2-digit',
+    year: 'numeric',
+  }).format(date);
+}

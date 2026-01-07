@@ -13,7 +13,9 @@ import { cn } from '@/lib/utils';
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
+  onPreviousPage: () => void;
   onPageChange: (page: number) => void;
+  onNextPage: () => void;
   siblingCount?: number;
 }
 
@@ -68,7 +70,9 @@ function generatePageNumbers(
 export function Pagination({
   currentPage,
   totalPages,
+  onPreviousPage,
   onPageChange,
+  onNextPage,
   siblingCount = 1,
 }: PaginationProps) {
   const pages = generatePageNumbers(currentPage, totalPages, siblingCount);
@@ -78,7 +82,7 @@ export function Pagination({
       <PaginationContent className="w-full justify-between py-5">
         <PaginationItem>
           <PaginationPrevious
-            onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+            onClick={() => onPreviousPage()}
             className={cn(
               'hover:bg-transparent has-[>svg]:px-0 [&>svg]:hidden',
               currentPage === 1
@@ -97,7 +101,7 @@ export function Pagination({
             ) : (
               <PaginationItem key={page}>
                 <PaginationLink
-                  onClick={() => onPageChange(page as number)}
+                  onClick={() => onPageChange(Number(page))}
                   isActive={currentPage === page}
                   className={cn(
                     'cursor-pointer border-none opacity-50 shadow-none',
@@ -113,7 +117,7 @@ export function Pagination({
 
         <PaginationItem>
           <PaginationNext
-            onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
+            onClick={() => onNextPage()}
             className={cn(
               'hover:bg-transparent has-[>svg]:px-0 [&>svg]:hidden',
               currentPage === totalPages

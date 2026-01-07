@@ -43,7 +43,13 @@ const Navbar = () => {
       <div className="flex w-full max-w-7xl items-center justify-between px-5 md:px-8">
         <div className="flex items-center justify-between gap-6">
           <div>
-            <Link to={'/'}>
+            <Link
+              to={'/'}
+              search={{
+                page: 1,
+                limit: 12,
+              }}
+            >
               <Logo className="max-sm:hidden" />
             </Link>
           </div>
@@ -51,6 +57,10 @@ const Navbar = () => {
             <li>
               <Link
                 to={'/'}
+                search={{
+                  page: 1,
+                  limit: 12,
+                }}
                 className={cn(
                   '[.active]:bg-[#F7F5F2] [.active]:font-medium [.active]:text-[#212121]',
                   !pathname.startsWith('/settings') &&
@@ -193,7 +203,7 @@ const ProfileDropdown = (props: { children?: React.ReactNode }) => {
           </p>
         </DropdownMenuLabel>
         <hr className="h-1 w-full border-t border-dashed border-[#00000014]" />
-        <DropdownMenuItem className="rounded-xl px-2 py-2.5 hover:bg-[#F7F5F2]">
+        <DropdownMenuItem className="rounded-[8px] px-2 py-2.5 hover:bg-[#F7F5F2]">
           <Link
             to={'/settings'}
             className="flex items-center gap-2 text-base/6 -tracking-[0.02em] text-[#575554]"
@@ -202,12 +212,12 @@ const ProfileDropdown = (props: { children?: React.ReactNode }) => {
             Account settings
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem className="mt-1 rounded-xl px-2 py-2.5 hover:bg-[#F7F5F2]">
+        <DropdownMenuItem className="mt-1 rounded-[8px] px-2 py-2.5 hover:bg-[#FF383C]/8!">
           <button
             onClick={handleLogOut}
-            className="flex w-full cursor-pointer items-center gap-2 text-base/6 -tracking-[0.02em] text-[#575554]"
+            className="flex w-full cursor-pointer items-center gap-2 text-base/6 -tracking-[0.02em] text-[#FF383C]"
           >
-            <Logout />
+            <Logout fill="#FF383C" />
             Logout
           </button>
         </DropdownMenuItem>
@@ -257,6 +267,10 @@ const MobileNav = (props: {
             <li className="has-[.active]:bg-primary/10 has-[.active]:text-primary relative">
               <Link
                 to={'/'}
+                search={{
+                  page: 1,
+                  limit: 12,
+                }}
                 className={cn(
                   'absolute inset-0',
                   !pathname.startsWith('/settings') &&
