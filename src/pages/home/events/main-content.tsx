@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 import { useGetAllEvents } from '@/lib/queries/hooks';
 
 const MainContent = () => {
-  const { data, isPending, isError } = useGetAllEvents(1, 1);
+  const { data, isPending } = useGetAllEvents(1, 1);
   const events: EventData = data?.data;
 
   return (
@@ -19,9 +19,7 @@ const MainContent = () => {
           events?.events?.length < 1 && 'items-center justify-center',
         )}
       >
-        {isError ? (
-          <p>Error Fetching events</p>
-        ) : isPending ? (
+        {isPending ? (
           <EventsLoadingView />
         ) : events.events.length > 0 ? (
           <EventsView />
