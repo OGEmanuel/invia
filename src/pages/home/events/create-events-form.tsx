@@ -21,16 +21,25 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import type { Events } from '@/lib/constants';
 import useSendRequest from '@/lib/hooks/useSendRequest';
-import { MUTATIONS } from '@/lib/queries';
+import { MUTATIONS, QUERIES } from '@/lib/queries';
 import { QUERY_KEYS } from '@/lib/queries/query-keys';
 import { cn } from '@/lib/utils';
 import { useFormStore } from '@/store/submitting-store';
 import { revalidateLogic, useForm } from '@tanstack/react-form';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { CalendarIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import z from 'zod';
+
+const useGetEventInfo = (eventId?: string) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.events.info(eventId!!),
+    queryFn: () => QUERIES.getEventInfo(eventId!!),
+    enabled: !!eventId,
+  });
+};
 
 const EVENT_TYPES = [
   {
@@ -71,10 +80,51 @@ const CreateEventsForm = (props: {
   children?: React.ReactNode;
   className?: string;
   onSetOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  eventId?: string;
 }) => {
-  const { children, className, onSetOpen } = props;
+  const { children, className, onSetOpen, eventId } = props;
   const [openPopover, setOpenPopover] = useState(false);
   const queryClient = useQueryClient();
+
+  const { setFormSubmitting } = useFormStore();
+
+  const { data } = useGetEventInfo(eventId);
+
+  const info: Events = data?.data;
+
+  const { mutate: updateEvent, isPending: isUpdatingEvent } = useSendRequest<
+    {
+      name: string;
+      category: string;
+      date: string;
+      time: string;
+      location: string;
+    },
+    any
+  >({
+    mutationFn: (data: {
+      name: string;
+      category: string;
+      date: string;
+      time: string;
+      location: string;
+    }) => MUTATIONS.updateEvent(data, eventId!!),
+    successToast: {
+      title: 'Success!',
+      description: 'Event updated successfully.',
+    },
+    errorToast: {
+      title: 'Failed!',
+      description: 'Please try again.',
+    },
+    onSuccessCallback: () => {
+      form.reset();
+      onSetOpen?.(false);
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.events.info(eventId!!),
+      });
+    },
+  });
 
   const { mutate, isPending } = useSendRequest<
     {
@@ -110,32 +160,40 @@ const CreateEventsForm = (props: {
     },
   });
 
-  const { setFormSubmitting } = useFormStore();
-
   useEffect(() => {
-    setFormSubmitting(isPending);
-  }, [isPending]);
+    setFormSubmitting(eventId ? isUpdatingEvent : isPending);
+  }, [isPending, isUpdatingEvent]);
 
   const form = useForm({
     defaultValues: {
-      eventType: '',
-      eventName: '',
-      eventDate: '',
-      eventTime: '',
-      eventLocation: '',
+      eventType: eventId ? info.category : '',
+      eventName: eventId ? info.name : '',
+      eventDate: eventId ? info.date : '',
+      eventTime: eventId ? info.time : '',
+      eventLocation: eventId ? info.location : '',
     } as EventFormType,
     validationLogic: revalidateLogic(),
     validators: {
       onSubmit: formSchema,
     },
-    onSubmit: async ({ value }) => {
-      mutate({
-        name: value.eventName,
-        category: value.eventType,
-        date: value.eventDate,
-        time: `${value.eventTime}`,
-        location: `${value.eventLocation}`,
-      });
+    onSubmit: ({ value }) => {
+      if (eventId) {
+        updateEvent({
+          name: value.eventName,
+          category: value.eventType,
+          date: value.eventDate,
+          time: `${value.eventTime}`,
+          location: `${value.eventLocation}`,
+        });
+      } else {
+        mutate({
+          name: value.eventName,
+          category: value.eventType,
+          date: value.eventDate,
+          time: `${value.eventTime}`,
+          location: `${value.eventLocation}`,
+        });
+      }
     },
   });
 

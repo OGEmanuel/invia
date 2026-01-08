@@ -28,6 +28,10 @@ const Navbar = () => {
             params={{
               eventId,
             }}
+            search={{
+              page: 1,
+              limit: 50,
+            }}
             className="flex size-10 items-center justify-center rounded-full border border-black/8"
           >
             <Arrow />

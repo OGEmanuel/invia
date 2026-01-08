@@ -102,6 +102,8 @@ const DataTable = <TData, TValue>(props: DataTableProps<TData, TValue>) => {
                         }}
                         search={{
                           guest: row.getValue('id') as string,
+                          page: 1,
+                          limit: 50,
                         }}
                         className="absolute top-1/2 left-1/2 z-10 size-[94%] -translate-1/2"
                       />

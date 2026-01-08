@@ -17,6 +17,7 @@ import ButtonLoading from '@/components/ui/custom/button-loading';
 
 const Events = () => {
   const [open, setOpen] = useState(false);
+  const { isFormSubmitting } = useFormStore();
 
   return (
     <>
@@ -37,6 +38,7 @@ const Events = () => {
           title="Create new event"
           description="Create an event and manage your guest list."
           className="h-[calc(100%-83px)]"
+          isPending={isFormSubmitting}
         >
           <Button className="w-max sm:hidden [&_svg:not([class*='size-'])]:size-6">
             <StarCalendar />

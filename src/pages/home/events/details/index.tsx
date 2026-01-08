@@ -1,43 +1,95 @@
 import StarCalendar from '@/assets/jsx-icons/star-calendar';
-// import EmptyState from './empty-state';
-import { cn } from '@/lib/utils';
+import EmptyState from './empty-state';
+import { cn, formatDateToShortMonth } from '@/lib/utils';
 import GuestList from './guest-list';
 import EventDetailsLayout, {
   EventDetailsLayoutHeader,
   GuestDetails,
 } from './layout';
+import { useParams } from '@tanstack/react-router';
+import type { Events, GuestData } from '@/lib/constants';
+import { useGetEventsInfo, useGetGuests } from '@/lib/queries/hooks';
+import NotFound from '@/pages/not-found';
+import { useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEYS } from '@/lib/queries/query-keys';
 
 const EventsDetails = () => {
+  const { eventId } = useParams({
+    from: '/_authenticated/$eventId',
+  });
+  const queryClient = useQueryClient();
+
+  const { data, isPending, isError } = useGetEventsInfo(eventId);
+  const { data: guestsData, isError: guestsIsError } = useGetGuests(
+    1,
+    50,
+    eventId,
+  );
+  const guests: GuestData = guestsData?.data;
+
+  const info: Events = data?.data;
+
   return (
     <EventDetailsLayout>
       <EventDetailsLayoutHeader link={'/'} linkLabel={'Back to events'}>
-        <GuestDetails header="Mr. & Mrs. Williams’ Wedding">
-          <div className="flex items-center gap-1.5">
-            <StarCalendar fill="#A3A19D" />
-            <p className="leading-[100%] -tracking-[0.02em] text-[#575554]">
-              Sat. Jun 15, 2026
-            </p>
-          </div>
-        </GuestDetails>
+        {isError ? (
+          <NotFound
+            header="Unable to fetch Events Info"
+            description="Check your internet connection and try againg or contact our support team for more."
+            className="w-full max-w-none flex-row justify-between text-start [&>div]:flex-row"
+            actionLabel="Retry"
+            action={() =>
+              queryClient.invalidateQueries({
+                queryKey: QUERY_KEYS.events.info(eventId),
+              })
+            }
+          />
+        ) : isPending ? (
+          <EventDetailsSkeleton />
+        ) : (
+          <GuestDetails header={info.name}>
+            <div className="flex items-center gap-1.5">
+              <StarCalendar fill="#A3A19D" />
+              <p className="leading-[100%] -tracking-[0.02em] text-[#575554]">
+                {formatDateToShortMonth(info.date)}
+              </p>
+            </div>
+          </GuestDetails>
+        )}
       </EventDetailsLayoutHeader>
-      <InviteStats />
-      {/* <EmptyState /> */}
-      <GuestList />
+      {isPending ? <InviteStatsSkeleton /> : isError ? null : <InviteStats />}
+      {guestsIsError ? (
+        <NotFound
+          header="Unable to fetch Guests List"
+          description="Check your internet connection and try againg or contact our support team for more."
+          action={() =>
+            queryClient.invalidateQueries({
+              queryKey: QUERY_KEYS.events.guests(1, 50, eventId),
+            })
+          }
+          actionLabel="Retry"
+        />
+      ) : guests?.totalPages > 1 ? (
+        <GuestList />
+      ) : (
+        <EmptyState
+          header="No guests yet"
+          description="Guests added to this event will appear here."
+        />
+      )}
     </EventDetailsLayout>
   );
 };
 
 export default EventsDetails;
 
-const Details = {
-  total_guests: 2291,
-  invite_sent: 2111,
-  confirmed_rsvp: 2291,
-  awaiting_response: 2291,
-  failed_delivery: 2291,
-};
-
 const InviteStats = () => {
+  const { eventId } = useParams({
+    from: '/_authenticated/$eventId',
+  });
+  const { data } = useGetEventsInfo(eventId);
+  const info: Events = data?.data;
+
   return (
     <div className="scrollbar-hidden max-lg:w-full max-lg:overflow-auto max-md:px-5 md:max-xl:px-8">
       <div className="flex justify-between rounded-[12px] border border-[#0000001A] max-lg:w-max [&>div]:flex [&>div]:flex-col [&>div]:gap-3 [&>div]:border-r [&>div]:border-[#0000001A] [&>div]:p-4 [&>div]:last:border-r-0 max-lg:[&>div]:w-43 lg:[&>div]:basis-full">
@@ -46,7 +98,7 @@ const InviteStats = () => {
             Total guest
           </p>
           <p className="font-serif text-2xl/8 text-[#212121]">
-            {Details.total_guests.toLocaleString()}
+            {info.totalGuests.toLocaleString()}
           </p>
         </div>
         <div>
@@ -54,7 +106,7 @@ const InviteStats = () => {
             Invite sent
           </p>
           <p className="font-serif text-2xl/8 text-[#212121]">
-            {Details.invite_sent.toLocaleString()}
+            {info.sentInvites.toLocaleString()}
           </p>
         </div>
         <div>
@@ -62,7 +114,7 @@ const InviteStats = () => {
             Confirmed RSVP
           </p>
           <p className="font-serif text-2xl/8 text-[#212121]">
-            {Details.confirmed_rsvp.toLocaleString()}
+            {info.acceptedInvites.toLocaleString()}
           </p>
         </div>
         <div>
@@ -70,7 +122,7 @@ const InviteStats = () => {
             Awaiting Response
           </p>
           <p className="font-serif text-2xl/8 text-[#212121]">
-            {Details.awaiting_response.toLocaleString()}
+            {info.pendingInvites.toLocaleString()}
           </p>
         </div>
         <div>
@@ -80,12 +132,46 @@ const InviteStats = () => {
           <p
             className={cn(
               'font-serif text-2xl/8 text-[#212121]',
-              Details.failed_delivery > 0 && 'text-[#FF383C]',
+              info.failedInvites > 0 && 'text-[#FF383C]',
             )}
           >
-            {Details.failed_delivery.toLocaleString()}
+            {info.failedInvites.toLocaleString()}
           </p>
         </div>
+      </div>
+    </div>
+  );
+};
+
+const EventDetailsSkeleton = () => {
+  return (
+    <div className="flex max-lg:flex-col max-lg:gap-6 md:justify-between lg:items-center">
+      {/* Left section */}
+      <div className="flex flex-col gap-2">
+        <div className="h-8 w-48 animate-pulse rounded-md bg-[#00000014]" />
+        <div className="h-4 w-64 animate-pulse rounded-md bg-[#00000014]" />
+      </div>
+
+      {/* Right actions */}
+      <div className="flex items-center gap-2 md:max-lg:justify-end">
+        <div className="h-10 w-32 animate-pulse rounded-md bg-[#00000014]" />
+        <div className="h-10 w-36 animate-pulse rounded-md bg-[#00000014]" />
+        <div className="hidden h-10 w-10 animate-pulse rounded-md bg-[#00000014] lg:block" />
+      </div>
+    </div>
+  );
+};
+
+const InviteStatsSkeleton = () => {
+  return (
+    <div className="scrollbar-hidden max-lg:w-full max-lg:overflow-auto max-md:px-5 md:max-xl:px-8">
+      <div className="flex justify-between rounded-[12px] border border-[#0000001A] max-lg:w-max [&>div]:flex [&>div]:flex-col [&>div]:gap-3 [&>div]:border-r [&>div]:border-[#0000001A] [&>div]:p-4 [&>div]:last:border-r-0 max-lg:[&>div]:w-43 lg:[&>div]:basis-full">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div key={i}>
+            <div className="h-4 w-28 animate-pulse rounded-md bg-[#00000014]" />
+            <div className="h-8 w-20 animate-pulse rounded-md bg-[#00000014]" />
+          </div>
+        ))}
       </div>
     </div>
   );

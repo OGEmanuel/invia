@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
 import GuestActions from './guest-actions';
 import { MoreVertical } from 'lucide-react';
+import Skeleton from '@/components/ui/custom/skeleton';
 
 export const columns: ColumnDef<Guests>[] = [
   {
@@ -12,7 +13,7 @@ export const columns: ColumnDef<Guests>[] = [
   },
   {
     id: 'select',
-    accessorKey: 'guest',
+    accessorKey: 'name',
     header: ({ table }) => (
       <div className="flex items-center">
         <Checkbox
@@ -35,7 +36,7 @@ export const columns: ColumnDef<Guests>[] = [
           className="z-10 size-5 rounded-[6px] border border-black/8 bg-[#FEFCF9] shadow-none data-[state=checked]:border-[#6155F5] data-[state=checked]:bg-[#F9F5FF] data-[state=indeterminate]:border-[#6155F5] data-[state=indeterminate]:bg-[#F9F5FF]"
           aria-label="Select row"
         />
-        <p className="pl-2 font-medium text-[#222222]">{row.original.guest}</p>
+        <p className="pl-2 font-medium text-[#222222]">{row.original.name}</p>
       </div>
     ),
   },
@@ -44,45 +45,42 @@ export const columns: ColumnDef<Guests>[] = [
     header: 'Party',
   },
   {
-    accessorKey: 'contact',
+    accessorKey: 'phone',
     header: 'Contact',
     cell: ({ row }) => (
       <div className="flex flex-col gap-1">
-        <p>{row.original.contact.phone}</p>
-        <p>{row.original.contact.email}</p>
+        <p>{row.original.phone}</p>
+        <p>{row.original.email}</p>
       </div>
     ),
   },
   {
-    accessorKey: 'status',
+    accessorKey: 'isInviteSent',
     header: () => <p className="text-center">Invite Status</p>,
     cell: ({ row }) => {
-      const textColor =
-        row.original.status === 'sent'
-          ? 'text-[#0088FF]'
-          : row.original.status === 'pending'
-            ? 'text-[#FF8D28]'
-            : row.original.status === 'delivered'
-              ? 'text-[#2B8309]'
-              : 'text-[#6155F5]';
+      const textColor = row.original.isInviteSent
+        ? 'text-[#0088FF]'
+        : row.original.isInviteRSVP
+          ? 'text-[#FF8D28]'
+          : row.original.isInviteDelivered
+            ? 'text-[#2B8309]'
+            : 'text-[#6155F5]';
 
-      const bgColor =
-        row.original.status === 'sent'
-          ? 'bg-[#0088FF1A]'
-          : row.original.status === 'pending'
-            ? 'bg-[#FF8D281A]'
-            : row.original.status === 'delivered'
-              ? 'bg-[#3FC70A1A]'
-              : 'bg-[#6155F51A]';
+      const bgColor = row.original.isInviteSent
+        ? 'bg-[#0088FF1A]'
+        : // : row.original.isInviteRSVP
+          //   ? 'bg-[#FF8D281A]'
+          row.original.isInviteDelivered
+          ? 'bg-[#3FC70A1A]'
+          : 'bg-[#6155F51A]';
 
-      const borderColor =
-        row.original.status === 'sent'
-          ? 'border-[#0088FF33]'
-          : row.original.status === 'pending'
-            ? 'border-[#FF8D2833]'
-            : row.original.status === 'delivered'
-              ? 'border-[#3FC70A33]'
-              : 'border-[#6155F533]';
+      const borderColor = row.original.isInviteSent
+        ? 'border-[#0088FF33]'
+        : // : row.original.isInviteRSVP
+          //   ? 'border-[#FF8D2833]'
+          row.original.isInviteDelivered
+          ? 'border-[#3FC70A33]'
+          : 'border-[#6155F533]';
 
       return (
         <div className="flex justify-center">
@@ -94,26 +92,31 @@ export const columns: ColumnDef<Guests>[] = [
               borderColor,
             )}
           >
-            {row.original.status}
+            {row.original.isInviteSent
+              ? 'Sent'
+              : row.original.isInviteDelivered
+                ? 'Delivered'
+                : 'Pending'}
           </p>
         </div>
       );
     },
   },
   {
-    accessorKey: 'rsvp',
+    accessorKey: 'isInviteRSVP',
     header: () => <p className="text-center">RSVP</p>,
     cell: ({ row }) => {
-      const textColor =
-        row.original.rsvp === 'awaiting' ? 'text-[#FF8D28]' : 'text-[#2B8309]';
+      const textColor = !row.original.isInviteRSVP
+        ? 'text-[#FF8D28]'
+        : 'text-[#2B8309]';
 
-      const bgColor =
-        row.original.rsvp === 'awaiting' ? 'bg-[#FF8D281A]' : 'bg-[#3FC70A1A]';
+      const bgColor = !row.original.isInviteRSVP
+        ? 'bg-[#FF8D281A]'
+        : 'bg-[#3FC70A1A]';
 
-      const borderColor =
-        row.original.rsvp === 'awaiting'
-          ? 'border-[#FF8D2833]'
-          : 'border-[#3FC70A33]';
+      const borderColor = !row.original.isInviteRSVP
+        ? 'border-[#FF8D2833]'
+        : 'border-[#3FC70A33]';
 
       return (
         <div className="flex justify-center">
@@ -125,7 +128,7 @@ export const columns: ColumnDef<Guests>[] = [
               borderColor,
             )}
           >
-            {row.original.rsvp}
+            {row.original.isInviteRSVP ? 'Confirmed' : 'Awaiting'}
           </p>
         </div>
       );
@@ -140,6 +143,77 @@ export const columns: ColumnDef<Guests>[] = [
           <GuestActions>
             <MoreVertical className="size-5 text-[#5B5B5B]" />
           </GuestActions>
+        </div>
+      );
+    },
+  },
+];
+
+export const columnsSkeleton: ColumnDef<Guests>[] = [
+  {
+    accessorKey: 'id',
+    header: () => null,
+  },
+  {
+    id: 'select',
+    accessorKey: 'name',
+    header: () => (
+      <div className="flex items-center">
+        <Skeleton className="size-5 rounded-[6px]" />
+        <div className="pl-2">Guest</div>
+      </div>
+    ),
+    cell: () => (
+      <div className="flex items-center">
+        <Skeleton className="size-5 rounded-[6px]" />
+        <Skeleton className="ml-2 h-4 w-32" />
+      </div>
+    ),
+  },
+  {
+    accessorKey: 'party',
+    header: 'Party',
+    cell: () => <Skeleton className="h-4 w-20" />,
+  },
+  {
+    accessorKey: 'phone',
+    header: 'Contact',
+    cell: () => (
+      <div className="flex flex-col gap-1">
+        <Skeleton className="h-4 w-28" />
+        <Skeleton className="h-4 w-36" />
+      </div>
+    ),
+  },
+  {
+    accessorKey: 'isInviteSent',
+    header: () => <p className="text-center">Invite Status</p>,
+    cell: () => {
+      return (
+        <div className="flex justify-center">
+          <Skeleton className="h-7 w-20 rounded-[8px]" />
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: 'isInviteRSVP',
+    header: () => <p className="text-center">RSVP</p>,
+    cell: () => {
+      return (
+        <div className="flex justify-center">
+          <Skeleton className="h-7 w-24 rounded-[8px]" />
+        </div>
+      );
+    },
+  },
+  {
+    id: 'actions',
+    header: () => <p className="text-end">Action</p>,
+    cell: () => {
+      return (
+        <div className="flex justify-end">
+          <Skeleton className="size-5 rounded-full" />
         </div>
       );
     },

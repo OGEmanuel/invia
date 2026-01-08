@@ -193,6 +193,8 @@ const AddGuest = (props: { className?: string }) => {
               }}
               search={{
                 addGuest: true,
+                page: 1,
+                limit: 50,
               }}
               className="absolute inset-0"
             >

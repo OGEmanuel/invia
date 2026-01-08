@@ -11,16 +11,22 @@ export type FormFieldApi<TValue> = {
   handleBlur: () => void;
   handleChange: (value: TValue) => void;
 };
+
+export interface GuestData {
+  guests: Guests[];
+  guestParties: string[];
+  totalPages: number;
+  hasNextPage: boolean;
+}
 export interface Guests {
   id: string;
-  guest: string;
+  name: string;
   party: string;
-  contact: {
-    phone: string;
-    email: string;
-  };
-  status: string;
-  rsvp: string;
+  email: string;
+  phone: string;
+  isInviteSent: boolean;
+  isInviteDelivered: boolean;
+  isInviteRSVP: boolean;
 }
 export interface AccountInfo {
   id: string;

@@ -66,6 +66,26 @@ export const MUTATIONS = {
   }) {
     return await https.post(`/event/create`, data);
   },
+  updateEvent: async function (
+    data: {
+      name: string;
+      category: string;
+      date: string;
+      time: string;
+      location: string;
+    },
+    eventId: string,
+  ) {
+    const params = new URLSearchParams();
+
+    if (eventId) {
+      params.append('eventId', eventId);
+    }
+    const queryString = params.toString();
+    const url = `/event/update?${queryString}`;
+
+    return await https.patch(url, data);
+  },
 };
 
 export const QUERIES = {
@@ -99,6 +119,24 @@ export const QUERIES = {
 
     const queryString = params.toString();
     const url = `/event/info?${queryString}`;
+
+    return await https.get(url);
+  },
+  getGuests: async function (page?: number, limit?: number, eventId?: string) {
+    const params = new URLSearchParams();
+
+    if (page) {
+      params.append('page', page.toString());
+    }
+    if (limit) {
+      params.append('pageSize', limit.toString());
+    }
+    if (eventId) {
+      params.append('eventId', eventId);
+    }
+
+    const queryString = params.toString();
+    const url = `/event/guests/fetch?${queryString}`;
 
     return await https.get(url);
   },
