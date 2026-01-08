@@ -12,8 +12,19 @@ const CreateEventsMobileSheet = (props: {
   title: string;
   description?: string;
   className?: string;
+  isPending?: boolean;
+  eventId?: string;
 }) => {
-  const { children, open, onSetOpen, title, description, className } = props;
+  const {
+    children,
+    open,
+    onSetOpen,
+    title,
+    description,
+    className,
+    eventId,
+    isPending,
+  } = props;
 
   return (
     <Sheet open={open} onOpenChange={onSetOpen}>
@@ -23,8 +34,15 @@ const CreateEventsMobileSheet = (props: {
         description={description}
         setOpen={onSetOpen}
       >
-        <CreateEventsForm className={cn('h-[calc(100%-83px)]', className)}>
-          <SheetFooterWrapper buttonLabel="Create event" />
+        <CreateEventsForm
+          eventId={eventId}
+          className={cn('h-[calc(100%-83px)]', className)}
+          onSetOpen={onSetOpen}
+        >
+          <SheetFooterWrapper
+            buttonLabel="Create event"
+            isPending={isPending}
+          />
         </CreateEventsForm>
       </SheetContentWrapper>
     </Sheet>

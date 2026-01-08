@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Edit from '@/assets/jsx-icons/edit';
 import Logout from '@/assets/jsx-icons/logout';
-import { cn } from '@/lib/utils';
+import { cn, isAuthenticated } from '@/lib/utils';
 import {
   Sheet,
   SheetContent,
@@ -89,76 +89,78 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
-        <div className="flex items-center gap-3 md:gap-4">
-          <div className="max-md:hidden">
-            <UpgradeModal
+        {isAuthenticated() && (
+          <div className="flex items-center gap-3 md:gap-4">
+            <div className="max-md:hidden">
+              <UpgradeModal
+                open={open}
+                setOpen={setOpen}
+                openSmall={openSmall}
+                setOpenSmall={setOpenSmall}
+              >
+                <Button
+                  variant={'secondary'}
+                  className="outline-[#874CF933]"
+                  size={'lg'}
+                >
+                  Upgrade
+                  <Bolt />
+                </Button>
+              </UpgradeModal>
+            </div>
+            {!openMobileNav && (
+              <>
+                <div className="md:hidden">
+                  <UpgradeSheet
+                    open={open}
+                    setOpen={setOpen}
+                    openSmall={openSmall}
+                    setOpenSmall={setOpenSmall}
+                  >
+                    <Button
+                      variant={'secondary'}
+                      className="outline-[#874CF933]"
+                      size={'lg'}
+                    >
+                      Upgrade
+                      <Bolt />
+                    </Button>
+                  </UpgradeSheet>
+                </div>
+                {isPending ? (
+                  <div className="size-10 animate-pulse rounded-full bg-gray-300"></div>
+                ) : (
+                  <Activity mode={isError ? 'hidden' : 'visible'}>
+                    <ProfileDropdown>
+                      <AvatarCustom
+                        src={businessInfo.avatar}
+                        alt={businessInfo.name}
+                        fallback={businessInfo.name[0]}
+                        className="size-10"
+                      />
+                    </ProfileDropdown>
+                  </Activity>
+                )}
+              </>
+            )}
+            <MobileNav
               open={open}
               setOpen={setOpen}
               openSmall={openSmall}
               setOpenSmall={setOpenSmall}
+              openMobileNav={openMobileNav}
+              onSetOpenMobileNav={setOpenMobileNav}
             >
-              <Button
-                variant={'secondary'}
-                className="outline-[#874CF933]"
-                size={'lg'}
-              >
-                Upgrade
-                <Bolt />
+              <Button size={'icon-lg'} variant={'neutral'} className="size-10">
+                {openMobileNav ? (
+                  <X className="size-5" />
+                ) : (
+                  <Menu className="size-5" />
+                )}
               </Button>
-            </UpgradeModal>
+            </MobileNav>
           </div>
-          {!openMobileNav && (
-            <>
-              <div className="md:hidden">
-                <UpgradeSheet
-                  open={open}
-                  setOpen={setOpen}
-                  openSmall={openSmall}
-                  setOpenSmall={setOpenSmall}
-                >
-                  <Button
-                    variant={'secondary'}
-                    className="outline-[#874CF933]"
-                    size={'lg'}
-                  >
-                    Upgrade
-                    <Bolt />
-                  </Button>
-                </UpgradeSheet>
-              </div>
-              {isPending ? (
-                <div className="size-10 animate-pulse rounded-full bg-gray-300"></div>
-              ) : (
-                <Activity mode={isError ? 'hidden' : 'visible'}>
-                  <ProfileDropdown>
-                    <AvatarCustom
-                      src={businessInfo.avatar}
-                      alt={businessInfo.name}
-                      fallback={businessInfo.name[0]}
-                      className="size-10"
-                    />
-                  </ProfileDropdown>
-                </Activity>
-              )}
-            </>
-          )}
-          <MobileNav
-            open={open}
-            setOpen={setOpen}
-            openSmall={openSmall}
-            setOpenSmall={setOpenSmall}
-            openMobileNav={openMobileNav}
-            onSetOpenMobileNav={setOpenMobileNav}
-          >
-            <Button size={'icon-lg'} variant={'neutral'} className="size-10">
-              {openMobileNav ? (
-                <X className="size-5" />
-              ) : (
-                <Menu className="size-5" />
-              )}
-            </Button>
-          </MobileNav>
-        </div>
+        )}
       </div>
     </nav>
   );

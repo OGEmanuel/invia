@@ -7,11 +7,37 @@ import { routeTree } from './routeTree.gen';
 
 import './index.css';
 import { QueryClient } from '@tanstack/react-query';
+import NotFound from './pages/not-found';
+import Navbar from './pages/home/navbar';
 
 const queryClient = new QueryClient();
 
 // Create a new router instance
-const router = createRouter({ routeTree, context: { queryClient } });
+const router = createRouter({
+  routeTree,
+  context: { queryClient },
+  defaultNotFoundComponent: () => (
+    <>
+      <Navbar />
+      <NotFound wrapperClassName="h-[calc(100vh-73px)]" className="pt-18.25" />
+    </>
+  ),
+  defaultErrorComponent: ({ error, reset }) => {
+    return (
+      <>
+        <Navbar />
+        <NotFound
+          header="Something went wrong"
+          description={error.message ?? 'An error occurred.'}
+          action={() => reset()}
+          actionLabel="Retry"
+          wrapperClassName="h-[calc(100vh-73px)]"
+          className="pt-18.25"
+        />
+      </>
+    );
+  },
+});
 
 // Register the router instance for type safety
 declare module '@tanstack/react-router' {

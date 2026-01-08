@@ -14,13 +14,17 @@ import {
 } from '@/components/ui/select';
 import type { EventData, Events } from '@/lib/constants';
 import { useGetAllEvents } from '@/lib/queries/hooks';
+import { QUERY_KEYS } from '@/lib/queries/query-keys';
 import { cn, formatDateToShortMonth } from '@/lib/utils';
+import NotFound from '@/pages/not-found';
+import { useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigate, useSearch } from '@tanstack/react-router';
 import { useQueryState } from 'nuqs';
 
 const EventsView = () => {
   const { page } = useSearch({ from: '/_authenticated/' });
-  const { data, isPending } = useGetAllEvents(page, 12);
+  const { data, isPending, isError } = useGetAllEvents(page, 12);
+  const queryClient = useQueryClient();
   const navigate = useNavigate({
     from: '/',
   });
@@ -37,42 +41,57 @@ const EventsView = () => {
         </div>
         <SelectEvents />
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
-        {isPending
-          ? Array(12)
-              .fill(null)
-              .map((_, i) => <EventCardSkeleton key={i} />)
-          : events.events.map(event => <EventCard key={event.id} {...event} />)}
-      </div>
-      {events && (
-        <Pagination
-          currentPage={page}
-          totalPages={events.totalPages}
-          onPageChange={page =>
-            navigate({
-              search: () => ({
-                limit: 12,
-                page,
-              }),
-            })
+      {isError ? (
+        <NotFound
+          header="Unable to fetch events"
+          description="Check your internet connection and try again or contact our support team for more"
+          action={() =>
+            queryClient.invalidateQueries({ queryKey: QUERY_KEYS.events.all })
           }
-          onNextPage={() =>
-            navigate({
-              search: () => ({
-                limit: 12,
-                page: page + 1,
-              }),
-            })
-          }
-          onPreviousPage={() =>
-            navigate({
-              search: () => ({
-                limit: 12,
-                page: page - 1,
-              }),
-            })
-          }
+          actionLabel="Retry"
         />
+      ) : (
+        <>
+          <div className="grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
+            {isPending
+              ? Array(12)
+                  .fill(null)
+                  .map((_, i) => <EventCardSkeleton key={i} />)
+              : events.events.map(event => (
+                  <EventCard key={event.id} {...event} />
+                ))}
+          </div>
+          {events?.totalPages > 1 && (
+            <Pagination
+              currentPage={page}
+              totalPages={events.totalPages}
+              onPageChange={page =>
+                navigate({
+                  search: () => ({
+                    limit: 12,
+                    page,
+                  }),
+                })
+              }
+              onNextPage={() =>
+                navigate({
+                  search: () => ({
+                    limit: 12,
+                    page: page + 1,
+                  }),
+                })
+              }
+              onPreviousPage={() =>
+                navigate({
+                  search: () => ({
+                    limit: 12,
+                    page: page - 1,
+                  }),
+                })
+              }
+            />
+          )}
+        </>
       )}
     </div>
   );
@@ -128,6 +147,10 @@ const EventCard = ({
             to={'/$eventId'}
             params={{
               eventId: `${id}`,
+            }}
+            search={{
+              page: 1,
+              limit: 50,
             }}
             className="font-serif leading-6 text-[#212121]"
           >

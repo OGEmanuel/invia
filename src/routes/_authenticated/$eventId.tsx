@@ -10,6 +10,8 @@ export const Route = createFileRoute('/_authenticated/$eventId')({
   validateSearch: z.object({
     guest: z.string().optional(),
     addGuest: z.boolean().optional(),
+    page: z.number().catch(1),
+    limit: z.number().catch(50),
   }),
 });
 

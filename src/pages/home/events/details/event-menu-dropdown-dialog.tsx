@@ -25,15 +25,24 @@ import { useState } from 'react';
 import CreateEventsForm from '../create-events-form';
 import Notice from '@/assets/jsx-icons/notice';
 import CreateEventsMobileSheet from '../create-events-mobile-sheet';
+import { useParams } from '@tanstack/react-router';
+import { useGetEventsInfo } from '@/lib/queries/hooks';
+import { formatDateToFullWithWeekday } from '@/lib/utils';
+import { useFormStore } from '@/store/submitting-store';
+import ButtonLoading from '@/components/ui/custom/button-loading';
 
 const EventMenuDropdownDialog = (props: { className?: string }) => {
   const { className } = props;
+  const { eventId } = useParams({
+    from: '/_authenticated/$eventId',
+  });
 
   const [showEventDetailsDialog, setShowEventDetailsDialog] = useState(false);
   const [showEditEventDialog, setShowEditEventDialog] = useState(false);
   const [showMobileEditEventDialog, setShowMobileEditEventDialog] =
     useState(false);
   const [showDeleteEventDialog, setShowDeleteEventDialog] = useState(false);
+  const { isFormSubmitting } = useFormStore();
 
   return (
     <>
@@ -93,14 +102,21 @@ const EventMenuDropdownDialog = (props: { className?: string }) => {
       </Dialog>
       <Dialog open={showEditEventDialog} onOpenChange={setShowEditEventDialog}>
         <DialogContentWrapper title="Edit Event" className="max-sm:hidden">
-          <CreateEventsForm className="h-[calc(100%-61px)]">
+          <CreateEventsForm
+            className="h-[calc(100%-61px)]"
+            onSetOpen={setShowEditEventDialog}
+            eventId={eventId}
+          >
             <DialogFooter className="border-t border-[#00000014] p-4">
               <DialogClose asChild>
                 <Button type="button" variant={'neutral'}>
                   Cancel
                 </Button>
               </DialogClose>
-              <Button type="submit">Save changes</Button>
+              <ButtonLoading
+                label="Save changes"
+                isPending={isFormSubmitting}
+              />
             </DialogFooter>
           </CreateEventsForm>
         </DialogContentWrapper>
@@ -131,6 +147,8 @@ const EventMenuDropdownDialog = (props: { className?: string }) => {
         open={showMobileEditEventDialog}
         onSetOpen={setShowMobileEditEventDialog}
         className="h-[calc(100%-61px)]"
+        isPending={isFormSubmitting}
+        eventId={eventId}
       />
     </>
   );
@@ -139,27 +157,36 @@ const EventMenuDropdownDialog = (props: { className?: string }) => {
 export default EventMenuDropdownDialog;
 
 const EventDetails = () => {
+  const { eventId } = useParams({
+    from: '/_authenticated/$eventId',
+  });
+
+  const { data } = useGetEventsInfo(eventId);
+
   return (
     <ul className="px-5 pt-4 text-sm/5 -tracking-[0.02em] text-[#575554] [&>li]:flex [&>li]:items-center [&>li]:justify-between [&>li]:border-b [&>li]:border-dashed [&>li]:border-[#00000014] [&>li]:py-6 [&>li]:first:pt-0 [&>li]:last:border-0 [&>li>span]:leading-6 [&>li>span]:font-medium [&>li>span]:text-[#212121]">
       <li>
         Event name
-        <span>Mr & Mrs Williams’ Wedding</span>
+        <span>{data?.data.name}</span>
       </li>
       <li>
         Type
-        <span>Wedding</span>
+        <span className="capitalize">{data?.data.category.toLowerCase()}</span>
       </li>
       <li>
         Date
-        <span>Saturday, 16 September 2026</span>
+        <span>{formatDateToFullWithWeekday(data?.data.date)}</span>
       </li>
       <li>
         Time
-        <span>10:30 AM</span>
+        <span>
+          {data?.data.time === '' ? '--' : data?.data.time}
+          {/* 10:30 AM */}
+        </span>
       </li>
       <li>
         Location
-        <span>1, Perken Main Hall, Ikate, Lagos</span>
+        <span>{data?.data.location === '' ? '--' : data?.data.location}</span>
       </li>
     </ul>
   );

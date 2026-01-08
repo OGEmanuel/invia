@@ -9,6 +9,7 @@ import {
 } from '../sheet';
 import { cn } from '@/lib/utils';
 import { Button } from '../button';
+import ButtonLoading from './button-loading';
 
 const SheetContentWrapper = (props: {
   children?: React.ReactNode;
@@ -61,10 +62,11 @@ const SheetContentWrapper = (props: {
 export default SheetContentWrapper;
 
 export const SheetFooterWrapper = (props: {
-  buttonLabel?: string;
+  buttonLabel: string;
   className?: string;
+  isPending?: boolean;
 }) => {
-  const { className, buttonLabel } = props;
+  const { className, buttonLabel, isPending } = props;
 
   return (
     <SheetFooter
@@ -79,7 +81,7 @@ export const SheetFooterWrapper = (props: {
         </Button>
       </SheetClose>
 
-      <Button type={'submit'}>{buttonLabel}</Button>
+      <ButtonLoading label={buttonLabel} isPending={isPending} />
     </SheetFooter>
   );
 };

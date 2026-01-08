@@ -22,3 +22,17 @@ export const useGetAllEvents = (page: number, limit: number) => {
     queryFn: () => QUERIES.getEvents(page, limit),
   });
 };
+
+export const useGetEventsInfo = (eventId: string) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.events.info(eventId),
+    queryFn: () => QUERIES.getEventInfo(eventId),
+  });
+};
+
+export const useGetGuests = (page: number, limit: number, eventId: string) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.events.guests(page, limit, eventId),
+    queryFn: () => QUERIES.getGuests(page, limit, eventId),
+  });
+};
