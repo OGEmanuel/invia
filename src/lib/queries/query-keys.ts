@@ -16,5 +16,10 @@ export const QUERY_KEYS = {
       'guests',
       { page, limit, eventId },
     ],
+    parties: (eventId: string) => [
+      ...QUERY_KEYS.events.all,
+      'parties',
+      { eventId },
+    ],
   },
 };

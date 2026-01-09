@@ -2,15 +2,44 @@ import { Loader2 } from 'lucide-react';
 import { Button } from '../button';
 import { cn } from '@/lib/utils';
 
-const ButtonLoading = (props: { isPending?: boolean; label: string }) => {
-  const { isPending, label } = props;
+const ButtonLoading = (props: {
+  isPending?: boolean;
+  label: string;
+  onClick?: () => void;
+  form?: string;
+  type?: 'submit' | 'button' | 'reset';
+  variant?:
+    | 'secondary'
+    | 'destructive'
+    | 'neutral'
+    | 'link'
+    | 'default'
+    | 'outline'
+    | 'ghost'
+    | null
+    | undefined;
+  className?: string;
+}) => {
+  const {
+    isPending,
+    label,
+    form,
+    onClick,
+    type = 'submit',
+    variant = 'default',
+    className,
+  } = props;
   return (
     <Button
-      type="submit"
+      type={type}
+      onClick={onClick}
       disabled={isPending}
-      className={
-        'grid-stack grid w-max gap-0 overflow-hidden disabled:cursor-not-allowed disabled:opacity-50'
-      }
+      form={form}
+      variant={variant}
+      className={cn(
+        'grid-stack grid w-max gap-0 overflow-hidden disabled:cursor-not-allowed disabled:opacity-50',
+        className,
+      )}
     >
       <span
         className={cn(

@@ -25,11 +25,11 @@ import { Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import z from 'zod';
 import PhoneField from '@/components/ui/custom/phone';
-import Notice from '@/assets/jsx-icons/notice';
 import SheetContentWrapper, {
   SheetFooterWrapper,
 } from '@/components/ui/custom/sheet-content-wrapper';
 import { Sheet } from '@/components/ui/sheet';
+import notice from '@/assets/icons/notice.svg';
 
 const GuestActions = (props: {
   children: React.ReactNode;
@@ -270,7 +270,7 @@ export const RemoveGuest = (props: {
   return (
     <div className="flex justify-center">
       <div className="flex w-full max-w-100 flex-col items-center gap-5 text-center">
-        <Notice />
+        <img src={notice} alt="notice-icon" />
         <div className="flex flex-col gap-2 text-sm/[22px] -tracking-[0.02em] text-[#575554]">
           <p>Are you sure you want to remove</p>
           <h3 className="font-serif text-xl/7 text-[#212121]">{guestName}</h3>

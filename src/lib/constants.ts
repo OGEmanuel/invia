@@ -70,3 +70,15 @@ export interface EventData {
   totalPages: number;
   totalInvites: number;
 }
+
+export type Party = {
+  id: string;
+  name: string;
+};
+
+export type GuestFormContent = {
+  guestName: string;
+  whatsappNumber: string;
+  party?: string;
+  email?: string;
+};

@@ -35,6 +35,8 @@ import {
 } from '@/components/ui/dialog';
 import ScrollToTop from '@/components/scroll-to-top';
 import ShareForm from '../share-events-form';
+import { useGetEventParties } from '@/lib/queries/hooks';
+import type { Party } from '@/lib/constants';
 
 const EventDetailsLayout = (props: { children: React.ReactNode }) => {
   const { children } = props;
@@ -171,6 +173,9 @@ const AddGuest = (props: { className?: string }) => {
     from: '/_authenticated/$eventId',
   });
 
+  const { data } = useGetEventParties(eventId);
+  const parties: Party[] = data?.data;
+
   return (
     <>
       <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
@@ -195,6 +200,10 @@ const AddGuest = (props: { className?: string }) => {
                 addGuest: true,
                 page: 1,
                 limit: 50,
+                guestFilter:
+                  parties?.length > 0
+                    ? parties[0].name.toLowerCase()
+                    : undefined,
               }}
               className="absolute inset-0"
             >
