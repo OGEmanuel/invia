@@ -8,12 +8,8 @@ import { cn } from '@/lib/utils';
 import { useSearch } from '@tanstack/react-router';
 import { useGuestStore } from '@/store/guest-form-store';
 import { useQueryState } from 'nuqs';
-import { Activity } from 'react';
 
 const AddGuests = () => {
-  const [mobileTab, _] = useQueryState('mobile-add-guest', {
-    defaultValue: 'add-guest',
-  });
   return (
     <main className="bg-[#FEFCF9]">
       <Navbar />
