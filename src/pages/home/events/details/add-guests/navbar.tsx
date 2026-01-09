@@ -10,14 +10,28 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Link, useParams } from '@tanstack/react-router';
+import { Link, useParams, useSearch } from '@tanstack/react-router';
 import { LinkIcon } from 'lucide-react';
 import ShareForm from '../../share-events-form';
+import ButtonLoading from '@/components/ui/custom/button-loading';
+import { useGuestStore } from '@/store/guest-form-store';
+import { useFormStore } from '@/store/submitting-store';
 
 const Navbar = () => {
   const { eventId } = useParams({
     from: '/_authenticated/$eventId',
   });
+  const { guests: formGuests } = useGuestStore();
+  const { guestFilter } = useSearch({
+    from: '/_authenticated/$eventId',
+  });
+
+  const { isFormSubmitting } = useFormStore();
+
+  const lengthOfNonEmptyGuests = guestFilter
+    ? formGuests.filter(guest => guest.guestName !== '' && guest.party !== '')
+        .length
+    : formGuests.filter(guest => guest.guestName !== '').length;
 
   return (
     <nav className="flex justify-center border-black/8 lg:border-b">
@@ -65,13 +79,12 @@ const Navbar = () => {
               </DialogFooter>
             </DialogContent>
           </Dialog>
-          <Button
-            type="submit"
+          <ButtonLoading
             form="add-guest-form"
+            label={`Add ${lengthOfNonEmptyGuests > 0 ? `(${lengthOfNonEmptyGuests})` : ''} guest${lengthOfNonEmptyGuests > 1 ? 's' : ''}`}
+            isPending={isFormSubmitting}
             className="h-10 max-lg:hidden"
-          >
-            Add Guests
-          </Button>
+          />
         </div>
       </div>
     </nav>

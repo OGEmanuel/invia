@@ -32,6 +32,7 @@ const SelectField = (props: SelectFieldProps) => {
     className,
     isInvalid,
     optional,
+    disabled,
     options,
     orientation = 'vertical',
     wrapperClassName,
@@ -66,6 +67,7 @@ const SelectField = (props: SelectFieldProps) => {
         <Select
           name={field.name}
           value={field.state.value as string}
+          disabled={disabled}
           onValueChange={(value: string) => field.handleChange(value)}
         >
           <SelectTrigger
@@ -81,7 +83,7 @@ const SelectField = (props: SelectFieldProps) => {
           <SelectContent position="item-aligned" className="z-999">
             {/* <SelectItem value="auto">Auto</SelectItem>
             <SelectSeparator /> */}
-            {options.map(option => (
+            {options?.map(option => (
               <SelectItem key={option.value} value={option.value}>
                 {option.label}
               </SelectItem>

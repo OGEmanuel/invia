@@ -86,6 +86,61 @@ export const MUTATIONS = {
 
     return await https.patch(url, data);
   },
+  deleteEvent: async function (eventId: string) {
+    const params = new URLSearchParams();
+
+    if (eventId) {
+      params.append('eventId', eventId);
+    }
+    const queryString = params.toString();
+    const url = `/event/delete?${queryString}`;
+
+    return await https.delete(url);
+  },
+  createParty: async function (data: { name: string }, eventId?: string) {
+    const params = new URLSearchParams();
+
+    if (eventId) {
+      params.append('eventId', eventId);
+    }
+
+    const queryString = params.toString();
+    const url = `/event/parties/create?${queryString}`;
+
+    return await https.post(url, data);
+  },
+  deleteParty: async function (partyId: string, eventId?: string) {
+    const params = new URLSearchParams();
+
+    if (eventId) {
+      params.append('eventId', eventId);
+    }
+    if (partyId) {
+      params.append('partyId', partyId);
+    }
+
+    const queryString = params.toString();
+    const url = `/event/parties/delete?${queryString}`;
+
+    return await https.delete(url);
+  },
+  addEventGuests: async function (
+    data: {
+      guests: { party: string; name: string; phone: string; email: string }[];
+    },
+    eventId: string,
+  ) {
+    const params = new URLSearchParams();
+
+    if (eventId) {
+      params.append('eventId', eventId);
+    }
+
+    const queryString = params.toString();
+    const url = `/event/guests/add?${queryString}`;
+
+    return await https.post(url, data);
+  },
 };
 
 export const QUERIES = {
@@ -114,7 +169,7 @@ export const QUERIES = {
     const params = new URLSearchParams();
 
     if (id) {
-      params.append('id', id);
+      params.append('eventId', id);
     }
 
     const queryString = params.toString();
@@ -137,6 +192,18 @@ export const QUERIES = {
 
     const queryString = params.toString();
     const url = `/event/guests/fetch?${queryString}`;
+
+    return await https.get(url);
+  },
+  getEventParties: async function (eventId: string) {
+    const params = new URLSearchParams();
+
+    if (eventId) {
+      params.append('eventId', eventId);
+    }
+
+    const queryString = params.toString();
+    const url = `/event/parties?${queryString}`;
 
     return await https.get(url);
   },

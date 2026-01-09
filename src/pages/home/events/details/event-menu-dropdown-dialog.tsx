@@ -25,17 +25,22 @@ import { useState } from 'react';
 import CreateEventsForm from '../create-events-form';
 import Notice from '@/assets/jsx-icons/notice';
 import CreateEventsMobileSheet from '../create-events-mobile-sheet';
-import { useParams } from '@tanstack/react-router';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import { useGetEventsInfo } from '@/lib/queries/hooks';
 import { formatDateToFullWithWeekday } from '@/lib/utils';
 import { useFormStore } from '@/store/submitting-store';
 import ButtonLoading from '@/components/ui/custom/button-loading';
+import useSendRequest from '@/lib/hooks/useSendRequest';
+import { MUTATIONS } from '@/lib/queries';
+import { useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEYS } from '@/lib/queries/query-keys';
 
 const EventMenuDropdownDialog = (props: { className?: string }) => {
   const { className } = props;
   const { eventId } = useParams({
     from: '/_authenticated/$eventId',
   });
+  const navigate = useNavigate({ from: '/$eventId' });
 
   const [showEventDetailsDialog, setShowEventDetailsDialog] = useState(false);
   const [showEditEventDialog, setShowEditEventDialog] = useState(false);
@@ -43,6 +48,33 @@ const EventMenuDropdownDialog = (props: { className?: string }) => {
     useState(false);
   const [showDeleteEventDialog, setShowDeleteEventDialog] = useState(false);
   const { isFormSubmitting } = useFormStore();
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending } = useSendRequest<{ eventId: string }, any>({
+    mutationFn: (data: { eventId: string }) =>
+      MUTATIONS.deleteEvent(data.eventId),
+    successToast: {
+      title: 'Success!',
+      description: 'Event deleted successfully.',
+    },
+    errorToast: {
+      title: 'Failed!',
+      description: 'Please try again.',
+    },
+    onSuccessCallback: () => {
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.events.all,
+      });
+      setShowDeleteEventDialog(false);
+      navigate({
+        to: '/',
+        search: {
+          page: 1,
+          limit: 12,
+        },
+      });
+    },
+  });
 
   return (
     <>
@@ -138,7 +170,11 @@ const EventMenuDropdownDialog = (props: { className?: string }) => {
             <DialogClose asChild>
               <Button variant="neutral">Cancel</Button>
             </DialogClose>
-            <Button variant={'destructive'}>Remove event</Button>
+            <ButtonLoading
+              label="Remove event"
+              onClick={() => mutate({ eventId })}
+              isPending={isPending}
+            />
           </DialogFooter>
         </DialogContent>
       </Dialog>

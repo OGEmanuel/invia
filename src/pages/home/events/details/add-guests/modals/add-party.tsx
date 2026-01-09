@@ -1,26 +1,52 @@
 import { Button } from '@/components/ui/button';
+import ButtonLoading from '@/components/ui/custom/button-loading';
 import DialogContentWrapper from '@/components/ui/custom/dialog-content-wrapper';
 import InputField from '@/components/ui/custom/input';
 import SheetContentWrapper from '@/components/ui/custom/sheet-content-wrapper';
-import { Dialog, DialogClose, DialogFooter, DialogTrigger } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogClose,
+  DialogFooter,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { FieldSet } from '@/components/ui/field';
-import { Sheet, SheetClose, SheetFooter, SheetTrigger } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetClose,
+  SheetFooter,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+import useSendRequest from '@/lib/hooks/useSendRequest';
+import { MUTATIONS } from '@/lib/queries';
+import { QUERY_KEYS } from '@/lib/queries/query-keys';
 import { cn } from '@/lib/utils';
 import { revalidateLogic, useForm } from '@tanstack/react-form';
+import { useQueryClient } from '@tanstack/react-query';
+import { useParams } from '@tanstack/react-router';
+import { useState } from 'react';
 import z from 'zod';
 
-export const AddParty = (props: { children?: React.ReactNode }) => {
-  const { children } = props;
+export const AddParty = (props: {
+  children?: React.ReactNode;
+  asChild?: boolean;
+  partyId?: string;
+}) => {
+  const { children, asChild = true, partyId } = props;
+  const [open, setOpen] = useState(false);
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
       <DialogContentWrapper
         title="Add event party"
         description="Configure your export settings to download."
         className="h-80"
       >
-        <AddPartyForm className="h-[calc(100%-83px)]" />
+        <AddPartyForm
+          partyId={partyId}
+          onSetOpen={setOpen}
+          className="h-[calc(100%-83px)]"
+        />
       </DialogContentWrapper>
     </Dialog>
   );
@@ -30,8 +56,9 @@ export const AddPartyMobileSheet = (props: {
   children?: React.ReactNode;
   open: boolean;
   onSetOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  partyId?: string;
 }) => {
-  const { children, open, onSetOpen } = props;
+  const { children, open, onSetOpen, partyId } = props;
 
   return (
     <Sheet open={open} onOpenChange={onSetOpen}>
@@ -42,7 +69,11 @@ export const AddPartyMobileSheet = (props: {
         setOpen={onSetOpen}
         className="h-80"
       >
-        <AddPartyForm className="h-[calc(100%-83px)]" />
+        <AddPartyForm
+          partyId={partyId}
+          onSetOpen={onSetOpen}
+          className="h-[calc(100%-83px)]"
+        />
       </SheetContentWrapper>
     </Sheet>
   );
@@ -57,8 +88,35 @@ const addPartyFormSchema = z.object({
 const AddPartyForm = (props: {
   className?: string;
   children?: React.ReactNode;
+  onSetOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  partyId?: string;
 }) => {
-  const { className } = props;
+  const { className, onSetOpen } = props;
+  const { eventId } = useParams({
+    from: '/_authenticated/$eventId',
+  });
+
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending } = useSendRequest<{ name: string }, any>({
+    mutationFn: (data: { name: string }) =>
+      MUTATIONS.createParty(data, eventId),
+    successToast: {
+      title: 'Success!',
+      description: 'Party created successfully.',
+    },
+    errorToast: {
+      title: 'Failed!',
+      description: 'Please try again.',
+    },
+    onSuccessCallback: async () => {
+      form.reset();
+      onSetOpen(false);
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.events.parties(eventId),
+      });
+    },
+  });
 
   const form = useForm({
     defaultValues: {
@@ -69,7 +127,9 @@ const AddPartyForm = (props: {
       onSubmit: addPartyFormSchema,
     },
     onSubmit: async ({ value }) => {
-      console.log(value);
+      mutate({
+        name: value.partyName,
+      });
     },
   });
 
@@ -106,9 +166,7 @@ const AddPartyForm = (props: {
             Cancel
           </Button>
         </DialogClose>
-        <Button type="button" onClick={() => form.handleSubmit()}>
-          Create party
-        </Button>
+        <ButtonLoading label="Create party" isPending={isPending} />
       </DialogFooter>
       <SheetFooter className="border-t border-[#00000014] p-4 max-sm:flex-row max-sm:justify-end sm:hidden">
         <SheetClose asChild>
@@ -116,9 +174,7 @@ const AddPartyForm = (props: {
             Cancel
           </Button>
         </SheetClose>
-        <Button type="button" onClick={() => form.handleSubmit()}>
-          Create party
-        </Button>
+        <ButtonLoading label="Create party" isPending={isPending} />
       </SheetFooter>
     </form>
   );

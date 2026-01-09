@@ -69,7 +69,7 @@ const EventsDetails = () => {
           }
           actionLabel="Retry"
         />
-      ) : guests?.totalPages > 1 ? (
+      ) : guests?.guests.length > 1 ? (
         <GuestList />
       ) : (
         <EmptyState

@@ -36,3 +36,10 @@ export const useGetGuests = (page: number, limit: number, eventId: string) => {
     queryFn: () => QUERIES.getGuests(page, limit, eventId),
   });
 };
+
+export const useGetEventParties = (eventId: string) => {
+  return useQuery({
+    queryKey: QUERY_KEYS.events.parties(eventId),
+    queryFn: () => QUERIES.getEventParties(eventId),
+  });
+};
