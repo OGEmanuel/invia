@@ -9,7 +9,7 @@ export const Route = createFileRoute('/_authenticated/$eventId')({
   component: RouteComponent,
   validateSearch: z.object({
     guest: z.string().optional(),
-    addGuest: z.boolean().optional(),
+    addGuest: z.coerce.boolean().optional(),
     page: z.number().catch(1),
     limit: z.number().catch(50),
     guestFilter: z.string().optional(),
