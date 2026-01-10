@@ -30,3 +30,27 @@ export function formatDateToFullWithWeekday(dateString: string): string {
     year: 'numeric',
   }).format(date);
 }
+
+export function scrollToFirstError(form: any, offset = 120) {
+  const entries = Object.entries(form.state.fieldMeta) as [
+    string,
+    { errors: unknown[] },
+  ][];
+
+  const firstErrorEntry = entries.find(([, meta]) => meta.errors.length > 0);
+
+  if (!firstErrorEntry) return;
+
+  const [fieldName] = firstErrorEntry;
+
+  const input = document.querySelector(
+    `[name="${CSS.escape(fieldName)}"]`,
+  ) as HTMLElement | null;
+
+  if (!input) return;
+
+  const y = input.getBoundingClientRect().top + window.scrollY - offset;
+
+  window.scrollTo({ top: y, behavior: 'smooth' });
+  input.focus();
+}

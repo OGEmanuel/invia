@@ -6,10 +6,10 @@ import InputField from '@/components/ui/custom/input';
 import PhoneField from '@/components/ui/custom/phone';
 import SelectField from '@/components/ui/custom/select';
 import { FieldGroup, FieldSet } from '@/components/ui/field';
-import { cn } from '@/lib/utils';
+import { cn, scrollToFirstError } from '@/lib/utils';
 import { revalidateLogic, useField, useForm } from '@tanstack/react-form';
 import { Plus, Trash2, X } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import z from 'zod';
 import { AddParty, AddPartyMobileSheet } from './modals/add-party';
 import { RemovePartyDialog } from './modals/remove-party';
@@ -53,6 +53,7 @@ const AddGuestForm = (props: { className?: string }) => {
   const { guestFilter } = useSearch({
     from: '/_authenticated/$eventId',
   });
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const queryClient = useQueryClient();
 
@@ -126,7 +127,8 @@ const AddGuestForm = (props: { className?: string }) => {
     validators: {
       onSubmit: formSchema,
     },
-    onSubmit: async ({ value }) => {
+    onSubmitInvalid: () => scrollToFirstError(form),
+    onSubmit: ({ value }) => {
       mutate({
         guests: value.guest.map(
           ({ guestName, whatsappNumber, party, email }) => ({
@@ -170,6 +172,20 @@ const AddGuestForm = (props: { className?: string }) => {
     label: party.name,
     value: party.id,
   }));
+
+  const scrollToBottom = () => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const el = containerRef.current;
+        if (!el) return;
+
+        el.scrollTo({
+          top: el.scrollHeight,
+          behavior: 'smooth',
+        });
+      });
+    });
+  };
 
   return (
     <section className={cn('w-full max-lg:pt-5 lg:p-0', className)}>
@@ -252,7 +268,10 @@ const AddGuestForm = (props: { className?: string }) => {
             form.handleSubmit();
           }}
         >
-          <FieldGroup className="h-[calc(100vh-341px)] flex-col gap-6 overflow-auto max-lg:px-3.5 max-lg:pb-6 lg:h-[calc(100vh-283px)]">
+          <FieldGroup
+            ref={containerRef}
+            className="h-[calc(100vh-341px)] flex-col gap-6 overflow-auto max-lg:px-3.5 max-lg:pb-6 lg:h-[calc(100vh-283px)]"
+          >
             <form.Field
               name="guest"
               mode="array"
@@ -380,21 +399,26 @@ const AddGuestForm = (props: { className?: string }) => {
             />
             <Button
               type="button"
-              onClick={() =>
+              onClick={() => (
                 guest.pushValue({
                   guestName: '',
                   party: '',
                   whatsappNumber: '',
                   email: undefined,
+                }),
+                requestAnimationFrame(() => {
+                  requestAnimationFrame(() => {
+                    scrollToBottom();
+                  });
                 })
-              }
+              )}
               className="h-10 w-max self-end border border-dashed border-[#6155F5]/20 bg-[#6155F5]/8 text-[#6155F5] hover:bg-[#6155F5]/10"
             >
               <Plus className="size-5" />
               Add another guest
             </Button>
           </FieldGroup>
-          <div className="border-t border-black/8 p-5 lg:hidden">
+          <div className="fixed bottom-0 w-full border-t border-black/8 p-5 lg:hidden">
             <ButtonLoading
               label={`Add ${lengthOfNonEmptyGuests > 0 ? `(${lengthOfNonEmptyGuests})` : ''} guest${lengthOfNonEmptyGuests > 1 ? 's' : ''}`}
               isPending={isPending}

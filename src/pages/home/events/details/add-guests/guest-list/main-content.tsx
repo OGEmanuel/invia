@@ -42,6 +42,7 @@ const MainContent = () => {
             .map((_, i) => <GuestListItemLoading key={i} />)
         : guestsList.guests.map(guest => (
             <GuestCard
+              key={guest.id}
               guestName={guest.name}
               whatsappNumber={guest.phone}
               email={guest.email}

@@ -7,7 +7,6 @@ import Navbar from './navbar';
 import { cn } from '@/lib/utils';
 import { useSearch } from '@tanstack/react-router';
 import { useGuestStore } from '@/store/guest-form-store';
-import { useQueryState } from 'nuqs';
 
 const AddGuests = () => {
   return (
@@ -28,9 +27,6 @@ export default AddGuests;
 
 const AddGuestMobileTabs = (props: { className?: string }) => {
   const { className } = props;
-  const [mobileTab, setMobileTab] = useQueryState('mobile-add-guest', {
-    defaultValue: 'add-guest',
-  });
   const { guests: formGuests } = useGuestStore();
   const { guestFilter } = useSearch({
     from: '/_authenticated/$eventId',
@@ -42,11 +38,7 @@ const AddGuestMobileTabs = (props: { className?: string }) => {
     : formGuests.filter(guest => guest.guestName !== '').length;
 
   return (
-    <Tabs
-      className={cn('w-full gap-0', className)}
-      defaultValue={mobileTab}
-      onValueChange={setMobileTab}
-    >
+    <Tabs className={cn('w-full gap-0', className)} defaultValue="add-guest">
       <TabsList className="w-full rounded-none border-b border-black/8 bg-transparent p-0">
         <TabsTrigger
           value="add-guest"
