@@ -1,13 +1,15 @@
 import Banner from '../banner';
+import MainContent from './main-content';
 
 const Messages = () => {
   return (
     <>
       <Banner
-        header="Manage messages sent to guests"
-        description="Streamline your guest lists, send invitations, and track responses all in one place."
+        header="Send consistent invitations faster"
+        description="Create reusable templates for invitations and follow-ups across all your events."
         className="py-7"
       />
+      <MainContent />
     </>
   );
 };
