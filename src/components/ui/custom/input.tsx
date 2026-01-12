@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { Field, FieldError, FieldLabel, FieldSet } from '../field';
 import { Input } from '../input';
-import type { ComponentProps } from 'react';
+import { Activity, type ComponentProps } from 'react';
 import type { FormFieldApi } from '@/lib/constants';
 
 interface InputFieldProps<TValue = string> extends ComponentProps<'input'> {
@@ -14,6 +14,7 @@ interface InputFieldProps<TValue = string> extends ComponentProps<'input'> {
   orientation?: 'vertical' | 'horizontal' | 'responsive' | null;
   wrapperClassName?: string;
   errorClassName?: string;
+  numberOnly?: boolean;
 }
 
 const InputField = <TValue = string,>(props: InputFieldProps<TValue>) => {
@@ -30,6 +31,7 @@ const InputField = <TValue = string,>(props: InputFieldProps<TValue>) => {
     orientation = 'vertical',
     wrapperClassName,
     errorClassName,
+    numberOnly,
   } = props;
 
   return (
@@ -52,21 +54,43 @@ const InputField = <TValue = string,>(props: InputFieldProps<TValue>) => {
         )}
       </FieldSet>
       <FieldSet className="relative">
-        <Input
-          id={field.name}
-          name={field.name}
-          value={field.state.value as string}
-          onBlur={field.handleBlur}
-          onChange={e => field.handleChange(e.target.value as TValue)}
-          aria-invalid={isInvalid}
-          placeholder={placeholder}
-          type={type}
-          className={cn(
-            'h-11 rounded-[12px] border border-[#00000014] text-sm/6 tracking-[-0.02em] shadow-none placeholder:text-[#A3A19D]',
-            className,
-            iconPosition === 'left' && 'pl-10.5',
-          )}
-        />
+        <Activity mode={numberOnly ? 'hidden' : 'visible'}>
+          <Input
+            id={field.name}
+            name={field.name}
+            value={field.state.value as string}
+            onBlur={field.handleBlur}
+            onChange={e => field.handleChange(e.target.value as TValue)}
+            aria-invalid={isInvalid}
+            placeholder={placeholder}
+            type={type}
+            className={cn(
+              'h-11 rounded-[12px] border border-[#00000014] text-sm/6 tracking-[-0.02em] shadow-none placeholder:text-[#A3A19D]',
+              className,
+              iconPosition === 'left' && 'pl-10.5',
+            )}
+          />
+        </Activity>
+        <Activity mode={numberOnly ? 'visible' : 'hidden'}>
+          <Input
+            id={field.name}
+            name={field.name}
+            value={field.state.value as string}
+            onBlur={field.handleBlur}
+            onChange={e => {
+              const value = e.target.value.replace(/[^0-9.]/g, '');
+              field.handleChange(value as TValue);
+            }}
+            aria-invalid={isInvalid}
+            placeholder={placeholder}
+            type={type}
+            className={cn(
+              'h-11 rounded-[12px] border border-[#00000014] text-sm/6 tracking-[-0.02em] shadow-none placeholder:text-[#A3A19D]',
+              className,
+              iconPosition === 'left' && 'pl-10.5',
+            )}
+          />
+        </Activity>
         <span
           className={cn(
             'absolute flex items-center',

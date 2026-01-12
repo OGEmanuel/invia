@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { FieldDescription, FieldGroup, FieldSet } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { usePasscodeStore } from '@/store/passcode-store';
+import { useParams } from '@tanstack/react-router';
 import { useReducer, useRef } from 'react';
 
 type CopyType = 'link' | 'code' | null;
@@ -30,6 +32,10 @@ const copyReducer = (state: CopyState, action: CopyAction): CopyState => {
 const ShareForm = () => {
   const [state, dispatch] = useReducer(copyReducer, { copied: null });
   const timeoutRef = useRef<number | null>(null);
+  const { eventId } = useParams({
+    from: '/_authenticated/$eventId',
+  });
+  const passcode = usePasscodeStore(s => s.getValidCode(eventId)?.passcode);
 
   const handleCopy = async (text: string, type: 'link' | 'code') => {
     try {
@@ -101,8 +107,8 @@ const ShareForm = () => {
         <FieldSet className="flex-row items-center gap-2">
           <Input
             id="formCode"
+            value={passcode ?? ''}
             name="formCode"
-            value={'6AHPCE'}
             disabled
             className="h-10 rounded-[12px] border border-black/8 bg-[#FEFCF9] px-3.5 text-ellipsis text-[#212121] shadow-none disabled:opacity-100"
           />

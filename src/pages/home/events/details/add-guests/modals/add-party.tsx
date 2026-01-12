@@ -22,7 +22,7 @@ import { QUERY_KEYS } from '@/lib/queries/query-keys';
 import { cn } from '@/lib/utils';
 import { revalidateLogic, useForm } from '@tanstack/react-form';
 import { useQueryClient } from '@tanstack/react-query';
-import { useParams } from '@tanstack/react-router';
+import { useLocation, useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 import z from 'zod';
 
@@ -91,9 +91,12 @@ const AddPartyForm = (props: {
   onSetOpen: React.Dispatch<React.SetStateAction<boolean>>;
   partyId?: string;
 }) => {
+  const { pathname } = useLocation();
   const { className, onSetOpen } = props;
   const { eventId } = useParams({
-    from: '/_authenticated/$eventId',
+    from: pathname.includes('/share-guest-list')
+      ? '/share-guest-list/$eventId'
+      : '/_authenticated/$eventId',
   });
 
   const queryClient = useQueryClient();

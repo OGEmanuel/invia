@@ -23,7 +23,7 @@ import EventMenuDropdownDialog from './event-menu-dropdown-dialog';
 import SendInvitations, {
   SendInvitationsMobileSheet,
 } from './send-invitations';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogClose,
@@ -37,9 +37,30 @@ import ScrollToTop from '@/components/scroll-to-top';
 import ShareForm from '../share-events-form';
 import { useGetEventParties } from '@/lib/queries/hooks';
 import type { Party } from '@/lib/constants';
+import useSendRequest from '@/lib/hooks/useSendRequest';
+import { MUTATIONS } from '@/lib/queries';
+import { startPasscodeAutoRefresh } from '@/services/passcodeController';
 
 const EventDetailsLayout = (props: { children: React.ReactNode }) => {
   const { children } = props;
+  const { eventId } = useParams({
+    from: '/_authenticated/$eventId',
+  });
+  const { mutate } = useSendRequest<
+    { eventId: string },
+    { data: { passcode: string; passcodeExpires: string } }
+  >({
+    mutationFn: (data: { eventId: string }) =>
+      MUTATIONS.getEventShareFormGeneratePasscode(data.eventId),
+    errorToast: {
+      title: 'Failed!',
+      description: 'Share code generation failed!',
+    },
+  });
+
+  useEffect(() => {
+    startPasscodeAutoRefresh(eventId, mutate);
+  }, [eventId, mutate]);
   return (
     <>
       <ScrollToTop />
