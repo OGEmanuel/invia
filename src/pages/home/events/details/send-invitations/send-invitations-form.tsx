@@ -10,12 +10,13 @@ import {
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { cn } from '@/lib/utils';
 import { revalidateLogic, useField, useForm } from '@tanstack/react-form';
-import { Clock3, Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import { Activity, useRef, useState } from 'react';
 import z from 'zod';
 // import EmptyState from '../empty-state';
-import { renderStyledVariables } from './styled-variables';
+// import { renderStyledVariables } from './styled-variables';
 import { useSearch } from '@tanstack/react-router';
+import EmptyState from '../empty-state';
 
 const followUpSchema = z.object({
   rsvp: z.string().min(2, { error: 'Please select RSVP status' }),
@@ -310,8 +311,8 @@ const SendInvitationsForm = (props: {
           </FieldGroup>
         </Activity>
         <Activity mode={mode === 'template' ? 'visible' : 'hidden'}>
-          {/* <EmptyTemplateCard /> */}
-          <FieldSet>
+          <EmptyTemplateCard />
+          {/* <FieldSet>
             <form.Field
               name="template"
               children={field => {
@@ -348,7 +349,7 @@ const SendInvitationsForm = (props: {
                 </p>
               </div>
             </div>
-          </FieldSet>
+          </FieldSet> */}
         </Activity>
       </FieldGroup>
       {children}
@@ -381,14 +382,14 @@ const FormMode = (props: { mode: string; setMode: any }) => {
   );
 };
 
-// const EmptyTemplateCard = () => {
-//   return (
-//     <div className="flex w-full justify-center bg-[#FEFCF9]">
-//       <EmptyState
-//         header="No templates available"
-//         description="You don’t have any message templates for this event type yet. Create one or write a custom message."
-//         className="[&>p]:text-sm/ h-auto w-100 gap-1 rounded-[12px] py-21 text-center [&>h2]:text-base/5"
-//       />
-//     </div>
-//   );
-// };
+const EmptyTemplateCard = () => {
+  return (
+    <div className="flex w-full justify-center bg-[#FEFCF9]">
+      <EmptyState
+        header="No templates available"
+        description="You don’t have any message templates for this event type yet. Create one or write a custom message."
+        className="[&>p]:text-sm/ h-auto w-100 gap-1 rounded-[12px] py-21 text-center [&>h2]:text-base/5"
+      />
+    </div>
+  );
+};

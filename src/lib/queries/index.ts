@@ -141,6 +141,18 @@ export const MUTATIONS = {
 
     return await https.post(url, data);
   },
+  getEventShareFormGeneratePasscode: async function (eventId: string) {
+    const params = new URLSearchParams();
+
+    if (eventId) {
+      params.append('eventId', eventId);
+    }
+
+    const queryString = params.toString();
+    const url = `/event/share-form/generate-passcode?${queryString}`;
+
+    return await https.post(url);
+  },
 };
 
 export const QUERIES = {

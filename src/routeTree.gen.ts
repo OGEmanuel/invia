@@ -10,8 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as ShareGuestListIndexRouteImport } from './routes/share-guest-list/index'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as ShareGuestListEventIdRouteImport } from './routes/share-guest-list/$eventId'
 import { Route as AuthVerifyResetPasswordRouteImport } from './routes/auth/verify-reset-password'
 import { Route as AuthVerifyEmailRouteImport } from './routes/auth/verify-email'
 import { Route as AuthSignUpRouteImport } from './routes/auth/sign-up'
@@ -28,6 +30,11 @@ const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShareGuestListIndexRoute = ShareGuestListIndexRouteImport.update({
+  id: '/share-guest-list/',
+  path: '/share-guest-list/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthIndexRoute = AuthIndexRouteImport.update({
   id: '/auth/',
   path: '/auth/',
@@ -37,6 +44,11 @@ const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AuthenticatedRoute,
+} as any)
+const ShareGuestListEventIdRoute = ShareGuestListEventIdRouteImport.update({
+  id: '/share-guest-list/$eventId',
+  path: '/share-guest-list/$eventId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthVerifyResetPasswordRoute = AuthVerifyResetPasswordRouteImport.update({
   id: '/auth/verify-reset-password',
@@ -106,8 +118,10 @@ export interface FileRoutesByFullPath {
   '/auth/sign-up': typeof AuthSignUpRoute
   '/auth/verify-email': typeof AuthVerifyEmailRoute
   '/auth/verify-reset-password': typeof AuthVerifyResetPasswordRoute
+  '/share-guest-list/$eventId': typeof ShareGuestListEventIdRoute
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthIndexRoute
+  '/share-guest-list': typeof ShareGuestListIndexRoute
   '/messages': typeof AuthenticatedMessagesIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
 }
@@ -121,8 +135,10 @@ export interface FileRoutesByTo {
   '/auth/sign-up': typeof AuthSignUpRoute
   '/auth/verify-email': typeof AuthVerifyEmailRoute
   '/auth/verify-reset-password': typeof AuthVerifyResetPasswordRoute
+  '/share-guest-list/$eventId': typeof ShareGuestListEventIdRoute
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthIndexRoute
+  '/share-guest-list': typeof ShareGuestListIndexRoute
   '/messages': typeof AuthenticatedMessagesIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
 }
@@ -138,8 +154,10 @@ export interface FileRoutesById {
   '/auth/sign-up': typeof AuthSignUpRoute
   '/auth/verify-email': typeof AuthVerifyEmailRoute
   '/auth/verify-reset-password': typeof AuthVerifyResetPasswordRoute
+  '/share-guest-list/$eventId': typeof ShareGuestListEventIdRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/auth/': typeof AuthIndexRoute
+  '/share-guest-list/': typeof ShareGuestListIndexRoute
   '/_authenticated/messages/': typeof AuthenticatedMessagesIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
 }
@@ -155,8 +173,10 @@ export interface FileRouteTypes {
     | '/auth/sign-up'
     | '/auth/verify-email'
     | '/auth/verify-reset-password'
+    | '/share-guest-list/$eventId'
     | '/'
     | '/auth'
+    | '/share-guest-list'
     | '/messages'
     | '/settings'
   fileRoutesByTo: FileRoutesByTo
@@ -170,8 +190,10 @@ export interface FileRouteTypes {
     | '/auth/sign-up'
     | '/auth/verify-email'
     | '/auth/verify-reset-password'
+    | '/share-guest-list/$eventId'
     | '/'
     | '/auth'
+    | '/share-guest-list'
     | '/messages'
     | '/settings'
   id:
@@ -186,8 +208,10 @@ export interface FileRouteTypes {
     | '/auth/sign-up'
     | '/auth/verify-email'
     | '/auth/verify-reset-password'
+    | '/share-guest-list/$eventId'
     | '/_authenticated/'
     | '/auth/'
+    | '/share-guest-list/'
     | '/_authenticated/messages/'
     | '/_authenticated/settings/'
   fileRoutesById: FileRoutesById
@@ -202,7 +226,9 @@ export interface RootRouteChildren {
   AuthSignUpRoute: typeof AuthSignUpRoute
   AuthVerifyEmailRoute: typeof AuthVerifyEmailRoute
   AuthVerifyResetPasswordRoute: typeof AuthVerifyResetPasswordRoute
+  ShareGuestListEventIdRoute: typeof ShareGuestListEventIdRoute
   AuthIndexRoute: typeof AuthIndexRoute
+  ShareGuestListIndexRoute: typeof ShareGuestListIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -212,6 +238,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/share-guest-list/': {
+      id: '/share-guest-list/'
+      path: '/share-guest-list'
+      fullPath: '/share-guest-list'
+      preLoaderRoute: typeof ShareGuestListIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth/': {
@@ -227,6 +260,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/share-guest-list/$eventId': {
+      id: '/share-guest-list/$eventId'
+      path: '/share-guest-list/$eventId'
+      fullPath: '/share-guest-list/$eventId'
+      preLoaderRoute: typeof ShareGuestListEventIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/auth/verify-reset-password': {
       id: '/auth/verify-reset-password'
@@ -336,7 +376,9 @@ const rootRouteChildren: RootRouteChildren = {
   AuthSignUpRoute: AuthSignUpRoute,
   AuthVerifyEmailRoute: AuthVerifyEmailRoute,
   AuthVerifyResetPasswordRoute: AuthVerifyResetPasswordRoute,
+  ShareGuestListEventIdRoute: ShareGuestListEventIdRoute,
   AuthIndexRoute: AuthIndexRoute,
+  ShareGuestListIndexRoute: ShareGuestListIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

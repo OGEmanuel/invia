@@ -54,3 +54,19 @@ export function scrollToFirstError(form: any, offset = 120) {
   window.scrollTo({ top: y, behavior: 'smooth' });
   input.focus();
 }
+
+export function parseExpiryToMs(text: string): number {
+  const lower = text.toLowerCase();
+
+  const numberMatch = lower.match(/\d+/);
+  if (!numberMatch) return 60_000; // fallback: 1 min
+
+  const value = parseInt(numberMatch[0], 10);
+
+  if (lower.includes('second')) return value * 1000;
+  if (lower.includes('minute')) return value * 60_000;
+  if (lower.includes('hour')) return value * 3_600_000;
+  if (lower.includes('day')) return value * 86_400_000;
+
+  return 60_000; // fallback
+}

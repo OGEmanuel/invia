@@ -5,7 +5,7 @@ import AddGuestForm from './add-guest-form';
 import GuestList from './guest-list';
 import Navbar from './navbar';
 import { cn } from '@/lib/utils';
-import { useSearch } from '@tanstack/react-router';
+import { useLocation, useSearch } from '@tanstack/react-router';
 import { useGuestStore } from '@/store/guest-form-store';
 
 const AddGuests = () => {
@@ -28,8 +28,11 @@ export default AddGuests;
 const AddGuestMobileTabs = (props: { className?: string }) => {
   const { className } = props;
   const { guests: formGuests } = useGuestStore();
+  const { pathname } = useLocation();
   const { guestFilter } = useSearch({
-    from: '/_authenticated/$eventId',
+    from: pathname.includes('/share-guest-list')
+      ? '/share-guest-list/$eventId'
+      : '/_authenticated/$eventId',
   });
 
   const lengthOfNonEmptyGuests = guestFilter

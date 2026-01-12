@@ -9,7 +9,12 @@ import MainContent from './main-content';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { useGuestStore } from '@/store/guest-form-store';
-import { useNavigate, useParams, useSearch } from '@tanstack/react-router';
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  useSearch,
+} from '@tanstack/react-router';
 import { useGetEventParties, useGetGuests } from '@/lib/queries/hooks';
 import type { GuestData, Party } from '@/lib/constants';
 import Skeleton from '@/components/ui/custom/skeleton';
@@ -18,13 +23,18 @@ import NotFound from '@/pages/not-found';
 
 const GuestList = (props: { className?: string }) => {
   const { className } = props;
+  const { pathname } = useLocation();
 
   const { eventId } = useParams({
-    from: '/_authenticated/$eventId',
+    from: pathname.includes('/share-guest-list')
+      ? '/share-guest-list/$eventId'
+      : '/_authenticated/$eventId',
   });
   const { data, isError } = useGetEventParties(eventId);
   const { guestFilter } = useSearch({
-    from: '/_authenticated/$eventId',
+    from: pathname.includes('/share-guest-list')
+      ? '/share-guest-list/$eventId'
+      : '/_authenticated/$eventId',
   });
   const { data: guestsData, isError: guestsIsError } = useGetGuests(
     1,
@@ -52,7 +62,10 @@ const GuestList = (props: { className?: string }) => {
 
   return (
     <section
-      className={cn('h-max rounded-[12px] border-black/8 lg:border', className)}
+      className={cn(
+        'h-max overflow-hidden rounded-[12px] border-black/8 lg:border',
+        className,
+      )}
     >
       <div
         className={cn(
@@ -132,11 +145,16 @@ const GuestList = (props: { className?: string }) => {
 export default GuestList;
 
 const GuestTabs = () => {
+  const { pathname } = useLocation();
   const { eventId } = useParams({
-    from: '/_authenticated/$eventId',
+    from: pathname.includes('/share-guest-list')
+      ? '/share-guest-list/$eventId'
+      : '/_authenticated/$eventId',
   });
   const { guestFilter } = useSearch({
-    from: '/_authenticated/$eventId',
+    from: pathname.includes('/share-guest-list')
+      ? '/share-guest-list/$eventId'
+      : '/_authenticated/$eventId',
   });
   const navigate = useNavigate({ from: '/$eventId' });
   const { data, isPending, isError } = useGetEventParties(eventId);
@@ -144,31 +162,49 @@ const GuestTabs = () => {
   const { guests: formGuests } = useGuestStore();
 
   const filterPartyGuestsLength = (partyId: string) => {
-    return formGuests.filter(guest => guest.party === partyId).length;
+    return formGuests.filter(guest => guest.party?.toLowerCase() === partyId)
+      .length;
   };
 
   useEffect(() => {
     if (parties?.length > 0) {
-      navigate({
-        to: '/$eventId',
-        search: {
-          addGuest: true,
-          guestFilter: parties[0].id,
-          page: 1,
-          limit: 50,
-        },
-        replace: true,
-      });
+      pathname.includes('/share-guest-list')
+        ? navigate({
+            to: '/share-guest-list/$eventId',
+            search: {
+              addGuest: true,
+              guestFilter: parties[0].name.toLowerCase(),
+            },
+            replace: true,
+          })
+        : navigate({
+            to: '/$eventId',
+            search: {
+              addGuest: true,
+              guestFilter: parties[0].name.toLowerCase(),
+              page: 1,
+              limit: 50,
+            },
+            replace: true,
+          });
     } else {
-      navigate({
-        to: '/$eventId',
-        search: {
-          addGuest: true,
-          page: 1,
-          limit: 50,
-        },
-        replace: true,
-      });
+      pathname.includes('/share-guest-list')
+        ? navigate({
+            to: '/share-guest-list/$eventId',
+            search: {
+              addGuest: true,
+            },
+            replace: true,
+          })
+        : navigate({
+            to: '/$eventId',
+            search: {
+              addGuest: true,
+              page: 1,
+              limit: 50,
+            },
+            replace: true,
+          });
     }
   }, [parties]);
 
@@ -190,12 +226,12 @@ const GuestTabs = () => {
         {parties.map(party => (
           <TabsTrigger
             key={party.id}
-            value={party.id}
+            value={party.name.toLowerCase()}
             className="rounded-[46px] border-0 border-transparent px-4 py-2 text-sm/5 font-medium -tracking-[0.02em] data-[state=active]:border-[#212121] data-[state=active]:bg-[#212121] data-[state=active]:text-white max-lg:bg-[#F7F5F2] max-lg:text-[#575554] lg:rounded-none lg:border-b-2 lg:px-2 lg:py-3 lg:data-[state=active]:bg-transparent lg:data-[state=active]:text-[#212121]"
           >
             {party.name}{' '}
-            {filterPartyGuestsLength(party.id) > 0
-              ? `+ ${filterPartyGuestsLength(party.id)}`
+            {filterPartyGuestsLength(party.name.toLowerCase()) > 0
+              ? `+ ${filterPartyGuestsLength(party.name.toLowerCase())}`
               : ''}
           </TabsTrigger>
         ))}

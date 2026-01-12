@@ -13,7 +13,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import z from 'zod';
 import { AddParty, AddPartyMobileSheet } from './modals/add-party';
 import { RemovePartyDialog } from './modals/remove-party';
-import { useParams, useSearch } from '@tanstack/react-router';
+import { useLocation, useParams, useSearch } from '@tanstack/react-router';
 import type { Party } from '@/lib/constants';
 import Skeleton from '@/components/ui/custom/skeleton';
 import { useGetEventParties } from '@/lib/queries/hooks';
@@ -47,11 +47,16 @@ const addGuestFormSchema = z.object({
 const AddGuestForm = (props: { className?: string }) => {
   const { className } = props;
   const [open, setOpen] = useState(false);
+  const { pathname } = useLocation();
   const { eventId } = useParams({
-    from: '/_authenticated/$eventId',
+    from: pathname.includes('/share-guest-list')
+      ? '/share-guest-list/$eventId'
+      : '/_authenticated/$eventId',
   });
   const { guestFilter } = useSearch({
-    from: '/_authenticated/$eventId',
+    from: pathname.includes('/share-guest-list')
+      ? '/share-guest-list/$eventId'
+      : '/_authenticated/$eventId',
   });
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -101,7 +106,15 @@ const AddGuestForm = (props: { className?: string }) => {
       description: 'Please try again.',
     },
     onSuccessCallback: () => {
-      form.reset();
+      form.setFieldValue(
+        'guest',
+        guestsField.state.value.map(() => ({
+          guestName: '',
+          party: '',
+          whatsappNumber: '',
+          email: '',
+        })),
+      );
       queryClient.invalidateQueries({
         queryKey: QUERY_KEYS.events.guests(1, 50, eventId),
       });
@@ -119,7 +132,7 @@ const AddGuestForm = (props: { className?: string }) => {
           guestName: '',
           whatsappNumber: '',
           party: '',
-          email: '',
+          email: undefined,
         },
       ],
     } as formSchemaType,
@@ -141,6 +154,9 @@ const AddGuestForm = (props: { className?: string }) => {
       });
     },
   });
+
+  const guestsField = useField({ name: 'guest', form });
+
   useEffect(() => {
     setGuests(form.state.values.guest);
 
@@ -170,7 +186,7 @@ const AddGuestForm = (props: { className?: string }) => {
 
   const partyOptions = parties?.map(party => ({
     label: party.name,
-    value: party.id,
+    value: party.name,
   }));
 
   const scrollToBottom = () => {
@@ -418,7 +434,7 @@ const AddGuestForm = (props: { className?: string }) => {
               Add another guest
             </Button>
           </FieldGroup>
-          <div className="fixed bottom-0 w-full border-t border-black/8 p-5 lg:hidden">
+          <div className="fixed bottom-0 w-full border-t border-black/8 bg-[#FEFCF9] p-5 lg:hidden">
             <ButtonLoading
               label={`Add ${lengthOfNonEmptyGuests > 0 ? `(${lengthOfNonEmptyGuests})` : ''} guest${lengthOfNonEmptyGuests > 1 ? 's' : ''}`}
               isPending={isPending}

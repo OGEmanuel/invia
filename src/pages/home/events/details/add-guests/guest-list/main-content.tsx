@@ -4,17 +4,22 @@ import GuestActions from '../../guest-actions';
 import { useGuestStore } from '@/store/guest-form-store';
 import type { GuestData } from '@/lib/constants';
 import { useGetGuests } from '@/lib/queries/hooks';
-import { useParams, useSearch } from '@tanstack/react-router';
+import { useLocation, useParams, useSearch } from '@tanstack/react-router';
 import { cn } from '@/lib/utils';
 import Skeleton from '@/components/ui/custom/skeleton';
 
 const MainContent = () => {
+  const { pathname } = useLocation();
   const { eventId } = useParams({
-    from: '/_authenticated/$eventId',
+    from: pathname.includes('/share-guest-list')
+      ? '/share-guest-list/$eventId'
+      : '/_authenticated/$eventId',
   });
   const { guests } = useGuestStore();
   const { guestFilter } = useSearch({
-    from: '/_authenticated/$eventId',
+    from: pathname.includes('/share-guest-list')
+      ? '/share-guest-list/$eventId'
+      : '/_authenticated/$eventId',
   });
 
   const displayedList = guestFilter

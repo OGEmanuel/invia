@@ -22,7 +22,7 @@ import useSendRequest from '@/lib/hooks/useSendRequest';
 import { MUTATIONS } from '@/lib/queries';
 import { QUERY_KEYS } from '@/lib/queries/query-keys';
 import { useQueryClient } from '@tanstack/react-query';
-import { useParams } from '@tanstack/react-router';
+import { useLocation, useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 import notice from '@/assets/icons/notice.svg';
 // import { revalidateLogic, useForm } from '@tanstack/react-form';
@@ -73,9 +73,12 @@ const RemoveParty = (props: {
   partyId: string;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  const { pathname } = useLocation();
   const { partyName, partyId, setOpen } = props;
   const { eventId } = useParams({
-    from: '/_authenticated/$eventId',
+    from: pathname.includes('/share-guest-list')
+      ? '/share-guest-list/$eventId'
+      : '/_authenticated/$eventId',
   });
 
   const queryClient = useQueryClient();

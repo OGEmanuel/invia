@@ -21,5 +21,10 @@ export const QUERY_KEYS = {
       'parties',
       { eventId },
     ],
+    shareInviteCode: (eventId: string) => [
+      ...QUERY_KEYS.events.all,
+      'share-invite-code',
+      { eventId },
+    ],
   },
 };
