@@ -16,7 +16,7 @@ const UpgradeEmpty = () => {
           <h2 className="font-serif leading-[100%] sm:text-2xl">
             Create reusable messages
           </h2>
-          <p className="text-sm/[22px] text-[#626262] max-sm:-tracking-[0.02em] sm:leading-6">
+          <p className="text-sm/[22px] -tracking-[0.02em] text-[#626262] sm:leading-6">
             Upgrade your plan to create reusable message templates for faster
             and more consistent invitations.
           </p>
