@@ -208,7 +208,7 @@ const CreateEventsForm = (props: {
     >
       <FieldGroup
         className={cn(
-          'flex h-[calc(100%-81px)] flex-col justify-between overflow-auto p-4',
+          'flex h-[calc(100%-100px)] flex-col justify-between overflow-auto p-4 sm:h-[calc(100%-81px)]',
         )}
       >
         <form.Field

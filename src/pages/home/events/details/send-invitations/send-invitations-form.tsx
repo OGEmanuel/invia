@@ -8,7 +8,7 @@ import {
   FieldSet,
 } from '@/components/ui/field';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { cn } from '@/lib/utils';
+import { cn, scrollToBottom } from '@/lib/utils';
 import { revalidateLogic, useField, useForm } from '@tanstack/react-form';
 import { Plus, Trash2 } from 'lucide-react';
 import { Activity, useRef, useState } from 'react';
@@ -54,10 +54,10 @@ const SendInvitationsForm = (props: {
 }) => {
   const { children, setPage } = props;
   const [editorResetKey, setEditorResetKey] = useState(0);
-  const scrollRef = useRef<HTMLDivElement>(null);
   const { guest } = useSearch({
     from: '/_authenticated/$eventId',
   });
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Remember to update default sendTo value when guest is true
   const customDefaultValues = {
@@ -108,9 +108,9 @@ const SendInvitationsForm = (props: {
     >
       <FieldGroup
         className={cn(
-          'flex h-[calc(100%-81px)] flex-col gap-6 overflow-auto p-4',
+          'flex h-[calc(100%-100px)] flex-col gap-6 overflow-auto p-4 sm:h-[calc(100%-81px)]',
         )}
-        ref={scrollRef}
+        ref={containerRef}
       >
         <Activity mode={guest ? 'hidden' : 'visible'}>
           <form.Field
@@ -165,12 +165,7 @@ const SendInvitationsForm = (props: {
             }}
           />
           <FieldGroup>
-            <FieldSet
-              className={cn(
-                'flex-row items-center justify-between',
-                followUp.state.value?.length < 1 && mode === 'custom' && 'h-80',
-              )}
-            >
+            <FieldSet className={cn('flex-row items-center justify-between')}>
               <FieldSet>
                 <FieldLegend className="mb-0 text-sm! leading-5.5 font-medium -tracking-[0.02em] text-[#212121]">
                   Follow-up messages
@@ -183,9 +178,10 @@ const SendInvitationsForm = (props: {
                 type="button"
                 onClick={() => {
                   followUp.pushValue({ rsvp: '', numOfDays: '', message: '' });
-                  scrollRef.current?.scrollBy({
-                    top: 350,
-                    behavior: 'smooth',
+                  requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                      scrollToBottom(containerRef);
+                    });
                   });
                 }}
                 variant={'neutral'}
@@ -212,7 +208,7 @@ const SendInvitationsForm = (props: {
                             key={i}
                             className="rounded-3xl border border-black/8 bg-[#FEFCF9] p-2"
                           >
-                            <FieldGroup className="flex-row items-center justify-between">
+                            <FieldGroup className="flex-row items-center justify-between max-sm:gap-0">
                               <FieldSet className="flex-row items-center gap-2">
                                 <form.Field
                                   name={`followUp[${i}].rsvp`}

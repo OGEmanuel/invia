@@ -25,11 +25,11 @@ import { Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import z from 'zod';
 import PhoneField from '@/components/ui/custom/phone';
-import SheetContentWrapper, {
-  SheetFooterWrapper,
-} from '@/components/ui/custom/sheet-content-wrapper';
-import { Sheet } from '@/components/ui/sheet';
 import notice from '@/assets/icons/notice.svg';
+import { Drawer } from '@/components/ui/drawer';
+import DrawerContentWrapper, {
+  DrawerFooterWrapper,
+} from '@/components/ui/custom/drawer-content-wrapper';
 
 const GuestActions = (props: {
   children: React.ReactNode;
@@ -100,15 +100,11 @@ const GuestActions = (props: {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      <Sheet open={showEditGuestSheet} onOpenChange={setShowEditGuestSheet}>
-        <SheetContentWrapper
-          title="Edit guest"
-          setOpen={setShowEditGuestSheet}
-          className="h-max"
-        >
+      <Drawer open={showEditGuestSheet} onOpenChange={setShowEditGuestSheet}>
+        <DrawerContentWrapper title="Edit guest">
           <EditGuestForm className="h-[calc(100%-83px)]" />
-        </SheetContentWrapper>
-      </Sheet>
+        </DrawerContentWrapper>
+      </Drawer>
     </>
   );
 };
@@ -173,7 +169,7 @@ const EditGuestForm = (props: {
     >
       <FieldGroup
         className={cn(
-          'flex h-[calc(100%-81px)] flex-col gap-6 overflow-auto p-4',
+          'flex h-[calc(100%-100px)] flex-col gap-6 overflow-auto p-4 sm:h-[calc(100%-81px)]',
         )}
       >
         <FieldSet className="items-end gap-6 sm:flex-row sm:gap-2">
@@ -257,7 +253,7 @@ const EditGuestForm = (props: {
         </DialogClose>
         <Button type={'submit'}>Save changes</Button>
       </DialogFooter>
-      <SheetFooterWrapper buttonLabel="Save changes" className="sm:hidden" />
+      <DrawerFooterWrapper buttonLabel="Save changes" className="sm:hidden" />
     </form>
   );
 };

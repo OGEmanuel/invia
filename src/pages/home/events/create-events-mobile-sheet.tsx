@@ -1,51 +1,47 @@
-import { Sheet, SheetTrigger } from '@/components/ui/sheet';
 import CreateEventsForm from './create-events-form';
 import { cn } from '@/lib/utils';
-import SheetContentWrapper, {
-  SheetFooterWrapper,
-} from '@/components/ui/custom/sheet-content-wrapper';
+import { Drawer, DrawerTrigger } from '@/components/ui/drawer';
+import DrawerContentWrapper, {
+  DrawerFooterWrapper,
+} from '@/components/ui/custom/drawer-content-wrapper';
 
 const CreateEventsMobileSheet = (props: {
   children?: React.ReactNode;
-  open: boolean;
-  onSetOpen: React.Dispatch<React.SetStateAction<boolean>>;
   title: string;
   description?: string;
   className?: string;
   isPending?: boolean;
+  onSetOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  open?: boolean;
   eventId?: string;
 }) => {
   const {
     children,
-    open,
-    onSetOpen,
     title,
     description,
     className,
     eventId,
     isPending,
+    onSetOpen,
+    open,
   } = props;
 
   return (
-    <Sheet open={open} onOpenChange={onSetOpen}>
-      {children && <SheetTrigger asChild>{children}</SheetTrigger>}
-      <SheetContentWrapper
-        title={title}
-        description={description}
-        setOpen={onSetOpen}
-      >
+    <Drawer open={open} onOpenChange={onSetOpen}>
+      {children && <DrawerTrigger asChild>{children}</DrawerTrigger>}
+      <DrawerContentWrapper title={title} description={description}>
         <CreateEventsForm
           eventId={eventId}
           className={cn('h-[calc(100%-83px)]', className)}
           onSetOpen={onSetOpen}
         >
-          <SheetFooterWrapper
+          <DrawerFooterWrapper
             buttonLabel="Create event"
             isPending={isPending}
           />
         </CreateEventsForm>
-      </SheetContentWrapper>
-    </Sheet>
+      </DrawerContentWrapper>
+    </Drawer>
   );
 };
 

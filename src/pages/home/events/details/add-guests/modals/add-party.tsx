@@ -1,21 +1,21 @@
 import { Button } from '@/components/ui/button';
 import ButtonLoading from '@/components/ui/custom/button-loading';
 import DialogContentWrapper from '@/components/ui/custom/dialog-content-wrapper';
+import DrawerContentWrapper from '@/components/ui/custom/drawer-content-wrapper';
 import InputField from '@/components/ui/custom/input';
-import SheetContentWrapper from '@/components/ui/custom/sheet-content-wrapper';
 import {
   Dialog,
   DialogClose,
   DialogFooter,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { FieldSet } from '@/components/ui/field';
 import {
-  Sheet,
-  SheetClose,
-  SheetFooter,
-  SheetTrigger,
-} from '@/components/ui/sheet';
+  Drawer,
+  DrawerClose,
+  DrawerFooter,
+  DrawerTrigger,
+} from '@/components/ui/drawer';
+import { FieldSet } from '@/components/ui/field';
 import useSendRequest from '@/lib/hooks/useSendRequest';
 import { MUTATIONS } from '@/lib/queries';
 import { QUERY_KEYS } from '@/lib/queries/query-keys';
@@ -54,28 +54,26 @@ export const AddParty = (props: {
 
 export const AddPartyMobileSheet = (props: {
   children?: React.ReactNode;
-  open: boolean;
-  onSetOpen: React.Dispatch<React.SetStateAction<boolean>>;
   partyId?: string;
 }) => {
-  const { children, open, onSetOpen, partyId } = props;
+  const [open, setOpen] = useState(false);
+  const { children, partyId } = props;
 
   return (
-    <Sheet open={open} onOpenChange={onSetOpen}>
-      <SheetTrigger asChild>{children}</SheetTrigger>
-      <SheetContentWrapper
+    <Drawer open={open} onOpenChange={setOpen}>
+      <DrawerTrigger asChild>{children}</DrawerTrigger>
+      <DrawerContentWrapper
         title="Add event party"
         description="Configure your export settings to download."
-        setOpen={onSetOpen}
         className="h-80"
       >
         <AddPartyForm
           partyId={partyId}
-          onSetOpen={onSetOpen}
+          onSetOpen={setOpen}
           className="h-[calc(100%-83px)]"
         />
-      </SheetContentWrapper>
-    </Sheet>
+      </DrawerContentWrapper>
+    </Drawer>
   );
 };
 
@@ -171,14 +169,14 @@ const AddPartyForm = (props: {
         </DialogClose>
         <ButtonLoading label="Create party" isPending={isPending} />
       </DialogFooter>
-      <SheetFooter className="border-t border-[#00000014] p-4 max-sm:flex-row max-sm:justify-end sm:hidden">
-        <SheetClose asChild>
+      <DrawerFooter className="border-t border-[#00000014] p-4 max-sm:flex-row max-sm:justify-end sm:hidden">
+        <DrawerClose asChild>
           <Button type="button" variant={'neutral'}>
             Cancel
           </Button>
-        </SheetClose>
+        </DrawerClose>
         <ButtonLoading label="Create party" isPending={isPending} />
-      </SheetFooter>
+      </DrawerFooter>
     </form>
   );
 };

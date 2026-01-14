@@ -70,3 +70,19 @@ export function parseExpiryToMs(text: string): number {
 
   return 60_000; // fallback
 }
+
+export const scrollToBottom = (
+  containerRef: React.RefObject<HTMLDivElement | null>,
+) => {
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const el = containerRef.current;
+      if (!el) return;
+
+      el.scrollTo({
+        top: el.scrollHeight,
+        behavior: 'smooth',
+      });
+    });
+  });
+};
