@@ -87,7 +87,7 @@ const PreviewInvitations = (props: { children?: React.ReactNode }) => {
 
   return (
     <div className={'h-[calc(100%-83px)]'}>
-      <div className="flex h-[calc(100%-81px)] flex-col gap-6 overflow-auto p-4">
+      <div className="flex h-[calc(100%-120px)] flex-col gap-6 overflow-auto p-4 sm:h-[calc(100%-81px)]">
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between rounded-[12px] bg-[#F7F5F2] p-3 text-sm/5 -tracking-[0.02em] text-[#575554]">
             <div className="flex items-center gap-2">
@@ -219,7 +219,7 @@ const FollowUpMessages = () => {
         value="item-1"
         className="flex flex-col gap-4 rounded-[12px] border! border-black/8 bg-[#FEFCF9] p-3"
       >
-        <AccordionTrigger className="relative p-0 text-sm/[22px] -tracking-[0.02em] hover:no-underline max-sm:flex-col max-sm:gap-1 [&>svg]:absolute [&>svg]:top-1/2 [&>svg]:-right-3 [&>svg]:size-5 [&>svg]:-translate-1/2 [&>svg]:text-[#575554]">
+        <AccordionTrigger className="relative p-0 text-sm/[22px] -tracking-[0.02em] hover:no-underline max-sm:gap-1 [&>svg]:absolute [&>svg]:top-1/2 [&>svg]:-right-3 [&>svg]:size-5 [&>svg]:-translate-1/2 [&>svg]:text-[#575554]">
           <p className="text-[#212121]">Follow-up message</p>
           <p className="pr-7 text-[#575554]">If no RSVP after 2 days</p>
         </AccordionTrigger>

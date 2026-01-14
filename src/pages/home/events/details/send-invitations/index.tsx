@@ -10,13 +10,13 @@ import SendInvitationsForm from './send-invitations-form';
 import React, { Activity, useState } from 'react';
 import PreviewInvitations from './invitations-preview';
 import MessageSent from '@/assets/jsx-icons/message-sent';
+import DrawerContentWrapper from '@/components/ui/custom/drawer-content-wrapper';
 import {
-  Sheet,
-  SheetClose,
-  SheetFooter,
-  SheetTrigger,
-} from '@/components/ui/sheet';
-import SheetContentWrapper from '@/components/ui/custom/sheet-content-wrapper';
+  Drawer,
+  DrawerClose,
+  DrawerFooter,
+  DrawerTrigger,
+} from '@/components/ui/drawer';
 
 const SendInvitations = (props: {
   children?: React.ReactNode;
@@ -115,40 +115,38 @@ export const SendInvitationsMobileSheet = (props: {
   const [page, setPage] = useState(0);
 
   return (
-    <Sheet open={open} onOpenChange={onSetOpen}>
+    <Drawer open={open} onOpenChange={onSetOpen}>
       {children && (
-        <SheetTrigger asChild className={className}>
+        <DrawerTrigger asChild className={className}>
           {children}
-        </SheetTrigger>
+        </DrawerTrigger>
       )}
       <Activity mode={page === 0 ? 'visible' : 'hidden'}>
-        <SheetContentWrapper
+        <DrawerContentWrapper
           title="Send Invitations"
           description="Send invitations to your guests."
           className="bg-white"
-          setOpen={onSetOpen}
         >
           <SendInvitationsForm setPage={setPage}>
-            <SheetFooter className="flex-row justify-end border-t border-[#00000014] p-4">
-              <SheetClose asChild>
+            <DrawerFooter className="flex-row justify-end border-t border-[#00000014] p-4">
+              <DrawerClose asChild>
                 <Button type="button" variant={'neutral'}>
                   Cancel
                 </Button>
-              </SheetClose>
+              </DrawerClose>
               <Button type="submit">Preview message</Button>
-            </SheetFooter>
+            </DrawerFooter>
           </SendInvitationsForm>
-        </SheetContentWrapper>
+        </DrawerContentWrapper>
       </Activity>
       <Activity mode={page === 1 ? 'visible' : 'hidden'}>
-        <SheetContentWrapper
+        <DrawerContentWrapper
           title="Preview and send to guests"
           description="Review your invitation before sending it to your guests."
           className="bg-white"
-          setOpen={onSetOpen}
         >
           <PreviewInvitations>
-            <SheetFooter className="flex-row justify-end border-t border-[#00000014] p-4">
+            <DrawerFooter className="flex-row justify-end border-t border-[#00000014] p-4">
               <Button
                 type="button"
                 variant={'neutral'}
@@ -159,16 +157,15 @@ export const SendInvitationsMobileSheet = (props: {
               <Button type="submit" onClick={() => setPage(2)}>
                 Send to guests
               </Button>
-            </SheetFooter>
+            </DrawerFooter>
           </PreviewInvitations>
-        </SheetContentWrapper>
+        </DrawerContentWrapper>
       </Activity>
       <Activity mode={page === 2 ? 'visible' : 'hidden'}>
-        <SheetContentWrapper
+        <DrawerContentWrapper
           title="Message sent"
           className="h-auto items-center gap-5 px-4 pt-10 pb-4"
           hideHeader
-          setOpen={onSetOpen}
         >
           <MessageSent />
           <div className="flex w-full max-w-100 flex-col gap-2 text-center">
@@ -180,7 +177,7 @@ export const SendInvitationsMobileSheet = (props: {
               updates as they respond.
             </p>
           </div>
-          <SheetFooter className="justify-center sm:w-full sm:justify-center">
+          <DrawerFooter className="justify-center sm:w-full sm:justify-center">
             <DialogClose asChild>
               <Button
                 type="button"
@@ -190,9 +187,9 @@ export const SendInvitationsMobileSheet = (props: {
                 Close
               </Button>
             </DialogClose>
-          </SheetFooter>
-        </SheetContentWrapper>
+          </DrawerFooter>
+        </DrawerContentWrapper>
       </Activity>
-    </Sheet>
+    </Drawer>
   );
 };

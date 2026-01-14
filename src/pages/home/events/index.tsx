@@ -16,7 +16,6 @@ import { useFormStore } from '@/store/submitting-store';
 import ButtonLoading from '@/components/ui/custom/button-loading';
 
 const Events = () => {
-  const [open, setOpen] = useState(false);
   const { isFormSubmitting } = useFormStore();
 
   return (
@@ -33,8 +32,6 @@ const Events = () => {
           </Button>
         </CreateEventDesktop>
         <CreateEventsMobileSheet
-          open={open}
-          onSetOpen={setOpen}
           title="Create new event"
           description="Create an event and manage your guest list."
           className="h-[calc(100%-83px)]"

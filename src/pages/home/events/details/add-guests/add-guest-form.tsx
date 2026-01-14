@@ -6,10 +6,10 @@ import InputField from '@/components/ui/custom/input';
 import PhoneField from '@/components/ui/custom/phone';
 import SelectField from '@/components/ui/custom/select';
 import { FieldGroup, FieldSet } from '@/components/ui/field';
-import { cn, scrollToFirstError } from '@/lib/utils';
+import { cn, scrollToBottom, scrollToFirstError } from '@/lib/utils';
 import { revalidateLogic, useField, useForm } from '@tanstack/react-form';
 import { Plus, Trash2, X } from 'lucide-react';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import z from 'zod';
 import { AddParty, AddPartyMobileSheet } from './modals/add-party';
 import { RemovePartyDialog } from './modals/remove-party';
@@ -46,7 +46,6 @@ const addGuestFormSchema = z.object({
 
 const AddGuestForm = (props: { className?: string }) => {
   const { className } = props;
-  const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
   const { eventId } = useParams({
     from: pathname.includes('/share-guest-list')
@@ -189,20 +188,6 @@ const AddGuestForm = (props: { className?: string }) => {
     value: party.name,
   }));
 
-  const scrollToBottom = () => {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        const el = containerRef.current;
-        if (!el) return;
-
-        el.scrollTo({
-          top: el.scrollHeight,
-          behavior: 'smooth',
-        });
-      });
-    });
-  };
-
   return (
     <section className={cn('w-full max-lg:pt-5 lg:p-0', className)}>
       <div className="flex flex-col gap-6">
@@ -265,7 +250,7 @@ const AddGuestForm = (props: { className?: string }) => {
                 <Plus className="size-5 text-[#6155F5]" />
               </Button>
             </AddParty>
-            <AddPartyMobileSheet open={open} onSetOpen={setOpen}>
+            <AddPartyMobileSheet>
               <Button
                 variant={'ghost'}
                 size={'icon-sm'}
@@ -424,7 +409,7 @@ const AddGuestForm = (props: { className?: string }) => {
                 }),
                 requestAnimationFrame(() => {
                   requestAnimationFrame(() => {
-                    scrollToBottom();
+                    scrollToBottom(containerRef);
                   });
                 })
               )}

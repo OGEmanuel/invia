@@ -180,9 +180,9 @@ const EventMenuDropdownDialog = (props: { className?: string }) => {
       </Dialog>
       <CreateEventsMobileSheet
         title="Edit Event"
+        className="h-[calc(100%-61px)]"
         open={showMobileEditEventDialog}
         onSetOpen={setShowMobileEditEventDialog}
-        className="h-[calc(100%-61px)]"
         isPending={isFormSubmitting}
         eventId={eventId}
       />

@@ -10,16 +10,15 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useMediaQuery } from '@/lib/hooks/useMediaQuery';
-import { useSwipe } from '@/lib/hooks/useSwipe';
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 
@@ -127,9 +126,6 @@ export const UpgradeSheet = (props: {
   const [period, setPeriod] = useState<string>('monthly');
   const [currency, setCurrency] = useState<string>('usd');
   const isMobile = useMediaQuery('(max-width: 767px)');
-  const { handleTouchEnd, handleTouchMove, handleTouchStart } = useSwipe({
-    setOpen: setOpenSmall,
-  });
 
   const openDialog = () => {
     if (isMobile) {
@@ -156,59 +152,54 @@ export const UpgradeSheet = (props: {
   }, []);
 
   return (
-    <Sheet open={openSmall} onOpenChange={setOpenSmall}>
-      <SheetTrigger asChild>{children}</SheetTrigger>
-      <SheetContent
-        side="bottom"
-        className="flex h-170 flex-col gap-10 overflow-auto rounded-t-[24px] p-5 md:hidden [&>button]:top-2 [&>button]:right-2 [&>button]:rounded-full [&>button]:bg-[#FEFCF9] [&>button]:p-2"
-        overlayClassName={'md:hidden'}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        <SheetHeader className="sr-only">
-          <SheetTitle>Do more with Invia!</SheetTitle>
-          <SheetDescription>
+    <Drawer open={openSmall} onOpenChange={setOpenSmall}>
+      <DrawerTrigger asChild>{children}</DrawerTrigger>
+      <DrawerContent overlayClassName={'md:hidden '}>
+        <DrawerHeader className="sr-only">
+          <DrawerTitle>Do more with Invia!</DrawerTitle>
+          <DrawerDescription>
             Unlock advanced guest list tools, follow-ups, and team features as
             your events grow.
-          </SheetDescription>
-        </SheetHeader>
-        <div className="flex flex-col items-center gap-2">
-          {isMobile && <UpgradeIllustration size={'88'} />}
-          <div className="flex flex-col gap-1 text-center">
-            <h1 className="text-2xl/8 text-[#212121]">Do more with Invia!</h1>
-            <p className="max-w-120 text-sm/[22px] -tracking-[0.02em] text-[#575554]">
-              Unlock advanced guest list tools, follow-ups, and team features as
-              your events grow.
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col gap-2">
-            <div className="flex justify-between">
-              <PlanPeriod period={period} setPeriod={setPeriod} />
-              <PlanCurrency currency={currency} setCurrency={setCurrency} />
+          </DrawerDescription>
+        </DrawerHeader>
+        <div className="flex flex-col gap-10 overflow-auto rounded-t-[24px] p-5 md:hidden [&>button]:top-2 [&>button]:right-2 [&>button]:rounded-full [&>button]:bg-[#FEFCF9] [&>button]:p-2">
+          <div className="flex flex-col items-center gap-2">
+            {isMobile && <UpgradeIllustration size={'88'} />}
+            <div className="flex flex-col gap-1 text-center">
+              <h1 className="text-2xl/8 text-[#212121]">Do more with Invia!</h1>
+              <p className="max-w-120 text-sm/[22px] -tracking-[0.02em] text-[#575554]">
+                Unlock advanced guest list tools, follow-ups, and team features
+                as your events grow.
+              </p>
             </div>
-            <p className="text-sm/[22px] -tracking-[0.02em]">
-              {' '}
-              <span className="font-semibold">Save 30%</span> on a yearly plan
+          </div>
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-2">
+              <div className="z-50 flex justify-between">
+                <PlanPeriod period={period} setPeriod={setPeriod} />
+                <PlanCurrency currency={currency} setCurrency={setCurrency} />
+              </div>
+              <p className="text-sm/[22px] -tracking-[0.02em]">
+                {' '}
+                <span className="font-semibold">Save 30%</span> on a yearly plan
+              </p>
+            </div>
+            <div className="flex flex-col gap-4">
+              <PlanPriceCard plan="pro" />
+              <PlanPriceCard plan="studio" />
+            </div>
+            <hr className="h-2.5 border-none bg-[#0000000D]" />
+            <p className="text-sm/[22px] -tracking-[0.02em] text-[#575554]">
+              Morem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
+              vulputate libero et velit interdum, ac aliquet odio mattis. Class
+              aptent taciti sociosqu ad litora torquent per conubia nostra, per
+              inceptos himenaeos. Curabitur tempus urna at turpis condimentum
+              lobortis. Ut commodo efficitur neque.
             </p>
           </div>
-          <div className="flex flex-col gap-4">
-            <PlanPriceCard plan="pro" />
-            <PlanPriceCard plan="studio" />
-          </div>
-          <hr className="h-2.5 border-none bg-[#0000000D]" />
-          <p className="text-sm/[22px] -tracking-[0.02em] text-[#575554]">
-            Morem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-            vulputate libero et velit interdum, ac aliquet odio mattis. Class
-            aptent taciti sociosqu ad litora torquent per conubia nostra, per
-            inceptos himenaeos. Curabitur tempus urna at turpis condimentum
-            lobortis. Ut commodo efficitur neque.
-          </p>
         </div>
-      </SheetContent>
-    </Sheet>
+      </DrawerContent>
+    </Drawer>
   );
 };
 
