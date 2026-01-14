@@ -45,7 +45,6 @@ const ButtonLoading = (props: {
         className={cn(
           'grid-area-stack visible translate-y-0 transition-all',
           isPending && 'invisible -translate-y-50',
-          typeof label !== 'string' && 'flex items-center gap-2',
         )}
       >
         {label}
