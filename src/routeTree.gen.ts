@@ -25,6 +25,8 @@ import { Route as AuthBusinessInfoRouteImport } from './routes/auth/business-inf
 import { Route as AuthenticatedEventIdRouteImport } from './routes/_authenticated/$eventId'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedMessagesIndexRouteImport } from './routes/_authenticated/messages/index'
+import { Route as AuthenticatedSettingsPlanBillingsRouteImport } from './routes/_authenticated/settings/plan-billings'
+import { Route as AuthenticatedSettingsMembersRouteImport } from './routes/_authenticated/settings/members'
 
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
   id: '/_authenticated',
@@ -107,6 +109,18 @@ const AuthenticatedMessagesIndexRoute =
     path: '/messages/',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedSettingsPlanBillingsRoute =
+  AuthenticatedSettingsPlanBillingsRouteImport.update({
+    id: '/settings/plan-billings',
+    path: '/settings/plan-billings',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedSettingsMembersRoute =
+  AuthenticatedSettingsMembersRouteImport.update({
+    id: '/settings/members',
+    path: '/settings/members',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/$eventId': typeof AuthenticatedEventIdRoute
@@ -122,6 +136,8 @@ export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthIndexRoute
   '/share-guest-list': typeof ShareGuestListIndexRoute
+  '/settings/members': typeof AuthenticatedSettingsMembersRoute
+  '/settings/plan-billings': typeof AuthenticatedSettingsPlanBillingsRoute
   '/messages': typeof AuthenticatedMessagesIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
 }
@@ -139,6 +155,8 @@ export interface FileRoutesByTo {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthIndexRoute
   '/share-guest-list': typeof ShareGuestListIndexRoute
+  '/settings/members': typeof AuthenticatedSettingsMembersRoute
+  '/settings/plan-billings': typeof AuthenticatedSettingsPlanBillingsRoute
   '/messages': typeof AuthenticatedMessagesIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
 }
@@ -158,6 +176,8 @@ export interface FileRoutesById {
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/auth/': typeof AuthIndexRoute
   '/share-guest-list/': typeof ShareGuestListIndexRoute
+  '/_authenticated/settings/members': typeof AuthenticatedSettingsMembersRoute
+  '/_authenticated/settings/plan-billings': typeof AuthenticatedSettingsPlanBillingsRoute
   '/_authenticated/messages/': typeof AuthenticatedMessagesIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
 }
@@ -177,6 +197,8 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/share-guest-list'
+    | '/settings/members'
+    | '/settings/plan-billings'
     | '/messages'
     | '/settings'
   fileRoutesByTo: FileRoutesByTo
@@ -194,6 +216,8 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/share-guest-list'
+    | '/settings/members'
+    | '/settings/plan-billings'
     | '/messages'
     | '/settings'
   id:
@@ -212,6 +236,8 @@ export interface FileRouteTypes {
     | '/_authenticated/'
     | '/auth/'
     | '/share-guest-list/'
+    | '/_authenticated/settings/members'
+    | '/_authenticated/settings/plan-billings'
     | '/_authenticated/messages/'
     | '/_authenticated/settings/'
   fileRoutesById: FileRoutesById
@@ -345,12 +371,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMessagesIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/settings/plan-billings': {
+      id: '/_authenticated/settings/plan-billings'
+      path: '/settings/plan-billings'
+      fullPath: '/settings/plan-billings'
+      preLoaderRoute: typeof AuthenticatedSettingsPlanBillingsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/settings/members': {
+      id: '/_authenticated/settings/members'
+      path: '/settings/members'
+      fullPath: '/settings/members'
+      preLoaderRoute: typeof AuthenticatedSettingsMembersRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
 interface AuthenticatedRouteChildren {
   AuthenticatedEventIdRoute: typeof AuthenticatedEventIdRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedSettingsMembersRoute: typeof AuthenticatedSettingsMembersRoute
+  AuthenticatedSettingsPlanBillingsRoute: typeof AuthenticatedSettingsPlanBillingsRoute
   AuthenticatedMessagesIndexRoute: typeof AuthenticatedMessagesIndexRoute
   AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
 }
@@ -358,6 +400,9 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedEventIdRoute: AuthenticatedEventIdRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedSettingsMembersRoute: AuthenticatedSettingsMembersRoute,
+  AuthenticatedSettingsPlanBillingsRoute:
+    AuthenticatedSettingsPlanBillingsRoute,
   AuthenticatedMessagesIndexRoute: AuthenticatedMessagesIndexRoute,
   AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
 }
