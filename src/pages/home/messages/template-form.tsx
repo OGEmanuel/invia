@@ -78,7 +78,7 @@ const TemplateForm = (props: { children?: React.ReactNode }) => {
       <FieldGroup
         ref={containerRef}
         className={cn(
-          'flex h-[calc(100%-100px)] flex-col gap-6 overflow-auto p-4 sm:h-[calc(100%-81px)]',
+          'flex h-[calc(100%-85px)] flex-col gap-6 overflow-auto p-4 sm:h-[calc(100%-81px)]',
         )}
       >
         <form.Field
