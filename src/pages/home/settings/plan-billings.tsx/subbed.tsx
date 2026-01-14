@@ -108,7 +108,7 @@ const StudioPlan = () => {
   return (
     <Accordion type="single" collapsible>
       <AccordionItem value="item-1" className="rounded-[16px] bg-[#3A99FF]">
-        <AccordionTrigger className="relative items-center px-2 py-3 hover:no-underline [&>svg]:absolute [&>svg]:top-1/2 [&>svg]:right-0 [&>svg]:size-5 [&>svg]:-translate-1/2 [&>svg]:text-white/50">
+        <AccordionTrigger className="relative items-center px-2 py-3 hover:no-underline max-sm:flex-col max-sm:items-start max-sm:gap-4 [&>svg]:absolute [&>svg]:right-0 [&>svg]:bottom-2.5 [&>svg]:size-5 [&>svg]:-translate-1/2 [&>svg]:text-white/50 [&>svg]:sm:top-1/2">
           <div className="flex items-center gap-2">
             <Bolt fill={'white'} />
             <p className="text-sm/[22px] font-medium -tracking-[0.02em] text-white/80">
@@ -118,7 +118,7 @@ const StudioPlan = () => {
               </span>
             </p>
           </div>
-          <Button className="mr-8 h-9 rounded-[8px] border border-white/20 bg-transparent px-3 text-sm/[22px] font-medium -tracking-[0.02em]">
+          <Button className="mr-8 h-9 rounded-[8px] border border-white/20 bg-transparent px-3 text-sm/[22px] font-medium -tracking-[0.02em] max-sm:w-[85%]">
             Upgrade plan
           </Button>
         </AccordionTrigger>
