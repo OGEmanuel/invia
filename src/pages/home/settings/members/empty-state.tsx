@@ -1,8 +1,13 @@
 import members from '@/assets/icons/members.svg';
 import Bolt from '@/assets/jsx-icons/bolt';
 import { Button } from '@/components/ui/button';
+import UpgradeModal, { UpgradeSheet } from '../../upgrade-modal';
+import { useState } from 'react';
 
 const NoMembers = () => {
+  const [open, setOpen] = useState(false);
+  const [openSmall, setOpenSmall] = useState(false);
+
   return (
     <div className="flex h-120 items-center justify-center">
       <div className="flex w-full max-w-100 flex-col items-center gap-4 text-center">
@@ -18,14 +23,40 @@ const NoMembers = () => {
             collaboration for larger events.
           </p>
         </div>
-        <Button
-          variant={'secondary'}
-          className="outline-[#874CF933]"
-          size={'lg'}
-        >
-          Upgrade plan
-          <Bolt />
-        </Button>
+        <div className="max-md:hidden">
+          <UpgradeModal
+            open={open}
+            setOpen={setOpen}
+            openSmall={openSmall}
+            setOpenSmall={setOpenSmall}
+          >
+            <Button
+              variant={'secondary'}
+              className="outline-[#874CF933]"
+              size={'lg'}
+            >
+              Upgrade plan
+              <Bolt />
+            </Button>
+          </UpgradeModal>
+        </div>
+        <div className="md:hidden">
+          <UpgradeSheet
+            open={open}
+            setOpen={setOpen}
+            openSmall={openSmall}
+            setOpenSmall={setOpenSmall}
+          >
+            <Button
+              variant={'secondary'}
+              className="outline-[#874CF933]"
+              size={'lg'}
+            >
+              Upgrade
+              <Bolt />
+            </Button>
+          </UpgradeSheet>
+        </div>
       </div>
     </div>
   );
