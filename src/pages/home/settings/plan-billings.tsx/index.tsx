@@ -1,5 +1,13 @@
+import Subbed from './subbed';
+// import Unsubbed from "./unsubbed";
+
 const PlanBillings = () => {
-  return <h1>Plan & Billings</h1>;
+  return (
+    <div>
+      {/* <Unsubbed /> */}
+      <Subbed />
+    </div>
+  );
 };
 
 export default PlanBillings;

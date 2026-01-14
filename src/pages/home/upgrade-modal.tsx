@@ -22,6 +22,15 @@ import { useMediaQuery } from '@/lib/hooks/useMediaQuery';
 import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 
+type Currency = 'usd' | 'ngn';
+type Billing = 'monthly' | 'yearly';
+type Plan = 'pro' | 'studio';
+
+type Sub = {
+  monthly: Record<Currency, number>;
+  yearly: Record<Currency, number>;
+};
+
 const UpgradeModal = (props: {
   children?: React.ReactNode;
   open: boolean;
@@ -30,8 +39,6 @@ const UpgradeModal = (props: {
   setOpenSmall: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { children, open, setOpen, setOpenSmall } = props;
-  const [period, setPeriod] = useState<string>('monthly');
-  const [currency, setCurrency] = useState<string>('usd');
   const isMobile = useMediaQuery('(max-width: 767px)');
 
   const openDialog = () => {
@@ -84,36 +91,92 @@ const UpgradeModal = (props: {
             </p>
           </div>
         </div>
-        <div className="flex flex-col gap-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <PlanPeriod period={period} setPeriod={setPeriod} />
-              <p className="text-sm/[22px] -tracking-[0.02em]">
-                {' '}
-                <span className="font-semibold">Save 30%</span> on a yearly plan
-              </p>
-            </div>
-            <PlanCurrency currency={currency} setCurrency={setCurrency} />
-          </div>
-          <div className="flex gap-4">
-            <PlanPriceCard plan="pro" />
-            <PlanPriceCard plan="studio" />
-          </div>
-          <hr className="h-2.5 border-none bg-[#0000000D]" />
-          <p className="text-sm/[22px] -tracking-[0.02em] text-[#575554]">
-            Morem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-            vulputate libero et velit interdum, ac aliquet odio mattis. Class
-            aptent taciti sociosqu ad litora torquent per conubia nostra, per
-            inceptos himenaeos. Curabitur tempus urna at turpis condimentum
-            lobortis. Ut commodo efficitur neque.
-          </p>
-        </div>
+        <UpgradeContent />
       </DialogContent>
     </Dialog>
   );
 };
 
 export default UpgradeModal;
+
+export const UpgradeContent = () => {
+  const [period, setPeriod] = useState<Billing>('yearly');
+  const [currency, setCurrency] = useState<Currency>('usd');
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="flex justify-between sm:items-center">
+        <div className="flex gap-2 max-sm:flex-col sm:items-center">
+          <PlanPeriod period={period} setPeriod={setPeriod} />
+          <p className="text-sm/[22px] -tracking-[0.02em]">
+            {' '}
+            <span className="font-semibold">Save 30%</span> on a yearly plan
+          </p>
+        </div>
+        <PlanCurrency currency={currency} setCurrency={setCurrency} />
+      </div>
+      <div className="flex gap-4 max-sm:flex-col">
+        <PlanPriceCard
+          plan="pro"
+          period={period}
+          currency={currency}
+          perks={[
+            {
+              description: 'Up to 300 guests per event',
+            },
+            {
+              description: 'Unlimited events',
+            },
+            {
+              description: 'Reusable message templates',
+            },
+            {
+              description: 'Invite cover images',
+            },
+            {
+              description: 'Guest activity timeline',
+            },
+            {
+              description: 'Follow-up messages',
+            },
+          ]}
+        />
+        <PlanPriceCard
+          period={period}
+          currency={currency}
+          plan="studio"
+          perks={[
+            {
+              description: 'All Pro features',
+            },
+            {
+              description: 'Unlimited guests',
+            },
+            {
+              description: 'Team members & permissions',
+            },
+            {
+              description: 'Secure guest data access',
+            },
+            {
+              description: 'Advanced guest timelines & logs',
+            },
+            {
+              description: 'Flexible exports (PDF, SVG, filtered)',
+            },
+          ]}
+        />
+      </div>
+      <hr className="h-2.5 border-none bg-[#0000000D]" />
+      <p className="text-sm/[22px] -tracking-[0.02em] text-[#575554]">
+        Invia includes free tools to get started. Paid plans give you access to
+        more powerful features for a selected period. When a plan ends, paid
+        features are paused and can be re-enabled anytime by choosing a new
+        plan.
+      </p>
+    </div>
+  );
+};
 
 export const UpgradeSheet = (props: {
   children?: React.ReactNode;
@@ -123,8 +186,6 @@ export const UpgradeSheet = (props: {
   setOpenSmall: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { children, openSmall, setOpen, setOpenSmall } = props;
-  const [period, setPeriod] = useState<string>('monthly');
-  const [currency, setCurrency] = useState<string>('usd');
   const isMobile = useMediaQuery('(max-width: 767px)');
 
   const openDialog = () => {
@@ -173,30 +234,7 @@ export const UpgradeSheet = (props: {
               </p>
             </div>
           </div>
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-col gap-2">
-              <div className="z-50 flex justify-between">
-                <PlanPeriod period={period} setPeriod={setPeriod} />
-                <PlanCurrency currency={currency} setCurrency={setCurrency} />
-              </div>
-              <p className="text-sm/[22px] -tracking-[0.02em]">
-                {' '}
-                <span className="font-semibold">Save 30%</span> on a yearly plan
-              </p>
-            </div>
-            <div className="flex flex-col gap-4">
-              <PlanPriceCard plan="pro" />
-              <PlanPriceCard plan="studio" />
-            </div>
-            <hr className="h-2.5 border-none bg-[#0000000D]" />
-            <p className="text-sm/[22px] -tracking-[0.02em] text-[#575554]">
-              Morem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-              vulputate libero et velit interdum, ac aliquet odio mattis. Class
-              aptent taciti sociosqu ad litora torquent per conubia nostra, per
-              inceptos himenaeos. Curabitur tempus urna at turpis condimentum
-              lobortis. Ut commodo efficitur neque.
-            </p>
-          </div>
+          <UpgradeContent />
         </div>
       </DrawerContent>
     </Drawer>
@@ -249,8 +287,31 @@ const PlanCurrency = (props: { currency: string; setCurrency: any }) => {
   );
 };
 
-const PlanPriceCard = (props: { plan: string }) => {
-  const { plan } = props;
+type Perk = {
+  description: string;
+};
+
+const PlanPriceCard = (props: {
+  plan: Plan;
+  perks: Perk[];
+  period: Billing;
+  currency: Currency;
+}) => {
+  const { plan, perks, period, currency } = props;
+
+  const plans: Record<Plan, Sub> = {
+    pro: {
+      monthly: { usd: 30, ngn: 45 },
+      yearly: { usd: 25, ngn: 38 },
+    },
+    studio: {
+      monthly: { usd: 200, ngn: 300 },
+      yearly: { usd: 180, ngn: 270 },
+    },
+  };
+
+  const price = plans[plan][period][currency];
+  const priceOfMonth = plans[plan].monthly[currency];
 
   return (
     <div
@@ -281,11 +342,28 @@ const PlanPriceCard = (props: { plan: string }) => {
         <div className="flex items-center justify-between">
           <p
             className={cn(
-              'font-serif text-2xl/8',
-              plan === 'pro' ? 'text-[#212121]' : 'text-white',
+              'flex items-center gap-2 font-serif text-2xl/8',
+              plan === 'pro'
+                ? 'text-[#212121] [&>span]:text-[#A3A19D]'
+                : 'text-white [&>span]:text-black/35',
             )}
           >
-            {plan === 'pro' ? '$30' : '$200'}
+            {currency === 'usd' ? `$${price}` : `₦${price}K`}
+            {period === 'yearly' && (
+              <span>
+                {currency === 'usd' ? (
+                  <span className="line-through">
+                    {'$'}
+                    {priceOfMonth}
+                  </span>
+                ) : (
+                  <span className="line-through">
+                    {'₦'}
+                    {priceOfMonth}K
+                  </span>
+                )}
+              </span>
+            )}
           </p>
           <p
             className={cn(
@@ -309,29 +387,19 @@ const PlanPriceCard = (props: { plan: string }) => {
         </Button>
       </div>
       <div className="flex flex-col gap-5">
-        {plan === 'studio' && (
-          <div className="flex items-center gap-2">
-            <Bolt fill={'white'} />
-            <p className={cn('text-sm/[22px] -tracking-[0.02em] text-white')}>
-              All Pro features
+        {perks.map(perk => (
+          <div key={perk.description} className="flex items-center gap-2">
+            <Bolt fill={plan === 'pro' ? '#874CF980' : 'white'} />
+            <p
+              className={cn(
+                'text-sm/[22px] -tracking-[0.02em]',
+                plan === 'pro' ? 'text-[#575554]' : 'text-white',
+              )}
+            >
+              {perk.description}
             </p>
           </div>
-        )}
-        {Array(plan === 'pro' ? 6 : 5)
-          .fill(0)
-          .map((_, index) => (
-            <div key={index} className="flex items-center gap-2">
-              <Bolt fill={plan === 'pro' ? '#874CF980' : 'white'} />
-              <p
-                className={cn(
-                  'text-sm/[22px] -tracking-[0.02em]',
-                  plan === 'pro' ? 'text-[#575554]' : 'text-white',
-                )}
-              >
-                Morem ipsum dolor sit
-              </p>
-            </div>
-          ))}
+        ))}
       </div>
     </div>
   );
