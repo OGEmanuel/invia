@@ -20,19 +20,15 @@ const EventsDetails = () => {
   const queryClient = useQueryClient();
 
   const { data, isPending, isError } = useGetEventsInfo(eventId);
-  const { data: guestsData, isError: guestsIsError } = useGetGuests(
-    1,
-    50,
-    eventId,
-  );
-  const guests: GuestData = guestsData?.data;
-
+  const { isError: guestsIsError } = useGetGuests(1, 50, eventId);
   const info: Events = data?.data;
 
   return (
     <EventDetailsLayout>
       <EventDetailsLayoutHeader link={'/'} linkLabel={'Back to events'}>
-        {isError ? (
+        {isPending ? (
+          <EventDetailsSkeleton />
+        ) : isError ? (
           <NotFound
             header="Unable to fetch Events Info"
             description="Check your internet connection and try againg or contact our support team for more."
@@ -44,8 +40,6 @@ const EventsDetails = () => {
               })
             }
           />
-        ) : isPending ? (
-          <EventDetailsSkeleton />
         ) : (
           <GuestDetails header={info.name}>
             <div className="flex items-center gap-1.5">
@@ -69,13 +63,8 @@ const EventsDetails = () => {
           }
           actionLabel="Retry"
         />
-      ) : guests?.guests.length > 1 ? (
-        <GuestList />
       ) : (
-        <EmptyState
-          header="No guests yet"
-          description="Guests added to this event will appear here."
-        />
+        <GuestList />
       )}
     </EventDetailsLayout>
   );

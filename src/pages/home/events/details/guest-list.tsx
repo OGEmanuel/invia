@@ -21,6 +21,7 @@ import {
 } from '@tanstack/react-router';
 import { useGetGuests } from '@/lib/queries/hooks';
 import Skeleton from '@/components/ui/custom/skeleton';
+import EmptyState from './empty-state';
 
 const GuestList = () => {
   const { eventId } = useParams({
@@ -45,6 +46,15 @@ const GuestList = () => {
       isInviteRSVP: Math.random() > 0.5,
       isInviteDelivered: Math.random() > 0.5,
     });
+  }
+
+  if (guests && guests.guests.length < 1) {
+    return (
+      <EmptyState
+        header="No guests yet"
+        description="Guests added to this event will appear here."
+      />
+    );
   }
 
   return (
