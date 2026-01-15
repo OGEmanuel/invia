@@ -101,7 +101,7 @@ const MembersList = () => {
           <DrawerContentWrapper
             title="Invite member"
             description="Invite a new member to your team."
-            className="rounded-[16px] bg-white sm:hidden"
+            className="bg-white sm:hidden"
           >
             <InviteForm>
               <DrawerFooterWrapper buttonLabel="Invite member" />
@@ -239,7 +239,7 @@ const MemberAction = (props: { children: React.ReactNode; role: string }) => {
         >
           <DrawerContentWrapper
             title="Edit member role"
-            className="rounded-[16px] bg-white sm:hidden"
+            className="bg-white sm:hidden"
           >
             <EditInviteForm>
               <DrawerFooterWrapper buttonLabel="Invite member" />
