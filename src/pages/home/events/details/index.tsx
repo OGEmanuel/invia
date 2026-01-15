@@ -1,5 +1,4 @@
 import StarCalendar from '@/assets/jsx-icons/star-calendar';
-import EmptyState from './empty-state';
 import { cn, formatDateToShortMonth } from '@/lib/utils';
 import GuestList from './guest-list';
 import EventDetailsLayout, {
@@ -7,7 +6,7 @@ import EventDetailsLayout, {
   GuestDetails,
 } from './layout';
 import { useParams } from '@tanstack/react-router';
-import type { Events, GuestData } from '@/lib/constants';
+import type { Events } from '@/lib/constants';
 import { useGetEventsInfo, useGetGuests } from '@/lib/queries/hooks';
 import NotFound from '@/pages/not-found';
 import { useQueryClient } from '@tanstack/react-query';
